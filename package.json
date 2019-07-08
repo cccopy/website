@@ -1,0 +1,33 @@
+{
+  "name": "cccopy-website",
+  "version": "1.0.0",
+  "description": "The e-commerce website",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "cross-env NODE_ENV=development node server/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cccopy/website.git"
+  },
+  "author": "videoarmy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cccopy/website/issues"
+  },
+  "homepage": "https://github.com/cccopy/website#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.17.1",
+    "express-session": "^1.16.2",
+    "lodash": "^4.17.11",
+    "md5": "^2.2.1",
+    "method-override": "^3.0.0",
+    "nunjucks": "^3.2.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "uuid": "^3.3.2"
+  }
+}
