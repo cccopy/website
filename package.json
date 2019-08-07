@@ -4,7 +4,8 @@
   "description": "The e-commerce website",
   "main": "server/index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=development node server/test.js"
+    "start": "cross-env NODE_ENV=production supervisor server/index.js",
+    "dev": "cross-env NODE_ENV=development supervisor -i assets server/index.js"
   },
   "repository": {
     "type": "git",
@@ -20,9 +21,10 @@
     "body-parser": "^1.19.0",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.4",
+    "cross-env": "^5.2.0",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "md5": "^2.2.1",
     "method-override": "^3.0.0",
     "nunjucks": "^3.2.0",
