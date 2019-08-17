@@ -36,7 +36,8 @@ module.exports = function(app, passport) {
     app.get('/about', (req, res) => { res.render('footer/about') });
     app.get('/terms', (req, res) => { res.render('footer/terms') });
     app.get('/privacy', (req, res) => { res.render('footer/privacy') });
-
+    app.get('/descriptions', (req, res) => { res.render('footer/descriptions') });
+    
     // show the login form
     // app.get('/login', function(req, res) {
     //     // render the page and pass in any flash data if it exists
