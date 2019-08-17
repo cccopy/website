@@ -1,8 +1,7 @@
+
+{% set pageinfo = { headtitle: '首頁', wrapcls: 'index' } %}
+
 {% extends "base.njk" %}
-
-{% block headtitle %}首頁{% endblock %}
-
-{% block wrapcls %}index{% endblock %}
 
 {% block content %}
 	<section class="kv indexkv">
@@ -48,11 +47,4 @@
 			</div>
 		</div>
 	</section>
-{% endblock %}
-
-{% block pjwork %}
-<script type="text/javascript">
-	var _headtitle = '首頁';
-	var _wrapcls = 'index';
-</script>
 {% endblock %}

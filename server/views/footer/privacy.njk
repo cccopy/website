@@ -1,19 +1,15 @@
+
+{% set pageinfo = { headtitle: '隱私權政策', wrapcls: 'inpage' } %}
+
 {% extends "base.njk" %}
 
-{% block headtitle %}隱私權政策{% endblock %}
-
-{% block wrapcls %}inpage{% endblock %}
-
 {% block content %}
-	<section class="crumb">
-		<div class="container">
-			<a main-pjax-link href="/">首頁</a> > 隱私權政策
-		</div>
-	</section>
+	
+	{% include "crumbnav.njk" %}
 
 	<section class="content">
 		<div class="container">
-			<h2 class="title"><span>隱私權政策</span></h2>
+			<h2 class="title"><span>{{ pageinfo.headtitle }}</span></h2>
 			<div class="rule">
 				<p>CC copy影音創意智庫 為錨點影音整合行銷有限公司（以下稱「本公司」或「本網站」）所經營。本公司十分重視您的隱私權保護，將依個人資料保護法及本隱私權政策蒐集、處理及利用您的個人資料，並提供您對個人資料權利之行使與保護（以下稱「使用者」）。</p>
 				<p>若使用者光臨本網站、購買或使用服務時，已同意本隱私政策之運作與政策，若使用者不同意本隱私權政策之全部或部分者，請停止使用本網站服務。</p>
@@ -31,11 +27,4 @@
 			<div class="note">最新公告日期：2019 年 6 月 18 日</div>
 		</div>
 	</section>
-{% endblock %}
-
-{% block pjwork %}
-<script type="text/javascript">
-	var _headtitle = '隱私權政策';
-	var _wrapcls = 'inpage';
-</script>
 {% endblock %}

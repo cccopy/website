@@ -7,7 +7,7 @@
 	<meta charset="UTF-8">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>{% block headtitle %}{% endblock %} - CCcopy</title>
+	<title>{{ pageinfo.headtitle }} - CCcopy</title>
 
 	<meta property="og:title" content="" />
 	<meta property="og:description" content="">
@@ -30,7 +30,7 @@
 </head>
 <body>
 
-	<div class="wrap {% block wrapcls %}{% endblock %}" id="wrap">
+	<div class="wrap {{ pageinfo.wrapcls }}" id="wrap">
 		<header class="hd">
 			<div class="container">
 				<div class="logo">
@@ -52,7 +52,7 @@
 					<a href="#">註冊</a>
 					<a href="#">登入</a>
 					<a href="#">購物車(0)</a>
-					<a href="webflow.html">服務流程</a>
+					<a href="/descriptions">服務流程</a>
 				</div>
 			</nav>
 			<div class="search">
@@ -69,8 +69,10 @@
 		<div id="main-pjax-container">
 			{% block content %}
 			{% endblock %}
-			{% block pjwork %}
-			{% endblock %}
+			<script type="text/javascript">
+				var _headtitle = '{{ pageinfo.headtitle }}';
+				var _wrapcls = '{{ pageinfo.wrapcls }}';
+			</script>
 		</div>
 	</div>
 
@@ -89,7 +91,7 @@
 						<li><a href="#">Line@</a></li>
 					</ul>
 					<ul class="col-lg-2 col-4">
-						<li><a href="#">服務項目</a></li>
+						<li><a main-pjax-link href="/descriptions">服務說明</a></li>
 						<li><a main-pjax-link href="/terms">服務條款</a></li>
 						<li><a main-pjax-link href="/privacy">隱私權政策</a></li>
 					</ul>

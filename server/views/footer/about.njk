@@ -1,19 +1,15 @@
+
+{% set pageinfo = { headtitle: '關於我們', wrapcls: 'inpage' } %}
+
 {% extends "base.njk" %}
 
-{% block headtitle %}關於我們{% endblock %}
-
-{% block wrapcls %}inpage{% endblock %}
-
 {% block content %}
-	<section class="crumb">
-		<div class="container">
-			<a href="/">首頁</a> > 關於我們
-		</div>
-	</section>
-
+	
+	{% include "crumbnav.njk" %}
+	
 	<section class="content">
 		<div class="container">
-			<h2 class="title"><span>關於我們</span></h2>
+			<h2 class="title"><span>{{ pageinfo.headtitle }}</span></h2>
 			<div class="rule">
 				<p><b class="fontB">CC copy</b> 影音創意智庫為全新的影音服務平台：我們提供了完整的影音企劃腳本，協助行銷人快速進行內外部對焦與提案，能夠直接想像成品，快速進行產製；一條龍的服務，價格完全透明，幫助行銷人「用最小的預算做最有價值的影音」，抓助新媒體市場機會！</p>
 				<h5><b class="fontB">CC copy</b> 由來</h5>
@@ -34,11 +30,4 @@
 			</div>
 		</div>
 	</section>
-{% endblock %}
-
-{% block pjwork %}
-<script type="text/javascript">
-	var _headtitle = '關於我們';
-	var _wrapcls = 'inpage';
-</script>
 {% endblock %}
