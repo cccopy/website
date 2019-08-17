@@ -28,13 +28,14 @@ module.exports = function(app, passport) {
         express: app
     });
 
-    app.get('/', function(req, res){
-        res.render('index');
-    });
+    app.get('/', (req, res) => { res.render('index') });
 
-    app.get('/privacy', function(req, res){
-        res.render('privacy');
-    });
+    // =====================================
+    // FOOTER ==============================
+    // =====================================
+    app.get('/about', (req, res) => { res.render('footer/about') });
+    app.get('/terms', (req, res) => { res.render('footer/terms') });
+    app.get('/privacy', (req, res) => { res.render('footer/privacy') });
 
     // show the login form
     // app.get('/login', function(req, res) {
