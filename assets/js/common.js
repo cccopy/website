@@ -172,4 +172,15 @@ $(document).ready(function() {
 		$('.pop').fadeOut();
 	});
 
+	$(document).pjax('a[main-pjax-link]', '#main-pjax-container');
+
+});
+
+$(document).on('pjax:end', function(event) {
+	if (_headtitle) {
+		document.title = _headtitle + " - CCcopy";
+	}
+	if (_wrapcls) {
+		$("#wrap").removeClass("index inpage").addClass(_wrapcls);
+	}
 });

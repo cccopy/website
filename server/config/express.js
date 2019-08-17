@@ -37,17 +37,18 @@ module.exports = function (app, passport) {
 	app.use(bodyParser.json({limit: '50mb'}));
 
 	// common nunjucks properties
-	// app.use(function(req, res, next){
-	// 	res.locals.isDev = !isProduction;
-	// 	res.locals.login = req.isAuthenticated();
-	// 	if ( res.locals.login ) {
-	// 		res.locals.devices = req.user.cells || [];
-	// 		res.locals.userid = req.user.id;
-	// 		res.locals.username = req.user.name;
-	// 		res.locals.currentpath = req.path;
-	// 	}
-	// 	next();
-	// }); 
+	app.use(function(req, res, next){
+		res.locals.isDev = !isProduction;
+		// res.locals.login = req.isAuthenticated();
+		// if ( res.locals.login ) {
+		// 	res.locals.devices = req.user.cells || [];
+		// 	res.locals.userid = req.user.id;
+		// 	res.locals.username = req.user.name;
+		// 	res.locals.currentpath = req.path;
+		// }
+		res.locals.isPjax = !!req.header('X-PJAX');
+		next();
+	}); 
 
 	if ( !isProduction ) {
 		app.use('/assets', express.static(path.join(__dirname, '../..', 'assets')));
