@@ -4,7 +4,7 @@
 var express = require('express');
 var path = require('path');
 // var utils = require('../services/utils');
-// var interface = require('../services/data-interface');
+var interface = require('../services/interface');
 var nunjucks = require('nunjucks');
 
 var isDev = process.env.NODE_ENV === 'development';
@@ -28,7 +28,9 @@ module.exports = function(app, passport) {
         express: app
     });
 
-    app.get('/', (req, res) => { res.render('index') });
+    app.get('/', async (req, res) => { 
+        res.render('index', { newitems: await interface.getItems() } );
+    });
 
     // =====================================
     // FOOTER ==============================
