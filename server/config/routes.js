@@ -5,6 +5,7 @@ var express = require('express');
 var path = require('path');
 // var utils = require('../services/utils');
 var interface = require('../services/interface');
+var utils = require('../services/utils');
 var nunjucks = require('nunjucks');
 
 var isDev = process.env.NODE_ENV === 'development';
@@ -20,7 +21,7 @@ function loginRequired(req, res, next) {
     res.redirect('/login');
 }
 
-module.exports = function(app, passport) {
+module.exports = async function(app, passport) {
 
     var nunEnv = nunjucks.configure(app.get('views'), {
         autoescape: true,
@@ -28,8 +29,20 @@ module.exports = function(app, passport) {
         express: app
     });
 
+    nunEnv.addFilter("youtubeEmbed", function(url){
+        return utils.getYoutubeEmbedUrl(url);
+    });
+
+    let keywordsMap = await utils.getKeywordsMap();
+
     app.get('/', async (req, res) => { 
-        res.render('index', { newitems: await interface.getItems() } );
+        let newItems = await interface.getItems( { limit: 5, sort: "created_at:DESC" } );
+        newItems.forEach((item) => {
+            let urls = item.productUrls.filter(prod => prod.url);
+            if ( urls.length ) item.mainUrl = urls[0].url;
+            item.keywordLabels = item.keywords.slice(0, 3).map(id => keywordsMap[id].word );
+        });
+        res.render('index', { newitems: newItems } );
     });
 
     // =====================================

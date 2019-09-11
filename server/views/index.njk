@@ -57,20 +57,22 @@
 					<div class="inner">
 						<div class="img">
 							<div class="video">
-								<iframe width="100%" height="100%" src="https://www.youtube.com/embed/BRcudpJzy1I" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+								<iframe width="100%" height="100%" src="{{ item.mainUrl|youtubeEmbed }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 							</div>
 						</div>
 						<h4>{{ item.title }}</h4>
+						{% if item.keywordLabels|length %}
 						<div class="tags">
-							<a href="#">療癒</a>
-							<a href="#">無劇情</a>
-							<a href="#">重感官</a>
+							{% for word in item.keywordLabels %}
+							<a href="#">{{ word }}</a>
+							{% endfor %}
 						</div>
+						{% endif %}
 						<div class="fc">
 							<a class="fc-view" href="#"><i></i>瀏覽腳本</a>
 							<a class="fc-like" href="#"><i></i>收藏</a>
 						</div>
-						<span class="tab">倒數預告</span>
+						<!-- <span class="tab">倒數預告</span> -->
 					</div>
 				</div>
 				{% endfor %}

@@ -13,8 +13,9 @@ module.exports = {
 		var params = { _limit: -1 };
 		query = query || {};
 		query._filters = { "additionType": "isEmpty" };
-		if (typeof query.offset !== "undefined") params._start = offset;
-		if (typeof query.limit !== "undefined") params._limit = limit;
+		if (typeof query.offset !== "undefined") params._start = query.offset;
+		if (typeof query.limit !== "undefined") params._limit = query.limit;
+		if (typeof query.sort !== "undefined") params._sort = query.sort;
 		return new Promise(function(resolve, reject){
 			axiosIns.get("items", { params: params })
 				.then(function(response){
@@ -34,4 +35,15 @@ module.exports = {
 				.catch( err => reject(err) );
 		});
 	},
+	getKeywords: function(){
+		var params = { _limit: -1 };
+		return new Promise(function(resolve, reject){
+			axiosIns.get("keywords", { params: params })
+				.then(function(response){
+					let results = response.data;
+					resolve(results);
+				})
+				.catch( err => reject(err) );
+		});
+	}
 };
