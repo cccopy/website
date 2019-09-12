@@ -18,5 +18,12 @@ module.exports = {
         	return "https://www.youtube.com/embed/" + match[2];
         }
         return "";
+	},
+	getYoutubeThumbnailUrl: function(url){
+		var match = url.match(youtubeRegExp);
+        if (match && match[2].length == 11) {
+        	return "https://img.youtube.com/vi/" + match[2] + "/0.jpg";
+        }
+        return "";
 	}
 };

@@ -10,7 +10,7 @@ var axiosIns = axios.create({
 
 module.exports = {
 	getItems: function(query){
-		var params = { _limit: -1 };
+		var params = { _limit: -1, itemType: "normal" };
 		query = query || {};
 		query._filters = { "additionType": "isEmpty" };
 		if (typeof query.offset !== "undefined") params._start = query.offset;

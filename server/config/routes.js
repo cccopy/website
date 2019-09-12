@@ -33,16 +33,24 @@ module.exports = async function(app, passport) {
         return utils.getYoutubeEmbedUrl(url);
     });
 
+    nunEnv.addFilter("youtubeThumbnail", function(url){
+        return utils.getYoutubeThumbnailUrl(url);
+    });
+
     let keywordsMap = await utils.getKeywordsMap();
 
+    function prepareItem(item){
+        let urls = item.productUrls.filter(prod => prod.url);
+        if ( urls.length ) item.mainUrl = urls[0].url;
+        item.keywordLabels = item.keywords.slice(0, 3).map(id => keywordsMap[id].word );
+    }
+
     app.get('/', async (req, res) => { 
+        let popularItems = await interface.getItems( { limit: 5 } );
         let newItems = await interface.getItems( { limit: 5, sort: "created_at:DESC" } );
-        newItems.forEach((item) => {
-            let urls = item.productUrls.filter(prod => prod.url);
-            if ( urls.length ) item.mainUrl = urls[0].url;
-            item.keywordLabels = item.keywords.slice(0, 3).map(id => keywordsMap[id].word );
-        });
-        res.render('index', { newitems: newItems } );
+        newItems.forEach(prepareItem);
+        popularItems.forEach(prepareItem);
+        res.render('index', { newitems: newItems, popularitems: popularItems } );
     });
 
     // =====================================
