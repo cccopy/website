@@ -172,7 +172,7 @@ $(document).ready(function() {
 		$('.pop').fadeOut();
 	});
 
-	$(document).pjax('a[main-pjax-link]', '#main-pjax-container');
+	$(document).pjax('a[main-pjax-link]', '#main-pjax-container', { timeout: 5000 });
 
 });
 
@@ -182,5 +182,27 @@ $(document).on('pjax:end', function(event) {
 	}
 	if (_wrapcls) {
 		$("#wrap").removeClass("index inpage").addClass(_wrapcls);
+
+		// in detail (do again)
+		$(".moreRC").owlCarousel({
+		    loop:false,
+		    dots:true,
+		    margin: 0,
+		    responsiveClass:true,
+		    responsive:{
+		        0:{
+		            items:1,
+		            nav:true
+		        },
+		        720:{
+		            items:2,
+		            nav:true
+		        },
+		        1000:{
+		            items:3,
+		            nav:true
+		        }
+		    }
+		});
 	}
 });

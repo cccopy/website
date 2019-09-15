@@ -1,0 +1,20 @@
+
+{% macro taglist(labels='') %}
+{% if labels|length %}
+<div class="tags">
+	{% for word in labels %}
+	<a href="#">{{ word }}</a>
+	{% endfor %}
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro highlightlist(list='') %}
+{% if list|length %}
+<ul>
+	{% for sentence in list %}
+	<li>{{ sentence }}</li>
+	{% endfor %}
+</ul>
+{% endif %}
+{% endmacro %}

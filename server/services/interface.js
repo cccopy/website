@@ -35,6 +35,42 @@ module.exports = {
 				.catch( err => reject(err) );
 		});
 	},
+	getItemsByTag: function(query){
+		let params = new URLSearchParams();
+		// default
+		params.set("itemType", "normal");
+		params.set("_limit", -1);
+		query = query || {};
+		if (typeof query.limit !== "undefined") params.set("_limit", query.limit);
+		if ( Array.isArray(query.tags) ) {
+			query.tags.forEach(tag => {
+				// single case
+				params.append("keywords_contains", "[" + tag + "]");
+				// multiple case
+				// first
+				params.append("keywords_contains", "[" + tag + ",");
+				// middle
+				params.append("keywords_contains", "," + tag + ",");
+				// last
+				params.append("keywords_contains", "," + tag + "]");
+			});
+		} 
+		// params.keywords_contains = query.tags;
+		return new Promise((resolve, reject) => {
+			axiosIns.get("items", { params: params })
+				.then(response => resolve(response.data))
+				.catch(err => reject(err));
+		});
+	},
+	getItem: function(id){
+		var params = { itemType: "normal" };
+		if (typeof id === "undefined" || isNaN(id)) return Promise.reject("[getItem] id is invalid.");
+		return new Promise((resolve, reject) => {
+			axiosIns.get("items/" + id)
+				.then(response => resolve(response.data))
+				.catch(err => reject(err));
+		});
+	},
 	getKeywords: function(){
 		var params = { _limit: -1 };
 		return new Promise(function(resolve, reject){

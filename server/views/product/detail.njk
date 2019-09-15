@@ -1,0 +1,210 @@
+
+{% set pageinfo = 
+	{ 
+		headtitle: itemdetail.title, 
+		wrapcls: 'inpage', 
+		subcrumb: { 
+			href: '', title: '列表'
+		}
+	} 
+%}
+
+{% import "macros.njk" as macros %}
+
+{% extends "base.njk" %}
+
+{% block content %}
+	
+	{% include "crumbnav.njk" %}
+	
+	<section class="content pdtop">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 img">
+					<div class="video">
+						<iframe width="100%" height="100%" src="{{ itemdetail.mainUrl|youtubeEmbed }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+					</div>
+					{% if itemdetail.demoProds|length %}
+					<div class="row svideo">
+						{% for demo in itemdetail.demoProds %}
+						<div class="col-4 item">
+							<a href="#"><img src="{{ demo.thumbnail }}" alt=""></a>
+						</div>
+						{% endfor %}
+					</div>
+					{% endif %}
+					<!-- 點小圖切換上方 iframe 影片內容 -->
+					{{ macros.taglist(itemdetail.keywordLabels) }}
+				</div>
+				<div class="col-lg-6 meat">
+					<h3>{{ itemdetail.title }}</h3>
+					<p>{{ itemdetail.description }}</p>
+					<div class="spot">
+						<span>影片亮點：</span>
+						{{ macros.highlightlist(itemdetail.highlightList) }}
+					</div>
+					<ul class="price">
+						<li class="big">
+							<span>價格</span>
+							＄<b>{{ itemdetail.price|locale }}</b>
+						</li>
+						{% if itemdetail.discountPrice|length %}
+						<li>
+							<span>優惠價</span>
+							＄<b>{{ itemdetail.discountPrice|locale }}</b>
+							<!-- <em>4/31止</em> -->
+						</li>
+						{% endif %}
+						{% if itemdetail.urgentPrice|length %}
+						<li>
+							<span>急件加價</span>
+							＄<b>{{ itemdetail.urgentPrice|locale }}</b>
+						</li>
+						{% endif %}
+						{% if itemdetail.customizePrice|length %}
+						<li>
+							<span>特殊加價</span>
+							＄<b>{{ itemdetail.customizePrice|locale }}</b>
+						</li>
+						{% endif %}
+					</ul>
+					<div class="time">
+						<span>製作時程：{{ itemdetail.period }}</span>
+						<span>影片長度：{{ itemdetail.length }}</span>
+					</div>
+				</div>
+			</div>
+			<div class="btns">
+				<a href="#" class="btn btnLike"><span class="">收藏</span></a>
+				<a href="cartList.html" class="btn">加入購物車</a>
+			</div>
+		</div>
+	</section>
+
+	{% if itemdetail.scenario|length %}
+	<section class="content">
+		<div class="container">
+			<h2 class="title"><span>劇本結構</span></h2>
+			<!-- <div class="row story splist">
+				<div class="col-lg-3 col-sm-4 splbx">
+					<div class="inner">
+						<img src="images/img_plb.jpg" alt="">
+						<p>說明說明說明說明說明說明說明說明說明說明說明說明說明說</p>
+						<span class="tab">起</span>
+					</div>
+				</div>
+				<div class="col-lg-3 col-sm-4 splbx">
+					<div class="inner">
+						<img src="images/img_plb.jpg" alt="">
+						<p>說明說明說明說明說明說明說明說明說明說明說明說明說明說</p>
+					</div>
+				</div>
+			</div> -->
+		</div>
+	</section>
+	{% endif %}
+
+	<section class="content">
+		<div class="container">
+			<h2 class="title"><span>產品簡介</span></h2>
+			<div class="row pddetail">
+				{% if itemdetail.strategy|length %}
+				<div class="col-12 item">
+					<div class="inner">
+						<img src="/assets/images/img_plb.jpg" alt="">
+						<p>{{ itemdetail.strategy }}</p>
+					</div>
+				</div>
+				{% endif %}
+
+				{% if itemdetail.context|length %}
+				<div class="col-sm-6 item">
+					<div class="inner">適用播放情境：{{ itemdetail.context }}</div>
+				</div>
+				{% endif %}
+
+				{% if itemdetail.factors|length %}
+				<div class="col-sm-6 item">
+					<div class="inner">影片元素：{{ itemdetail.factors }}</div>
+				</div>
+				{% endif %}
+
+				{% if itemdetail.position|length %}
+				<div class="col-sm-6 item">
+					<div class="inner">適合播放版位：{{ itemdetail.position }}</div>
+				</div>
+				{% endif %}
+
+				{% if itemdetail.length|length %}
+				<div class="col-sm-6 item">
+					<div class="inner">影片長度：{{ itemdetail.length }}</div>
+				</div>
+				{% endif %}
+
+				{% if itemdetail.period|length %}
+				<div class="col-sm-6 item">
+					<div class="inner">交期：<span>{{ itemdetail.period }}</span></div>
+				</div>
+				{% endif %}
+
+				{% if itemdetail.delivery|length %}
+				<div class="col-sm-6 item">
+					<div class="inner">交付項目：{{ itemdetail.delivery }}</div>
+				</div>
+				{% endif %}
+
+				{% if itemdetail.customizePrice|length %}
+				<div class="col-sm-6 item">
+					<div class="inner">
+						特殊加價：{{ itemdetail.customizePrice|locale }}
+						{% if itemdetail.customizeDescription|length %}
+						<span class="ex">└ 說明：{{ itemdetail.customizeDescription }}</span>
+						{% endif %}
+					</div>
+				</div>
+				{% endif %}
+
+				{% if itemdetail.remarks|length %}
+				<div class="col-sm-6 item">
+					<div class="inner">備註：{{ itemdetail.remarks }}</div>
+				</div>
+				{% endif %}
+
+				{% if itemdetail.submitFactorDescription|length %}
+				<div class="col-12 item focus">
+					<div class="inner">
+						用戶需提交素材：{{ itemdetail.submitFactorDescription }}
+					</div>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+	</section>
+
+	{% if itemdetail.recommendProds|length %}
+	<section class="content">
+		<div class="container">
+			<h2 class="title"><span>更多推薦商品</span></h2>
+			<div class="owl-carousel splist moreRC">
+				{% for prod in itemdetail.recommendProds %}
+				<div class="splbx">
+					<div class="inner">
+						<div class="img">
+							<div class="video">
+								<iframe width="100%" height="100%" src="{{ prod.mainUrl|youtubeEmbed }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+							</div>
+						</div>
+						<h4>{{ prod.title }}</h4>
+						<p>{{ prod.description }}</p>
+						<div class="price">
+							價格 <span>＄<b>{{ prod.price|locale }}</b></span>
+						</div>
+						<a main-pjax-link href="/items/{{ prod.id }}" class="btn"><span>詳細規格</span></a>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+	{% endif %}
+{% endblock %}

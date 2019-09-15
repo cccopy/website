@@ -1,5 +1,10 @@
 <section class="crumb">
 	<div class="container">
-		<a href="/">首頁</a> > {{ pageinfo.headtitle }}
+		{% if pageinfo.subcrumb|length %}
+		{% set sub = pageinfo.subcrumb %}
+		<a main-pjax-link href="/">首頁</a> > <a main-pjax-link href="{{ sub.href }}">{{ sub.title }}</a> > {{ pageinfo.headtitle }}
+		{% else %}
+		<a main-pjax-link href="/">首頁</a> > {{ pageinfo.headtitle }}
+		{% endif %}
 	</div>
 </section>

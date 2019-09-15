@@ -1,6 +1,8 @@
 
 {% set pageinfo = { headtitle: '首頁', wrapcls: 'index' } %}
 
+{% import "macros.njk" as macros %}
+
 {% extends "base.njk" %}
 
 {% block content %}
@@ -59,15 +61,9 @@
 							<img src="{{ item.mainUrl|youtubeThumbnail }}" alt="">
 						</div>
 						<h4>{{ item.title }}</h4>
-						{% if item.keywordLabels|length %}
-						<div class="tags">
-							{% for word in item.keywordLabels %}
-							<a href="#">{{ word }}</a>
-							{% endfor %}
-						</div>
-						{% endif %}
+						{{ macros.taglist(item.keywordLabels) }}
 						<div class="fc">
-							<a class="fc-view" href="#"><i></i>瀏覽腳本</a>
+							<a class="fc-view" main-pjax-link href="/items/{{ item.id }}"><i></i>瀏覽腳本</a>
 							<a class="fc-like" href="#"><i></i>收藏</a>
 						</div>
 					</div>
@@ -90,15 +86,9 @@
 							</div>
 						</div>
 						<h4>{{ item.title }}</h4>
-						{% if item.keywordLabels|length %}
-						<div class="tags">
-							{% for word in item.keywordLabels %}
-							<a href="#">{{ word }}</a>
-							{% endfor %}
-						</div>
-						{% endif %}
+						{{ macros.taglist(item.keywordLabels) }}
 						<div class="fc">
-							<a class="fc-view" href="#"><i></i>瀏覽腳本</a>
+							<a class="fc-view" main-pjax-link href="/items/{{ item.id }}"><i></i>瀏覽腳本</a>
 							<a class="fc-like" href="#"><i></i>收藏</a>
 						</div>
 						<!-- <span class="tab">倒數預告</span> -->

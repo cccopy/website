@@ -37,12 +37,32 @@ module.exports = async function(app, passport) {
         return utils.getYoutubeThumbnailUrl(url);
     });
 
+    nunEnv.addFilter("locale", function(num){
+        return Number(num).toLocaleString();
+    });
+
     let keywordsMap = await utils.getKeywordsMap();
 
     function prepareItem(item){
         let urls = item.productUrls.filter(prod => prod.url);
         if ( urls.length ) item.mainUrl = urls[0].url;
         item.keywordLabels = item.keywords.slice(0, 3).map(id => keywordsMap[id].word );
+    }
+
+    function prepareDetailItem(item){
+        let urls = item.productUrls.filter(prod => prod.url);
+        if ( urls.length ) item.mainUrl = urls[0].url;
+
+        item.demoProds = item.productUrls.map(prod => {
+            if ( prod.url ) {
+                return { type: "youtube", thumbnail: utils.getYoutubeThumbnailUrl(prod.url), originUrl: prod.url };
+            } else if ( prod.image ) {
+                return { type: "image", thumbnail: prod.image.url, originUrl: prod.image.url };
+            }
+            return null;
+        }).filter(demo => !!demo);
+        item.keywordLabels = item.keywords.map(id => keywordsMap[id].word );
+        item.highlightList = item.highlight.split("\r\n");
     }
 
     app.get('/', async (req, res) => { 
@@ -61,6 +81,19 @@ module.exports = async function(app, passport) {
     app.get('/privacy', (req, res) => { res.render('footer/privacy') });
     app.get('/descriptions', (req, res) => { res.render('footer/descriptions') });
     
+
+    app.get('/items/:id', async (req, res) => {
+        const lookId = req.params.id;
+        let item = await interface.getItem(lookId);
+        prepareDetailItem(item);
+
+        let keywordRelateds = await interface.getItemsByTag({ tags: item.keywords });
+        item.recommendProds = utils.getRandom(keywordRelateds, Math.min(keywordRelateds.length, 3) );
+        item.recommendProds.forEach(prepareDetailItem);
+        
+        res.render('product/detail', { itemdetail: item });
+    });
+
     // show the login form
     // app.get('/login', function(req, res) {
     //     // render the page and pass in any flash data if it exists
