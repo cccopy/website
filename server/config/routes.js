@@ -84,14 +84,22 @@ module.exports = async function(app, passport) {
 
     app.get('/items/:id', async (req, res) => {
         const lookId = req.params.id;
-        let item = await interface.getItem(lookId);
-        prepareDetailItem(item);
+        try {
+            let item = await interface.getItem(lookId);
+            prepareDetailItem(item);
 
-        let keywordRelateds = await interface.getItemsByTag({ tags: item.keywords });
-        item.recommendProds = utils.getRandom(keywordRelateds, Math.min(keywordRelateds.length, 3) );
-        item.recommendProds.forEach(prepareDetailItem);
-        
-        res.render('product/detail', { itemdetail: item });
+            let keywordRelateds = await interface.getItemsByTag({ tags: item.keywords });
+            item.recommendProds = utils.getRandom(keywordRelateds, Math.min(keywordRelateds.length, 3) );
+            item.recommendProds.forEach(prepareDetailItem);
+            
+            res.render('product/detail', { itemdetail: item });
+        } catch (e) {
+            if (e.response) {
+                res.status(e.response.status).send(e.response.statusText);
+            } else {
+                res.status(500).send(e);
+            }
+        }
     });
 
     // show the login form
