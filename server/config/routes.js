@@ -10,6 +10,12 @@ var nunjucks = require('nunjucks');
 
 var isDev = process.env.NODE_ENV === 'development';
 
+const asyncHandler = fn => (req, res, next) => {
+    return Promise
+        .resolve(fn(req, res, next))
+        .catch(next);
+};
+
 // route middleware to make sure a user is logged in
 function loginRequired(req, res, next) {
     // if user is authenticated in the session, carry on
@@ -49,10 +55,13 @@ module.exports = async function(app, passport) {
         item.keywordLabels = item.keywords.slice(0, 3).map(id => keywordsMap[id].word );
     }
 
-    function prepareDetailItem(item){
-        let urls = item.productUrls.filter(prod => prod.url);
-        if ( urls.length ) item.mainUrl = urls[0].url;
+    function prepareItemAllKey(item){
+        prepareItem(item);
+        item.keywordLabels = item.keywords.map(id => keywordsMap[id].word );   
+    }
 
+    function prepareDetailItem(item){
+        prepareItemAllKey(item);
         item.demoProds = item.productUrls.map(prod => {
             if ( prod.url ) {
                 return { type: "youtube", thumbnail: utils.getYoutubeThumbnailUrl(prod.url), originUrl: prod.url };
@@ -61,7 +70,6 @@ module.exports = async function(app, passport) {
             }
             return null;
         }).filter(demo => !!demo);
-        item.keywordLabels = item.keywords.map(id => keywordsMap[id].word );
         item.highlightList = item.highlight.split("\r\n");
     }
 
@@ -82,25 +90,23 @@ module.exports = async function(app, passport) {
     app.get('/descriptions', (req, res) => { res.render('footer/descriptions') });
     
 
-    app.get('/items/:id', async (req, res) => {
+    app.get('/items/:id', asyncHandler(async (req, res) => {
         const lookId = req.params.id;
-        try {
-            let item = await interface.getItem(lookId);
-            prepareDetailItem(item);
+        let item = await interface.getItem(lookId);
+        prepareDetailItem(item);
 
-            let keywordRelateds = await interface.getItemsByTag({ tags: item.keywords });
-            item.recommendProds = utils.getRandom(keywordRelateds, Math.min(keywordRelateds.length, 3) );
-            item.recommendProds.forEach(prepareDetailItem);
-            
-            res.render('product/detail', { itemdetail: item });
-        } catch (e) {
-            if (e.response) {
-                res.status(e.response.status).send(e.response.statusText);
-            } else {
-                res.status(500).send(e);
-            }
-        }
-    });
+        let keywordRelateds = await interface.getItemsByTag({ tags: item.keywords });
+        item.recommendProds = utils.getRandom(keywordRelateds, Math.min(keywordRelateds.length, 3) );
+        item.recommendProds.forEach(prepareDetailItem);
+        
+        res.render('product/detail', { itemdetail: item });
+    }));
+
+    app.get('/itemlist/', async (req, res) => {
+        let items = await interface.getItems( { limit: 10 } );
+        items.forEach(prepareItemAllKey);
+        res.render('product/list', { items: items });
+    })
 
     // show the login form
     // app.get('/login', function(req, res) {
@@ -123,4 +129,12 @@ module.exports = async function(app, passport) {
     //     req.logout();
     //     res.redirect('/');
     // });
+
+    app.use(function(err, req, res, next){
+        if (err.response) {
+            res.status(err.response.status).send(err.response.statusText);
+        } else {
+            res.status(500).send(err.toString());
+        }
+    });
 };
