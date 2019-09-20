@@ -102,11 +102,26 @@ module.exports = async function(app, passport) {
         res.render('product/detail', { itemdetail: item });
     }));
 
-    app.get('/itemlist/', async (req, res) => {
-        let items = await interface.getItems( { limit: 10 } );
+    app.get('/itemlist/', asyncHandler(async (req, res) => {
+        let limit = 5;
+        let items = await interface.getItems( { limit: limit } );
+        let itemLength = items.length;
         items.forEach(prepareItemAllKey);
-        res.render('product/list', { items: items });
-    })
+        res.render('product/list', { items: items, hasmore: itemLength == limit, nextidx: items.length });
+    }));
+
+    app.get('/ajax/items/more', asyncHandler(async (req, res) => {
+        let offset = req.query.offset;
+        let referer = req.headers.referer;
+        let isValid = referer && referer.slice( -("/itemlist/".length) ) == "/itemlist/";
+        if ( isValid && !isNaN(offset = parseInt(offset)) ) {
+            let limit = 5;
+            let moreitems = await interface.getItems( { offset: offset, limit: limit } );
+            let moreLength = moreitems.length;
+            moreitems.forEach(prepareItemAllKey);
+            res.render('product/more', { items: moreitems, hasmore: moreLength == limit, nextidx: offset + moreitems.length });
+        } else throw new Error({ response: { status: 400, statusText: "Bad Request" } });
+    }));
 
     // show the login form
     // app.get('/login', function(req, res) {

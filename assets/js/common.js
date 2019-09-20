@@ -174,9 +174,20 @@ $(document).ready(function() {
 
 	$(document).pjax('a[main-pjax-link]', '#main-pjax-container', { timeout: 5000 });
 
+	$('a[more-ajax]').click(moreAjaxHandler);
 });
 
+function moreAjaxHandler(e) {
+	e.preventDefault();
+	$.ajax({ url: $(this).attr('href') })
+		.done(function(response){
+			$("#more-replacer").replaceWith(response);
+			$('a[more-ajax]').click(moreAjaxHandler);
+		});
+}
+
 $(document).on('pjax:end', function(event) {
+	$('a[more-ajax]').click(moreAjaxHandler);
 	if (_headtitle) {
 		document.title = _headtitle + " - CCcopy";
 	}
