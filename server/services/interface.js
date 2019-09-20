@@ -1,5 +1,6 @@
 var axios = require('axios');
 var _ = require('lodash');
+var md5 = require('md5');
 var api = require('../config/constants.json').api;
 
 var axiosIns = axios.create({
@@ -9,6 +10,25 @@ var axiosIns = axios.create({
 });
 
 module.exports = {
+	validUser: function(email, password){
+		return new Promise(function(resolve, reject){
+			axiosIns.get("clients", {
+				params: {
+					email: email,
+					pw: md5(password)
+				}
+			})
+			.then(function(response){
+				const users = response.data;
+				if (users && users.length == 1) {
+					resolve(users[0]);
+				} else {
+					reject("email or password is not correct.");
+				}
+			})
+			.catch( err => { reject(err); });
+		});
+	},
 	getItems: function(query){
 		var params = { _limit: -1, itemType: "normal" };
 		query = query || {};

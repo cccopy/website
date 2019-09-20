@@ -18,13 +18,13 @@ const asyncHandler = fn => (req, res, next) => {
 
 // route middleware to make sure a user is logged in
 function loginRequired(req, res, next) {
+    // if (isDev) return next();
     // if user is authenticated in the session, carry on
     // if(process.env.NODE_ENV === 'development' || req.isAuthenticated()) return toNext();    
     if(req.isAuthenticated()) return next();
 
-    console.log("return to login");
     // if they aren't redirect them to the home page
-    res.redirect('/login');
+    res.redirect('/auth/login?next=' + encodeURIComponent(req.originalUrl) );
 }
 
 module.exports = async function(app, passport) {
@@ -89,7 +89,9 @@ module.exports = async function(app, passport) {
     app.get('/privacy', (req, res) => { res.render('footer/privacy') });
     app.get('/descriptions', (req, res) => { res.render('footer/descriptions') });
     
-
+    // =====================================
+    // ITEMS ===============================
+    // =====================================
     app.get('/items/:id', asyncHandler(async (req, res) => {
         const lookId = req.params.id;
         let item = await interface.getItem(lookId);
@@ -123,6 +125,45 @@ module.exports = async function(app, passport) {
         } else throw new Error({ response: { status: 400, statusText: "Bad Request" } });
     }));
 
+    // =====================================
+    // AUTH ================================
+    // =====================================
+    app.get('/auth/login', asyncHandler(async (req, res) => {
+        if ( req.isAuthenticated() ) {
+            let dest = decodeURIComponent(req.query.next || "/");
+            if ( res.locals.isPjax ) res.header('X-PJAX-URL', dest);
+            res.redirect( dest );
+        } else {
+            // render the page and pass in any flash data if it exists
+            let message = req.flash('message');
+            console.log("message: " + message);
+            res.render('auth/login', { message: message, next: decodeURIComponent(req.query.next || "/") });
+        }
+    }));
+    app.post('/auth/login', 
+        passport.authenticate('local-login', {
+            failureRedirect : '/auth/login', // redirect back to the signup page if there is an error
+            failureFlash : true // allow flash messages
+        }), 
+        function(req, res){
+            let dest = decodeURIComponent(req.body.next || "/");
+            if ( res.locals.isPjax ) res.header('X-PJAX-URL', dest);
+            res.redirect( dest );
+        }
+    );
+
+    // =====================================
+    // USER ================================
+    // =====================================
+    app.get('/user/ugindex', loginRequired, asyncHandler(async (req, res) => {
+        res.render('user/ugindex');
+    }));
+
+    app.get('/user/info', loginRequired, asyncHandler(async (req, res) => {
+        res.render('user/info');
+    }));
+
+    
     // show the login form
     // app.get('/login', function(req, res) {
     //     // render the page and pass in any flash data if it exists

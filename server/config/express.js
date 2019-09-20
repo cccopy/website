@@ -46,6 +46,7 @@ module.exports = function (app, passport) {
 		// 	res.locals.username = req.user.name;
 		// 	res.locals.currentpath = req.path;
 		// }
+		res.locals.currentpath = req.path;
 		res.locals.isPjax = !!req.header('X-PJAX');
 		next();
 	}); 

@@ -8,7 +8,7 @@ var isDev = process.env.NODE_ENV === 'development';
 if (isDev) {
 }
 
-// require('./config/passport')(passport); // pass passport for configuration
+require('./config/passport')(passport); // pass passport for configuration
 
 require('./config/express')(app, passport);
 

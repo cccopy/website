@@ -1,0 +1,56 @@
+
+{% set pageinfo = { headtitle: '登入', wrapcls: 'inpage' } %}
+
+{% extends "base.njk" %}
+
+{% block content %}
+	
+	<section class="content login">
+		<div class="container">
+			<h2 class="title"><span>登入</span></h2>
+			<p>升級VIP會員：請至會員專區內進行方案升級</p>
+			<div class="inner">
+				<!-- <div class="btns fb">
+					<a href="" class="btn btnFB">使用 Facebook 登入</a>
+				</div> -->
+				<div class="user">
+					<h4>用 Email 進行登入</h4>
+					<form action="/auth/login">
+						<div class="form">
+							<div class="fbx">
+								<span>E-mail</span>
+								<input type="text" name="email" placeholder="請輸入你的E-mail" onfocus="this.placeholder = ''" onblur="this.placeholder = '請輸入你的E-mail'">
+							</div>
+							<div class="fbx">
+								<span>密碼</span>
+								<input type="password" name="password" placeholder="請輸入密碼" onfocus="this.placeholder = ''" onblur="this.placeholder = '請輸入密碼'">
+							</div>
+							<!-- <div class="fbx">
+								<span>驗證碼</span>
+								<input type="text" placeholder="請輸入驗證碼" onfocus="this.placeholder = ''" onblur="this.placeholder = '請輸入驗證碼'">
+							</div> -->
+							{% if next|length %}
+							<input type="hidden" name="next" value="{{ next }}">
+							{% endif %}
+						</div>
+						{% if message|length %}
+						<em class="fontR fontS">{{ message }}</em>
+						{% endif %}
+						<!-- <div class="checkCode">
+							<img src="images/img_checkCode.png" alt="">
+							<a href="" class="link">換一換</a>
+						</div> -->
+						<div class="btns">
+							<button type="submit" class="btn btnIm">登入</button>
+							<br>
+							<a href="" class="link fontS">忘記密碼</a>
+						</div>
+					</form>
+				</div>
+				<!-- <div class="btm">
+					還沒成為會員？ <a href="" class="link">立即註冊</a>
+				</div> -->
+			</div>
+		</div>
+	</section>
+{% endblock %}

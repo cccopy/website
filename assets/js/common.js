@@ -1,8 +1,152 @@
 
 
+function bindMoreRC(){
+	$(".moreRC").owlCarousel({
+	    loop:false,
+	    dots:true,
+	    margin: 0,
+	    responsiveClass:true,
+	    responsive:{
+	        0:{
+	            items:1,
+	            nav:true
+	        },
+	        720:{
+	            items:2,
+	            nav:true
+	        },
+	        1000:{
+	            items:3,
+	            nav:true
+	        }
+	    }
+	});
+}
+
+function bindBuyMore(){
+	$(".buyMore").owlCarousel({
+	    loop:false,
+	    dots:true,
+	    margin: 0,
+	    responsiveClass:true,
+	    responsive:{
+	        0:{
+	            items:2,
+	            nav:true
+	        },
+	        720:{
+	            items:3,
+	            nav:true
+	        },
+	        1000:{
+	            items:5,
+	            nav:true
+	        }
+	    }
+	});
+}
+
+function bindSwebFlow(){
+	$(".swebflow").owlCarousel({
+	    loop:false,
+	    dots:true,
+	    margin: 0,
+	    responsiveClass:true,
+	    responsive:{
+	        0:{
+	            items:3,
+	            nav:false
+	        },
+	        600:{
+	            items:4,
+	            nav:false
+	        },
+	        720:{
+	            items:5,
+	            nav:false
+	        },
+	        1000:{
+	            items:7,
+	            nav:false
+	        }
+	    }
+	});
+}
+
+function bindSindexkv(){
+	$(".sindexkv").owlCarousel({
+	    loop:true,
+	    autoplay:true,
+	    dots:true,
+	    nav:false,
+	    margin: 0,
+	    responsiveClass:true,
+	    responsive:{
+	        0:{
+	            items:1,
+	        },
+	        600:{
+	            items:1,
+	        },
+	        720:{
+	            items:1,
+	        },
+	        1000:{
+	            items:1,
+	        }
+	    }
+	});
+}
+
+function bindIndexPL(){
+	$(".indexPL").owlCarousel({
+	    loop:false,
+	    dots:true,
+	    margin: 0,
+	    responsiveClass:true,
+	    responsive:{
+	        0:{
+	            items:1,
+	            nav:true
+	        },
+	        720:{
+	            items:2,
+	            nav:true
+	        },
+	        1000:{
+	            items:3,
+	            nav:true
+	        }
+	    }
+	});
+}
+
+function bindFormSubmit(){
+	$(document.body).on('submit', 'section.login form', function(event) {
+		// event.preventDefault(); // stop default submit behavior when it bubbles to <body>
+		$.pjax.submit(event, '#main-pjax-container', { 
+			scrollTo: false,
+			timeout: 5000, 
+			push: false, 
+			type: "POST"
+		});
+	});
+}
+
+function bindMoreAjax(){
+	$('a[more-ajax]').click(moreAjaxHandler);
+}
+
+function moreAjaxHandler(e) {
+	e.preventDefault();
+	$.ajax({ url: $(this).attr('href') })
+		.done(function(response){
+			$("#more-replacer").replaceWith(response);
+			bindMoreAjax();
+		});
+}
+
 $(document).ready(function() {
-
-
 	var x; 
 	x=$(window).width();
 	if (x>1023) {
@@ -41,117 +185,17 @@ $(document).ready(function() {
 	$("[data-fancybox]").fancybox({
 		// Options will go here
 	});
-	$(".indexPL").owlCarousel({
-	    loop:false,
-	    dots:true,
-	    margin: 0,
-	    responsiveClass:true,
-	    responsive:{
-	        0:{
-	            items:1,
-	            nav:true
-	        },
-	        720:{
-	            items:2,
-	            nav:true
-	        },
-	        1000:{
-	            items:3,
-	            nav:true
-	        }
-	    }
-	});
-	$(".moreRC").owlCarousel({
-	    loop:false,
-	    dots:true,
-	    margin: 0,
-	    responsiveClass:true,
-	    responsive:{
-	        0:{
-	            items:1,
-	            nav:true
-	        },
-	        720:{
-	            items:2,
-	            nav:true
-	        },
-	        1000:{
-	            items:3,
-	            nav:true
-	        }
-	    }
-	});
+	
+	bindIndexPL();
+	
+	bindMoreRC();
 
-	$(".buyMore").owlCarousel({
-	    loop:false,
-	    dots:true,
-	    margin: 0,
-	    responsiveClass:true,
-	    responsive:{
-	        0:{
-	            items:2,
-	            nav:true
-	        },
-	        720:{
-	            items:3,
-	            nav:true
-	        },
-	        1000:{
-	            items:5,
-	            nav:true
-	        }
-	    }
-	});
+	bindBuyMore();
+	
+	bindSwebFlow();
 
-	$(".swebflow").owlCarousel({
-	    loop:false,
-	    dots:true,
-	    margin: 0,
-	    responsiveClass:true,
-	    responsive:{
-	        0:{
-	            items:3,
-	            nav:false
-	        },
-	        600:{
-	            items:4,
-	            nav:false
-	        },
-	        720:{
-	            items:5,
-	            nav:false
-	        },
-	        1000:{
-	            items:7,
-	            nav:false
-	        }
-	    }
-	});
-
-	$(".sindexkv").owlCarousel({
-	    loop:true,
-	    autoplay:true,
-	    dots:true,
-	    nav:false,
-	    margin: 0,
-	    responsiveClass:true,
-	    responsive:{
-	        0:{
-	            items:1,
-	        },
-	        600:{
-	            items:1,
-	        },
-	        720:{
-	            items:1,
-	        },
-	        1000:{
-	            items:1,
-	        }
-	    }
-	});
-
-
+	bindSindexkv();
+	
 	$('.basic-select').select2();
 	$( "#datepicker" ).datepicker();
 
@@ -174,20 +218,11 @@ $(document).ready(function() {
 
 	$(document).pjax('a[main-pjax-link]', '#main-pjax-container', { timeout: 5000 });
 
-	$('a[more-ajax]').click(moreAjaxHandler);
+	bindMoreAjax();
+	bindFormSubmit();
 });
 
-function moreAjaxHandler(e) {
-	e.preventDefault();
-	$.ajax({ url: $(this).attr('href') })
-		.done(function(response){
-			$("#more-replacer").replaceWith(response);
-			$('a[more-ajax]').click(moreAjaxHandler);
-		});
-}
-
 $(document).on('pjax:end', function(event) {
-	$('a[more-ajax]').click(moreAjaxHandler);
 	if (_headtitle) {
 		document.title = _headtitle + " - CCcopy";
 	}
@@ -195,25 +230,12 @@ $(document).on('pjax:end', function(event) {
 		$("#wrap").removeClass("index inpage").addClass(_wrapcls);
 
 		// in detail (do again)
-		$(".moreRC").owlCarousel({
-		    loop:false,
-		    dots:true,
-		    margin: 0,
-		    responsiveClass:true,
-		    responsive:{
-		        0:{
-		            items:1,
-		            nav:true
-		        },
-		        720:{
-		            items:2,
-		            nav:true
-		        },
-		        1000:{
-		            items:3,
-		            nav:true
-		        }
-		    }
-		});
+		bindMoreRC();
+		bindMoreAjax();
+		// bindFormSubmit();
+		bindIndexPL();
+		bindBuyMore();
+		bindSwebFlow();
+		bindSindexkv();
 	}
 });

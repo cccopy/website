@@ -1,0 +1,86 @@
+
+{% set pageinfo = 
+	{ 
+		headtitle: '會員升級方案', 
+		wrapcls: 'inpage', 
+		subcrumb: { 
+			href: '/user/', title: '會員專區'
+		}
+	} 
+%}
+
+{% extends "base.njk" %}
+
+{% block content %}
+	
+	{% include "crumbnav.njk" %}
+
+	<section class="content">
+		<div class="container">
+			<div class="member">
+
+				{% include "user/_nav.njk"%}
+
+				<div class="main">
+					<h2 class="title">您目前為「會員」身份</h2>
+					<p class="center">
+						您的 VIP 會員效期至 2020/08/31
+					</p>
+					<div class="btns center">
+						<a class="btn" href="ugPay.html">立即升級VIP會員</a>
+					</div>
+					<div class="row plan justify-content-md-center">
+						<div class="col-lg-3 col-md-4 planbx">
+							<div class="inner">
+								<h4>VIP會員</h4>
+								<b><span>NT$</span>300<span>/月</span></b>
+								<div class="list">
+									<span>方案權益：</span>
+									<ul>
+										<li>瀏覽當月限定影音商品</li>
+										<li>XXX待補</li>
+										<li>XXX待補</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-4 planbx">
+							<div class="inner">
+								<h4>VIP會員</h4>
+								<b><span>NT$</span>275<span>/月(年約)</span></b>
+								<div class="list">
+									<span>方案權益：</span>
+									<ul>
+										<li>瀏覽當月限定影音商品</li>
+										<li>XXX待補</li>
+										<li>XXX待補</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-4 planbx">
+							<div class="inner">
+								<h4>VIP會員</h4>
+								<b><span>NT$</span>3000<span>/年</span></b>
+								<div class="list">
+									<span>方案權益：</span>
+									<ul>
+										<li>瀏覽當月限定影音商品</li>
+										<li>XXX待補</li>
+										<li>XXX待補</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="planbtm">
+						若有任何問題，請撥打客服專線：00-2222-2222<br>
+						客服信箱：<a href="mailto:videoarmy2018@gmail.com">videoarmy2018@gmail.com</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}
