@@ -5,9 +5,25 @@ var session      = require('express-session');
 var flash    = require('connect-flash');
 var path = require('path');
 
+function lessTenAddZero(v) { return v < 10? ("0" + v) : v; };
+function dateToContinueFormat(dte){
+	var year = dte.getUTCFullYear(),
+		month = dte.getUTCMonth() + 1,
+		day = dte.getUTCDate(),
+		hour = dte.getUTCHours(),
+		min = dte.getUTCMinutes(),
+		sec = dte.getUTCSeconds();
+	return [year.toString().slice(2), lessTenAddZero(month), lessTenAddZero(day), 
+			lessTenAddZero(hour), lessTenAddZero(min), lessTenAddZero(sec)
+		].join("");
+}
+
 module.exports = function (app, passport) {
 	var node_env = process.env.NODE_ENV;
 	var isProduction = node_env === 'production';
+
+	const dateString = require('child_process').execSync('git log -1 --format=%ci').toString();
+	const programStamp = dateToContinueFormat(new Date(dateString));
 
 	app.set('port', 5000);
 
@@ -48,9 +64,13 @@ module.exports = function (app, passport) {
 		// }
 		res.locals.currentpath = req.path;
 		res.locals.isPjax = !!req.header('X-PJAX');
-		if ( res.locals.isPjax && req.session.redirectTo ) {
-			res.header('X-PJAX-URL', req.session.redirectTo);
-			req.session.redirectTo = null;
+		res.locals.pjVersion = programStamp;
+		if ( res.locals.isPjax ) {
+			res.header('X-PJAX-Version', programStamp);
+			if ( req.session.redirectTo ) {
+				res.header('X-PJAX-URL', req.session.redirectTo);
+				req.session.redirectTo = null;
+			}
 		} 
 		next();
 	}); 
