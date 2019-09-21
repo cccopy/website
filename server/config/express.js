@@ -48,6 +48,10 @@ module.exports = function (app, passport) {
 		// }
 		res.locals.currentpath = req.path;
 		res.locals.isPjax = !!req.header('X-PJAX');
+		if ( res.locals.isPjax && req.session.redirectTo ) {
+			res.header('X-PJAX-URL', req.session.redirectTo);
+			req.session.redirectTo = null;
+		} 
 		next();
 	}); 
 

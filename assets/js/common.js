@@ -128,6 +128,7 @@ function bindFormSubmit(){
 			scrollTo: false,
 			timeout: 5000, 
 			push: false, 
+			replace: true,
 			type: "POST"
 		});
 	});

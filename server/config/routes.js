@@ -10,6 +10,8 @@ var nunjucks = require('nunjucks');
 
 var isDev = process.env.NODE_ENV === 'development';
 
+const DEFAULT_AFTER_LOGIN = '/user/ugindex';
+
 const asyncHandler = fn => (req, res, next) => {
     return Promise
         .resolve(fn(req, res, next))
@@ -24,7 +26,9 @@ function loginRequired(req, res, next) {
     if(req.isAuthenticated()) return next();
 
     // if they aren't redirect them to the home page
-    res.redirect('/auth/login?next=' + encodeURIComponent(req.originalUrl) );
+    let dest = '/auth/login?next=' + encodeURIComponent(req.originalUrl);
+    req.session.redirectTo = dest;
+    res.redirect(dest);
 }
 
 module.exports = async function(app, passport) {
@@ -130,28 +134,32 @@ module.exports = async function(app, passport) {
     // =====================================
     app.get('/auth/login', asyncHandler(async (req, res) => {
         if ( req.isAuthenticated() ) {
-            let dest = decodeURIComponent(req.query.next || "/");
-            if ( res.locals.isPjax ) res.header('X-PJAX-URL', dest);
+            let dest = decodeURIComponent(req.query.next || DEFAULT_AFTER_LOGIN);
+            req.session.redirectTo = dest;
             res.redirect( dest );
         } else {
             // render the page and pass in any flash data if it exists
             let message = req.flash('message');
-            console.log("message: " + message);
-            res.render('auth/login', { message: message, next: decodeURIComponent(req.query.next || "/") });
+            res.render('auth/login', { message: message, next: req.query.next || DEFAULT_AFTER_LOGIN });
         }
     }));
-    app.post('/auth/login', 
-        passport.authenticate('local-login', {
-            failureRedirect : '/auth/login', // redirect back to the signup page if there is an error
-            failureFlash : true // allow flash messages
-        }), 
-        function(req, res){
-            let dest = decodeURIComponent(req.body.next || "/");
-            if ( res.locals.isPjax ) res.header('X-PJAX-URL', dest);
-            res.redirect( dest );
-        }
-    );
 
+    app.post('/auth/login', function(req, res, next) {
+        passport.authenticate('local-login', function(err, user, info) {
+            if (err || !user) return next(err);
+            req.logIn(user, function(err) {
+                if (err) return next(err);
+                let dest = req.body.next || DEFAULT_AFTER_LOGIN;
+                req.session.redirectTo = dest;
+                return res.redirect(dest);
+            });
+        })(req, res, next);
+    }, function(req, res, next){
+        let failureDest = '/auth/login?next=' + encodeURIComponent(req.body.next || DEFAULT_AFTER_LOGIN);
+        req.session.redirectTo = failureDest;
+        res.redirect(failureDest);
+    });
+    
     // =====================================
     // USER ================================
     // =====================================
