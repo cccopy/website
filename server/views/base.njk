@@ -52,7 +52,11 @@
 				</ul>
 				<div class="login-bar">
 					<!-- <a href="#">註冊</a> -->
-					<a main-pjax-link href="/auth/login">登入</a>
+					{% if isLoggedIn %}
+					<a main-pjax-link href="/user/ugindex">會員專區</a>
+					{% else %}
+					<a login-link main-pjax-link href="/auth/login">登入</a>
+					{% endif %}
 					<a href="#">購物車(0)</a>
 					<a href="/descriptions#sec-flow">服務流程</a>
 				</div>

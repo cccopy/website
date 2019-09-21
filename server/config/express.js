@@ -55,7 +55,7 @@ module.exports = function (app, passport) {
 	// common nunjucks properties
 	app.use(function(req, res, next){
 		res.locals.isDev = !isProduction;
-		// res.locals.login = req.isAuthenticated();
+		res.locals.isLoggedIn = req.isAuthenticated();
 		// if ( res.locals.login ) {
 		// 	res.locals.devices = req.user.cells || [];
 		// 	res.locals.userid = req.user.id;
@@ -70,6 +70,10 @@ module.exports = function (app, passport) {
 			if ( req.session.redirectTo ) {
 				res.header('X-PJAX-URL', req.session.redirectTo);
 				req.session.redirectTo = null;
+			}
+			if ( req.session.loginState == "loggedIn" ) {
+				res.locals.toLoggedState = true;
+				req.session.loginState = null;
 			}
 		} 
 		next();

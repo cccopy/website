@@ -151,6 +151,7 @@ module.exports = async function(app, passport) {
                 if (err) return next(err);
                 let dest = req.body.next || DEFAULT_AFTER_LOGIN;
                 req.session.redirectTo = dest;
+                req.session.loginState = "loggedIn";
                 return res.redirect(dest);
             });
         })(req, res, next);

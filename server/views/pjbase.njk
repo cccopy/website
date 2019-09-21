@@ -3,4 +3,7 @@
 <script type="text/javascript">
 	var _headtitle = '{{ pageinfo.headtitle }}';
 	var _wrapcls = '{{ pageinfo.wrapcls }}';
+	{% if toLoggedState %}
+	var _toLogged = true;
+	{% endif %}
 </script>

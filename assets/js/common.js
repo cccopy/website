@@ -239,4 +239,7 @@ $(document).on('pjax:end', function(event) {
 		bindSwebFlow();
 		bindSindexkv();
 	}
+	if (_toLogged) {
+		$("a[login-link]").replaceWith('<a main-pjax-link href="/user/ugindex">會員專區</a>');
+	}
 });
