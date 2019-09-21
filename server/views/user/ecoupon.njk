@@ -1,0 +1,105 @@
+
+{% set pageinfo = 
+	{ 
+		headtitle: '我的E-Coupon', 
+		wrapcls: 'inpage', 
+		subcrumb: { 
+			href: '/user/ugindex', title: '會員專區'
+		}
+	} 
+%}
+
+{% extends "base.njk" %}
+
+{% block content %}
+	
+	{% include "crumbnav.njk" %}
+
+	<section class="content">
+		<div class="container">
+			<div class="member">
+
+				{% include "user/_nav.njk"%}
+
+				<div class="main">
+					<div class="remind">
+						提醒您：
+						<ol>
+							<li>每組優惠折扣碼序號僅能使用一次；每筆訂單可抵用一組優惠折扣碼。</li>
+							<li>每組序號之面額可能不相同，視各活動發送之面額為準。</li>
+							<li>每組優惠折扣碼皆有使用期限，超過期限將自動失效。</li>
+							<li>每組折扣碼優惠僅適用於一般商品折抵，不適用於加購商品。</li>
+						</ol>
+					</div>
+					<div class="stable">
+						<div class="row thead">
+							<div class="th col-lg-3"><span>序號</span></div>
+							<div class="th col-lg-2"><span>派送日期</span></div>
+							<div class="th col-lg-2"><span>折扣</span></div>
+							<div class="th col-lg-2"><span>使用期限</span></div>
+							<div class="th col-lg-3"><span>備註</span></div>
+						</div>
+						<div class="row tbody">
+							<div class="td col-lg-3">AB12345678</div>
+							<div class="td col-lg-2">
+								<span class="sth">派送日期</span>
+								2019/05/31
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">折扣</span>
+								$1,000
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">使用期限</span>
+								2019/12/31
+							</div>
+							<div class="td col-lg-3">
+								<span class="sth">備註</span>
+								123
+							</div>
+						</div>
+						<div class="row tbody">
+							<div class="td col-lg-3">AB12345678</div>
+							<div class="td col-lg-2">
+								<span class="sth">派送日期</span>
+								2019/05/31
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">折扣</span>
+								$1,000
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">使用期限</span>
+								2019/12/31
+							</div>
+							<div class="td col-lg-3">
+								<span class="sth">備註</span>
+								123
+							</div>
+						</div>
+						<div class="row tbody">
+							<div class="td col-lg-3">AB12345678</div>
+							<div class="td col-lg-2">
+								<span class="sth">派送日期</span>
+								2019/05/31
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">折扣</span>
+								$1,000
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">使用期限</span>
+								2019/12/31
+							</div>
+							<div class="td col-lg-3">
+								<span class="sth">備註</span>
+								123
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+
+{% set pageinfo = 
+	{ 
+		headtitle: '推廣申請', 
+		wrapcls: 'inpage', 
+		subcrumb: { 
+			href: '/user/ugindex', title: '會員專區'
+		}
+	} 
+%}
+
+{% extends "base.njk" %}
+
+{% block content %}
+	
+	{% include "crumbnav.njk" %}
+
+	<section class="content">
+		<div class="container">
+			<div class="member">
+
+				{% include "user/_nav.njk"%}
+
+				<div class="main">
+					<h2 class="title"><span>您的專屬推廣連結</span></h2>
+					<div class="pmlink">
+						<input type="text" value="http://www.cccopy.com/user102498/promote/">
+						<button class="btn">copy</button>
+					</div>
+					<h2 class="title">推廣方式</h2>
+					<div class="pmstep row">
+						<div class="pmsbx col-6 col-md-3">
+							<div class="inner">
+								<span>邀請朋友點擊您的專屬推廣連結進入本站</span>
+							</div>
+						</div>
+						<div class="pmsbx col-6 col-md-3">
+							<div class="inner">
+								<span>朋友成功下單並完成尾款支付</span>
+							</div>
+						</div>
+						<div class="pmsbx col-6 col-md-3">
+							<div class="inner">
+								<span>您可以獲得單筆 <b>訂單總金額 1%</b> 回饋</span>
+							</div>
+						</div>
+						<div class="pmsbx col-6 col-md-3">
+							<div class="inner">
+								<span>滿3000元即可進行提領，並需負擔轉帳手續費</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}

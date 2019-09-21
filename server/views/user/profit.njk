@@ -1,0 +1,118 @@
+
+{% set pageinfo = 
+	{ 
+		headtitle: '分潤查詢', 
+		wrapcls: 'inpage', 
+		subcrumb: { 
+			href: '/user/ugindex', title: '會員專區'
+		}
+	} 
+%}
+
+{% extends "base.njk" %}
+
+{% block content %}
+	
+	{% include "crumbnav.njk" %}
+
+	<section class="content">
+		<div class="container">
+			<div class="member">
+
+				{% include "user/_nav.njk"%}
+
+				<div class="main">
+					<div class="stable">
+						<div class="row thead">
+							<div class="th col-lg-3"><span>訂單編號</span></div>
+							<div class="th col-lg-2"><span>訂購時間</span></div>
+							<div class="th col-lg-2"><span>訂單總金額</span></div>
+							<div class="th col-lg-1"><span>訂單狀態</span></div>
+							<div class="th col-lg-2"><span>分潤金額</span></div>
+							<div class="th col-lg-2"><span>提領狀態</span></div>
+						</div>
+						<div class="row tbody">
+							<div class="td col-lg-3">OD0456123789</div>
+							<div class="td col-lg-2">
+								<span class="sth">訂購時間</span>
+								2019/05/31
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">訂單總金額</span>
+								$125,000
+							</div>
+							<div class="td col-lg-1">
+								<span class="sth">訂單狀態</span>
+								結案
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">分潤金額</span>
+								$1,250
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">提領狀態</span>
+								未提領
+							</div>
+						</div>
+						<div class="row tbody">
+							<div class="td col-lg-3">OD0456123789</div>
+							<div class="td col-lg-2">
+								<span class="sth">訂購時間</span>
+								2019/05/31
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">訂單總金額</span>
+								$125,000
+							</div>
+							<div class="td col-lg-1">
+								<span class="sth">訂單狀態</span>
+								結案
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">分潤金額</span>
+								$1,250
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">提領狀態</span>
+								未提領
+							</div>
+						</div>
+						<div class="row tbody">
+							<div class="td col-lg-3">OD0456123789</div>
+							<div class="td col-lg-2">
+								<span class="sth">訂購時間</span>
+								2019/05/31
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">訂單總金額</span>
+								$125,000
+							</div>
+							<div class="td col-lg-1">
+								<span class="sth">訂單狀態</span>
+								Bcopy
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">分潤金額</span>
+								$1,250
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">提領狀態</span>
+								未提領
+							</div>
+						</div>
+						<div class="row tbtm">
+							<div class="td col total">
+								分潤金額小計  NT$ <span>3,920</span> 元
+							</div> 
+						</div>
+					</div>
+					<div class="note fontS">*說明：滿3000元即可進行提領，並需負擔轉帳手續費</div>
+					<div class="btns">
+						<a href="ddReceive.html" class="btn btnIm">我要提領</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}

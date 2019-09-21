@@ -172,6 +172,29 @@ module.exports = async function(app, passport) {
         res.render('user/info');
     }));
 
+    app.get('/user/like', loginRequired, asyncHandler(async (req, res) => {
+        res.render('user/like');
+    }));
+
+    app.get('/user/ecoupon', loginRequired, asyncHandler(async (req, res) => {
+        res.render('user/ecoupon');
+    }));
+
+    app.get('/user/cart', loginRequired, asyncHandler(async (req, res) => {
+        res.render('user/cart');
+    }));
+
+    app.get('/user/orders', loginRequired, asyncHandler(async (req, res) => {
+        res.render('user/orders');
+    }));
+
+    app.get('/user/promote', loginRequired, asyncHandler(async (req, res) => {
+        res.render('user/promote');
+    }));
+
+    app.get('/user/profit', loginRequired, asyncHandler(async (req, res) => {
+        res.render('user/profit');
+    }));
     
     // show the login form
     // app.get('/login', function(req, res) {
