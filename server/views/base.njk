@@ -62,13 +62,17 @@
 				</div>
 			</nav>
 			<div class="search">
-				<input type="text">
-				<div class="hot-tag">
-					<span>熱門關鍵字：</span>
-					<a href="#">3D拍攝</a>、
-					<a href="#">活動型錄</a>、
-					<a href="#">林森風格</a>
-				</div>
+				<form header-search action="/itemlist/">
+					<input type="text" name="s">
+					{% if hotkeys|length %}
+					<div class="hot-tag">
+						<span>熱門關鍵字：</span>
+						{% for key in hotkeys %}
+						<a fast-search-link href>{{ key }}</a>{% if not loop.last %}、{% endif %}
+						{% endfor %}
+					</div>
+					{% endif %}
+				</form>
 			</div>
 		</header>
 

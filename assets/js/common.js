@@ -132,6 +132,10 @@ function bindFormSubmit(){
 			type: "POST"
 		});
 	});
+
+	$(document.body).on('submit', 'form[header-search]', function(event){
+		$.pjax.submit(event, '#main-pjax-container', { timeout: 5000, type: "GET" });
+	});
 }
 
 function bindMoreAjax(){
@@ -221,13 +225,22 @@ $(document).ready(function() {
 
 	bindMoreAjax();
 	bindFormSubmit();
+
+	$('a[fast-search-link]').click(function(event){
+		event.preventDefault();
+		var jqform = $("form[header-search]"),
+			jqinput = jqform.find("input[name=s]");
+		jqinput.val($(this).text());
+		jqform.submit();
+		jqinput.val("");
+	});
 });
 
 $(document).on('pjax:end', function(event) {
-	if (_headtitle) {
+	if ( window._headtitle ) {
 		document.title = _headtitle + " - CCcopy";
 	}
-	if (_wrapcls) {
+	if ( window._wrapcls ) {
 		$("#wrap").removeClass("index inpage").addClass(_wrapcls);
 
 		// in detail (do again)
@@ -239,7 +252,7 @@ $(document).on('pjax:end', function(event) {
 		bindSwebFlow();
 		bindSindexkv();
 	}
-	if (_toLogged) {
+	if ( window._toLogged ) {
 		$("a[login-link]").replaceWith('<a main-pjax-link href="/user/ugindex">會員專區</a>');
 	}
 });

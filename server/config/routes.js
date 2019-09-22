@@ -3,6 +3,7 @@
  */
 var express = require('express');
 var path = require('path');
+const url = require('url');
 // var utils = require('../services/utils');
 var interface = require('../services/interface');
 var utils = require('../services/utils');
@@ -33,6 +34,12 @@ function loginRequired(req, res, next) {
 
 module.exports = async function(app, passport) {
 
+    let normalKeywords = await interface.getKeywords(),
+        hotKeywords = [];
+
+    let keywordsMap = utils.getPropMapObject(normalKeywords, "id");
+    let keywordsWordMap = utils.getPropMapObject(normalKeywords, "word");
+
     var nunEnv = nunjucks.configure(app.get('views'), {
         autoescape: true,
         watch: true,
@@ -51,7 +58,11 @@ module.exports = async function(app, passport) {
         return Number(num).toLocaleString();
     });
 
-    let keywordsMap = await utils.getKeywordsMap();
+    (function renewHotKeys() {
+        hotKeywords = utils.getRandom(Object.keys(keywordsMap), 3).map(id => keywordsMap[id].word);
+        nunEnv.addGlobal("hotkeys", hotKeywords);
+        setTimeout(renewHotKeys, 20000);
+    })();
 
     function prepareItem(item){
         let urls = item.productUrls.filter(prod => prod.url);
@@ -109,24 +120,53 @@ module.exports = async function(app, passport) {
     }));
 
     app.get('/itemlist/', asyncHandler(async (req, res) => {
-        let limit = 5;
-        let items = await interface.getItems( { limit: limit } );
+        const searchKey = req.query.s;
+        let searchCount = 0;
+        let limit = 5, items = [];
+        if (searchKey) {
+            let tag = keywordsWordMap[searchKey];
+            if (tag) {
+                items = await interface.getItemsByTag( { limit: limit, tags: [tag.id] } );
+                searchCount = await interface.getItemsCountByTag( { tags: [tag.id] } );
+            }
+        } else {
+            items = await interface.getItems( { limit: limit } );
+        }
         let itemLength = items.length;
         items.forEach(prepareItemAllKey);
-        res.render('product/list', { items: items, hasmore: itemLength == limit, nextidx: items.length });
+        res.render('product/list', { 
+            items: items, 
+            searchkey: searchKey, 
+            searchcount: searchCount,
+            hasmore: itemLength == limit, 
+            nextidx: items.length
+        });
     }));
 
-    app.get('/ajax/items/more', asyncHandler(async (req, res) => {
+    app.get('/ajax/items/more', asyncHandler(async (req, res, next) => {
         let offset = req.query.offset;
         let referer = req.headers.referer;
-        let isValid = referer && referer.slice( -("/itemlist/".length) ) == "/itemlist/";
+        let isValid = referer && url.parse(referer).pathname == "/itemlist/";
         if ( isValid && !isNaN(offset = parseInt(offset)) ) {
-            let limit = 5;
-            let moreitems = await interface.getItems( { offset: offset, limit: limit } );
+            const searchKey = req.query.s;
+            let limit = 5, moreitems = [];
+            if ( searchKey ) {
+                let tag = keywordsWordMap[searchKey];
+                if (tag) {
+                    moreitems = await interface.getItemsByTag( { offset: offset, limit: limit, tags: [tag.id] } );
+                }
+            } else {
+                moreitems = await interface.getItems( { offset: offset, limit: limit } );
+            }
             let moreLength = moreitems.length;
             moreitems.forEach(prepareItemAllKey);
-            res.render('product/more', { items: moreitems, hasmore: moreLength == limit, nextidx: offset + moreitems.length });
-        } else throw new Error({ response: { status: 400, statusText: "Bad Request" } });
+            res.render('product/more', { 
+                items: moreitems,
+                searchkey: searchKey,
+                hasmore: moreLength == limit,
+                nextidx: offset + moreitems.length
+            });
+        } else next({ response: { status: 400, statusText: "Bad Request" } });
     }));
 
     // =====================================

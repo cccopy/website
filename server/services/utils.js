@@ -1,14 +1,11 @@
 
-const interface = require('./interface');
-
 const youtubeRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
 
 module.exports = {
-	getKeywordsMap: async function(){
-		let keywords = await interface.getKeywords();
+	getPropMapObject: function(arr, keyname){
 		let resMap = {};
-		keywords.forEach( key => {
-			resMap[key.id] = key;
+		arr.forEach(item => {
+			resMap[item[keyname]] = item;
 		});
 		return resMap;
 	},

@@ -21,7 +21,7 @@
 {% if hasmore %}
 <div id="more-replacer">
 	<div class="loading">
-		<a more-ajax href="/ajax/items/more?offset={{ nextidx }}" class="btn btnBorder">載入更多</a>
+		<a more-ajax href="/ajax/items/more?offset={{ nextidx }}{% if searchkey|length %}&s={{ searchkey }}{% endif %}" class="btn btnBorder">載入更多</a>
 	</div>
 </div>
 {% endif %}

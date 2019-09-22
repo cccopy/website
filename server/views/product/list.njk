@@ -18,9 +18,11 @@
 
 	<section class="content">
 		<div class="container">
-			<!-- <div class="searchnote">
-				搜尋結果：<br>共有 <span>15</span> 項符合 <span>廣告</span> 搜尋條件的影音項目。
-			</div> -->
+			{% if searchkey|length %}
+			<div class="searchnote">
+				搜尋結果：<br>共有 <span>{{ searchcount }}</span> 項符合 <span>{{ searchkey }}</span> 搜尋條件的影音項目。
+			</div>
+			{% endif %}
 			<div class="upgrate">
 				<a href="#" class="btn
 				 openUpgrate">升級為VIP會員</a> <br>即可瀏覽本頁全部影音商品

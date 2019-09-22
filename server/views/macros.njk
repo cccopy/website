@@ -3,7 +3,7 @@
 {% if labels|length %}
 <div class="tags">
 	{% for word in labels %}
-	<a href="#">{{ word }}</a>
+	<a main-pjax-link href="/itemlist/?s={{ word }}">{{ word }}</a>
 	{% endfor %}
 </div>
 {% endif %}

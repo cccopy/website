@@ -9,6 +9,18 @@ var axiosIns = axios.create({
 	headers: { "Authorization": "Bearer " + api.token }
 });
 
+function appendContainsInArray(paramObj, field, value){
+	// single case
+	paramObj.append(field + "_contains", "[" + value + "]");
+	// multiple case
+	// first
+	paramObj.append(field + "_contains", "[" + value + ",");
+	// middle
+	paramObj.append(field + "_contains", "," + value + ",");
+	// last
+	paramObj.append(field + "_contains", "," + value + "]");
+}
+
 module.exports = {
 	validUser: function(email, password){
 		return new Promise(function(resolve, reject){
@@ -58,22 +70,23 @@ module.exports = {
 		params.set("itemType", "normal");
 		params.set("_limit", -1);
 		query = query || {};
+		if (typeof query.offset !== "undefined") params.set("_start", query.offset);
 		if (typeof query.limit !== "undefined") params.set("_limit", query.limit);
 		if ( Array.isArray(query.tags) ) {
-			query.tags.forEach(tag => {
-				// single case
-				params.append("keywords_contains", "[" + tag + "]");
-				// multiple case
-				// first
-				params.append("keywords_contains", "[" + tag + ",");
-				// middle
-				params.append("keywords_contains", "," + tag + ",");
-				// last
-				params.append("keywords_contains", "," + tag + "]");
-			});
+			query.tags.forEach(tag => { appendContainsInArray(params, "keywords", tag) });
 		} 
 		// params.keywords_contains = query.tags;
 		return axiosIns.get("items", { params: params }).then(response => response.data);
+	},
+	getItemsCountByTag: function(query){
+		let params = new URLSearchParams();
+		// default
+		params.set("itemType", "normal");
+		params.set("_limit", -1);
+		if ( Array.isArray(query.tags) ) {
+			query.tags.forEach(tag => { appendContainsInArray(params, "keywords", tag) });
+		}
+		return axiosIns.get("items/count", { params: params }).then(response => response.data);
 	},
 	getItem: function(id){
 		var params = { itemType: "normal" };
