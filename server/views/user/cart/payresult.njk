@@ -1,0 +1,30 @@
+
+{% extends "user/cart.njk" %}
+
+{% block cartcontent %}
+	<div class="main">
+		<div class="step">
+			<div class="item"><span>購物明細</span></div>
+			<div class="item"><span>訂單成立</span></div>
+			<div class="item"><span>付款</span></div>
+			<div class="item active"><span>訂購完成</span></div>
+		</div>
+		<div class="text">
+			<h2 class="title">交易失敗</h2>
+			<div class="inner">
+				<p class="">
+					錯誤訊息代碼為：1004
+					<span class="block">客服信箱：<a href="mailto:videoarmy2018@gmail.com">videoarmy2018@gmail.com</a></span>
+				</p>
+			</div>
+		</div>
+		<div class="text">
+			<h2 class="title">交易成功</h2>
+			<div class="inner">
+				<p class="">
+					提醒您：請於7天內至「<a href="odList.html">訂單管理-訂單進度查詢</a>」提交素材！<br>若於7天內不提交素材，將視為「取消訂單」，將扣除10%交易手續費後，直接進行退款。
+				</p>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -58,6 +58,10 @@ module.exports = async function(app, passport) {
         return Number(num).toLocaleString();
     });
 
+    nunEnv.addFilter("isGroupWith", function(cur, target){
+        return cur.substring(0, target.length) == target;
+    });
+
     (function renewHotKeys() {
         hotKeywords = utils.getRandom(Object.keys(keywordsMap), 3).map(id => keywordsMap[id].word);
         nunEnv.addGlobal("hotkeys", hotKeywords);
@@ -220,8 +224,20 @@ module.exports = async function(app, passport) {
         res.render('user/ecoupon');
     }));
 
+    // =====================================
+    // USER - CART =========================
+    // =====================================
     app.get('/user/cart', loginRequired, asyncHandler(async (req, res) => {
         res.render('user/cart');
+    }));
+    app.get('/user/cart/confirm', loginRequired, asyncHandler(async (req, res) => {
+        res.render('user/cart/confirm');
+    }));
+    app.get('/user/cart/paying', loginRequired, asyncHandler(async (req, res) => {
+        res.render('user/cart/paying');
+    }));
+    app.get('/user/cart/payresult', loginRequired, asyncHandler(async (req, res) => {
+        res.render('user/cart/payresult');
     }));
 
     app.get('/user/orders', loginRequired, asyncHandler(async (req, res) => {

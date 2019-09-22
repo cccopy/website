@@ -1,0 +1,29 @@
+
+{% extends "user/cart.njk" %}
+
+{% block cartcontent %}
+	<div class="main">
+		<div class="step">
+			<div class="item"><span>購物明細</span></div>
+			<div class="item active"><span>訂單成立</span></div>
+			<div class="item"><span>付款</span></div>
+			<div class="item"><span>訂購完成</span></div>
+		</div>
+		<div class="text">
+			<h2 class="title">您的訂單已成立！</h2>
+			<div class="inner">
+				<div class="okimg"></div>
+				<p class="left">
+					製作部專案經理將與您電話連繫確認需求，再進行付款。<br>
+					如您沒有其它問題，請至「<a main-pjax-link href="/user/orders">訂單管理-訂單進度查詢</a>」完成訂金支付！<br>
+					或請來信 <a href="mailto:videoarmy2018@gmail.com">
+					videoarmy2018@gmail.com</a>
+				</p>
+			</div>
+			<div class="btns">
+				<a main-pjax-link href="/" class="btn">稍後付款，回首頁再逛逛</a>
+				<a main-pjax-link href="/user/cart/paying" class="btn btnIm">立即付款</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}

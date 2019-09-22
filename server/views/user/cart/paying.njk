@@ -1,0 +1,104 @@
+
+{% extends "user/cart.njk" %}
+
+{% block cartcontent %}
+	<div class="main">
+		<div class="step">
+			<div class="item"><span>購物明細</span></div>
+			<div class="item"><span>訂單成立</span></div>
+			<div class="item active"><span>付款</span></div>
+			<div class="item"><span>訂購完成</span></div>
+		</div>
+		<div class="stable">
+			<div class="row thead">
+				<div class="th col-lg-4"><span>項目</span></div>
+				<div class="th col-lg-2"><span>價格</span></div>
+				<div class="th col-lg-1"><span>急件加價</span></div>
+				<div class="th col-lg-1"><span>特殊加價</span></div>
+				<div class="th col-lg-1"><span>訂金</span></div>
+				<div class="th col-lg-1"><span>尾款</span></div>
+				<div class="th col-lg-2 edit"></div>
+			</div>
+			<div class="row tbody">
+				<div class="td col-lg-4"><span>「ASMR顱內高潮」手法！用聲音產生記憶點</span></div>
+				<div class="td col-lg-2"><span><span class="sth">價格：</span>$50,000</span></div>
+				<div class="td col-lg-1"><span><span class="sth">急件加價：</span>無</span></div>
+				<div class="td col-lg-1"><span><span class="sth">特殊加價：</span>無</span></div>
+				<div class="td col-lg-1"><span><span class="sth">訂金：</span>$40,000</span></div>
+				<div class="td col-lg-1"><span><span class="sth">尾款：</span>$10,000</span></div>
+				<div class="td col-lg-2 edit"></div>
+			</div>
+			<div class="row thead theadg">
+				<div class="th col-lg-4"><span>加購項目</span></div>
+				<div class="th col-lg-2"><span>規格</span></div>
+				<div class="th col-lg-1"><span>價格</span></div>
+				<div class="th col-lg-1"><span></span></div>
+				<div class="th col-lg-1"><span></span></div>
+				<div class="th col-lg-1"><span></span></div>
+				<div class="th col-lg-2 edit"></div>
+			</div>
+			<div class="row tbody">
+				<div class="td col-lg-4"><span>
+					<span class="sth">加購項目：</span>
+					名稱名稱
+				</span></div>
+				<div class="td col-lg-2"><span>
+					<span class="sth">規格：</span>
+					1
+				</span></div>
+				<div class="td col-lg-1"><span>
+					<span class="sth">價格：</span>
+					$5,000
+				</span></div>
+				<div class="td col-lg-1"></div>
+				<div class="td col-lg-1"></div>
+				<div class="td col-lg-1"></div>
+				<div class="td col-lg-2 edit"></div>
+			</div>
+			<div class="row tbtm">
+				<div class="td col total">
+					小計 (不含尾款)  NT$ <span>46,500</span> 元
+				</div> 
+			</div>
+		</div>
+		<div class="notice">
+			<h3>重要提醒</h3>
+			<ol>
+				<li>訂單成立後，請於5日內完成訂金支付。</li>
+				<li>加購商品（精簡秒數、英文字幕、修改影片尺寸、加購劇照、毛帶全拿）於同筆訂單可享九折價惠，需一次付清款項，若於成品完成後購　買，則依原價計算。</li>
+				<li>加購商品（精簡秒數、其它語言字幕、修改影片尺寸、加購劇照、毛帶全拿）最遲於成品交付後14天內購買。</li>
+				<li>完成付款後，若於7天內不提交素材，視為「取消訂單」，將扣除10%交易手續費後，直接進行退款。</li>
+				<li>「折扣碼優惠」僅適用於一般商品折抵，不適用於加購商品。</li>
+				<li>付款完成後，可於3天內取消訂單，將扣除10%交易手續費後，進行退款。</li>
+				<li>同筆訂單若同時購買一支影片以上，須於同時間進行成品下載，並同時支付尾款；若需分開下載，請分開二筆訂單進行。</li>
+				<li>當支付訂金後，即開立發票；待尾款支付後，將開立第二張發票。</li>
+			</ol>
+		</div>
+		<div class="mmeat">
+			輸入折扣碼：<input type="text">
+		</div>
+		<div class="mmeat">
+			<p>
+				發票資訊：
+				<label class="sp" for=""><input type="radio" name="radio"><span class="radiomark"></span> 個人戶</label>
+				<label class="sp" for=""><input type="radio" name="radio"><span class="radiomark"></span> 公司戶</label>
+			</p>
+			<p>
+				<span class="fontR">*</span> 發票抬頭：<input type="text">
+			</p>
+			<p>
+				<span class="fontR">*</span> 統一編號：<input type="text">
+			</p>
+			<p>
+				<span class="fontR fontS">* 開立之統一發票將扣除折扣後之款項。 (折扣碼優惠僅限折抵主商品，不得超過總商品金額5%) </span>
+			</p>
+			<!-- <label for=""><input type="checkbox" name="checkbox"><span class="checkmark"></span> 個人戶</label> -->
+		</div>
+		<div class="mmeat alltotal">
+			訂單金額總計 (不含尾款)  NT$ <span>86,500</span> 元
+		</div>
+		<div class="btns">
+			<a main-pjax-link href="/user/cart/payresult" class="btn btnIm">確認付款</a>
+		</div>
+	</div>
+{% endblock %}

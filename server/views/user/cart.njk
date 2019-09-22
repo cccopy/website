@@ -21,6 +21,7 @@
 
 				{% include "user/_nav.njk"%}
 
+				{% block cartcontent %}
 				<div class="main">
 					<div class="step">
 						<div class="item active"><span>購物明細</span></div>
@@ -121,9 +122,10 @@
 						訂單金額總計 (不含尾款)  NT$ <span>86,500</span> 元
 					</div>
 					<div class="btns">
-						<a href="cartOk.html" class="btn btnIm">確認訂單</a>
+						<a main-pjax-link href="/user/cart/confirm" class="btn btnIm">確認訂單</a>
 					</div>
 				</div>
+				{% endblock %}
 			</div>
 		</div>
 	</section>
