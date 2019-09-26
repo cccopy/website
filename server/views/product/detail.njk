@@ -76,7 +76,11 @@
 			</div>
 			<div class="btns">
 				<a href="#" class="btn btnLike"><span class="">收藏</span></a>
-				<a href="cartList.html" class="btn">加入購物車</a>
+				{% if isLoggedIn %}
+				<a addcart-ajax href="/ajax/cart/add" item="{{ itemdetail.id }}" class="btn">加入購物車</a>
+				{% else %}
+				<a main-pjax-link href="/auth/login?next={{ currentpath }}" class="btn">加入購物車</a>
+				{% endif %}
 			</div>
 		</div>
 	</section>

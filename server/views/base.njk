@@ -53,12 +53,13 @@
 				<div class="login-bar">
 					<!-- <a href="#">註冊</a> -->
 					{% if isLoggedIn %}
-					<a main-pjax-link href="/user/ugindex">會員專區</a>
+					<a logout-link href="/auth/logout">登出</a>
+					<a ugindex-link main-pjax-link href="/user/ugindex">會員專區</a>
+					<a cart-link main-pjax-link href="/user/cart">購物車(<span cart-count>{{ cartCount }}</span>)</a>
 					{% else %}
 					<a login-link main-pjax-link href="/auth/login">登入</a>
 					{% endif %}
-					<a href="#">購物車(0)</a>
-					<a href="/descriptions#sec-flow">服務流程</a>
+					<a main-pjax-link href="/descriptions#sec-flow">服務流程</a>
 				</div>
 			</nav>
 			<div class="search">

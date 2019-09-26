@@ -5,5 +5,8 @@
 	var _wrapcls = '{{ pageinfo.wrapcls }}';
 	{% if toLoggedState %}
 	var _toLogged = true;
+	var _cartCount = {{ cartCount }};
+	{% elif toLogoutState %}
+	var _toLogout = true;
 	{% endif %}
 </script>

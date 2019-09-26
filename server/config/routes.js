@@ -32,6 +32,12 @@ function loginRequired(req, res, next) {
     res.redirect(dest);
 }
 
+function checkReferer(req, path){
+    let referer = req.headers.referer;
+    let isValid = referer && url.parse(referer).pathname == path;
+    return isValid;
+}
+
 module.exports = async function(app, passport) {
 
     let normalKeywords = await interface.getKeywords(),
@@ -92,6 +98,15 @@ module.exports = async function(app, passport) {
         item.highlightList = item.highlight.split("\r\n");
     }
 
+    function getSessionCartItem(item){
+        return {
+            title: item.title,
+            price: item.price,
+            urgentPrice: item.urgentPrice,
+            customizePrice: item.customizePrice
+        };
+    }
+
     app.get('/', async (req, res) => { 
         let popularItems = await interface.getItems( { limit: 5 } );
         let newItems = await interface.getItems( { limit: 5, sort: "created_at:DESC" } );
@@ -149,8 +164,7 @@ module.exports = async function(app, passport) {
 
     app.get('/ajax/items/more', asyncHandler(async (req, res, next) => {
         let offset = req.query.offset;
-        let referer = req.headers.referer;
-        let isValid = referer && url.parse(referer).pathname == "/itemlist/";
+        let isValid = checkReferer(req, "/itemlist/");
         if ( isValid && !isNaN(offset = parseInt(offset)) ) {
             const searchKey = req.query.s;
             let limit = 5, moreitems = [];
@@ -204,6 +218,14 @@ module.exports = async function(app, passport) {
         req.session.redirectTo = failureDest;
         res.redirect(failureDest);
     });
+
+    app.get('/auth/logout', loginRequired, asyncHandler(async (req, res) => {
+        let dest = "/";
+        req.logout();
+        req.session.redirectTo = dest;
+        req.session.loginState = "loggedOut";
+        res.redirect(dest);
+    }));
     
     // =====================================
     // USER ================================
@@ -238,6 +260,17 @@ module.exports = async function(app, passport) {
     }));
     app.get('/user/cart/payresult', loginRequired, asyncHandler(async (req, res) => {
         res.render('user/cart/payresult');
+    }));
+    app.post('/ajax/cart/add', loginRequired, asyncHandler(async (req, res, next) => {
+        let itemId = req.body.item;
+        let isValid = checkReferer(req, "/items/" + itemId);
+        if (isValid) {
+            let item = await interface.getItem(itemId);
+            let sessionCart = req.session.cart;
+            if ( !sessionCart ) sessionCart = req.session.cart = [];
+            sessionCart.push( getSessionCartItem(item) );
+            res.send({ success: true, count: sessionCart.length });
+        } else next({ response: { status: 400, statusText: "Bad Request" } });
     }));
 
     app.get('/user/orders', loginRequired, asyncHandler(async (req, res) => {

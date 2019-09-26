@@ -138,8 +138,34 @@ function bindFormSubmit(){
 	});
 }
 
+function bindLogoutLink(){
+	$(document.body).on('click', 'a[logout-link]', function(event) {
+		$.pjax.click(event, '#main-pjax-container', {
+			timeout: 5000, 
+			push: false, 
+			replace: true
+		});
+	});
+}
+
 function bindMoreAjax(){
 	$('a[more-ajax]').click(moreAjaxHandler);
+}
+
+function bindAddCartAjax(){
+	$('a[addcart-ajax]').click(function(e){
+		e.preventDefault();
+		$.ajax({ url: $(this).attr('href'), method: "POST", data: { item: $(this).attr('item') } })
+			.done(function(response){
+				if (response.success) {
+					$("a[cart-link] span[cart-count]").text(response.count);
+					alert("已加入購物車");
+				} else {
+					alert("加入購物車失敗");
+				}
+			})
+			.fail(function(){ alert("加入購物車失敗"); });	
+	});
 }
 
 function moreAjaxHandler(e) {
@@ -225,6 +251,8 @@ $(document).ready(function() {
 
 	bindMoreAjax();
 	bindFormSubmit();
+	bindAddCartAjax();
+	bindLogoutLink();
 
 	$('a[fast-search-link]').click(function(event){
 		event.preventDefault();
@@ -245,6 +273,8 @@ $(document).on('pjax:end', function(event) {
 
 		// in detail (do again)
 		bindMoreRC();
+		bindAddCartAjax();
+
 		bindMoreAjax();
 		// bindFormSubmit();
 		bindIndexPL();
@@ -253,6 +283,15 @@ $(document).on('pjax:end', function(event) {
 		bindSindexkv();
 	}
 	if ( window._toLogged ) {
-		$("a[login-link]").replaceWith('<a main-pjax-link href="/user/ugindex">會員專區</a>');
+		$("a[login-link]").replaceWith('<a logout-link href="/auth/logout">登出</a>' + 
+			'<a ugindex-link main-pjax-link href="/user/ugindex">會員專區</a>' + 
+			'<a cart-link main-pjax-link href="/user/cart">購物車(<span cart-count>' + window._cartCount + '</span>)</a>');
+		bindLogoutLink();
+		window._toLogged = false;
+	}
+	if ( window._toLogout ) {
+		$("a[logout-link]").replaceWith('<a login-link main-pjax-link href="/auth/login">登入</a>');
+		$("a[ugindex-link], a[cart-link]").remove();
+		window._toLogout = false;
 	}
 });

@@ -75,7 +75,14 @@ module.exports = function (app, passport) {
 				res.locals.toLoggedState = true;
 				req.session.loginState = null;
 			}
+			if ( req.session.loginState == "loggedOut" ) {
+				res.locals.toLogoutState = true;
+				req.session.loginState = null;
+			}
 		} 
+		if ( res.locals.isLoggedIn ) {
+			res.locals.cartCount = req.session.cart ? req.session.cart.length : 0;
+		}
 		next();
 	}); 
 
