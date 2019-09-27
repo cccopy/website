@@ -2268,3 +2268,7 @@ a.menu-link {
   width: 100%;
   height: 2px;
 }
+
+.hidden{
+  display: none;
+}

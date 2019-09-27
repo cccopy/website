@@ -158,7 +158,15 @@ function bindAddCartAjax(){
 		var errorMsg = "加入購物車失敗";
 		$.ajax({ url: $(this).attr('href'), method: "POST", data: { item: $(this).attr('item') } })
 			.done(function(response){
-				if (response.success) alert("已加入購物車");
+				if (response.success) {
+					// renew add link
+					$("div[add-addition-static]").each(function(){
+						var jqthis = $(this);
+						var itemId = jqthis.attr("item");
+						jqthis.replaceWith('<a add-addition-ajax href="/ajax/addition/add" item="' + itemId + '" class="btn">加購</a>');
+					});
+					alert("已加入購物車");
+				}
 				else alert(response.message || errorMsg);
 				if (response.count) $("a[cart-link] span[cart-count]").text(response.count);
 			})
@@ -182,6 +190,19 @@ function bindTooltip(){
 	$(document.body).tooltip({
 		selector: "[tool-tip]",
 		container: "#main-pjax-container"
+	});
+}
+
+function bindAdditionTypeSelection(){
+	$("select[addition-type]").change(function(){
+		var jqthis = $(this);
+		var idx = jqthis.find(":selected").index();
+		var wrap = jqthis.parent();
+		var spanWrap = wrap.siblings(".price").find("b span");
+		spanWrap.addClass("hidden");
+		spanWrap.eq(idx).removeClass("hidden");
+		wrap.siblings("a[add-addition-ajax]").attr("item", jqthis.val());
+		wrap.siblings("div[add-addition-static]").attr("item", jqthis.val());
 	});
 }
 
@@ -262,6 +283,7 @@ $(document).ready(function() {
 	bindAddCartAjax();
 	bindLogoutLink();
 	bindTooltip();
+	bindAdditionTypeSelection();
 
 	$('a[fast-search-link]').click(function(event){
 		event.preventDefault();
@@ -291,6 +313,7 @@ $(document).on('pjax:end', function(event) {
 		bindSwebFlow();
 		bindSindexkv();
 		bindTooltip();
+		bindAdditionTypeSelection();
 	}
 	if ( window._toLogged ) {
 		$("a[login-link]").replaceWith('<a logout-link href="/auth/logout">登出</a>' + 

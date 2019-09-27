@@ -202,20 +202,30 @@
 						<div class="main">
 							<p><span>交期：</span>成品交付後7日</p>
 							{% if addition.details|length > 1 %}
-							<select name="" id="">
+							<select addition-type>
 							{% for detail in addition.details %}
-								<option value="0">{{ detail.type }}</option>
+								<option value="{{ detail.id }}">{{ detail.type }}</option>
 							{% endfor %}
 							</select>
 							{% endif %}
 						</div>
 						<div class="price">
-							價格 <span>＄<b>{{ addition.details[0].price|locale }}</b></span>
+							價格 <span>＄
+								<b>
+								{% for detail in addition.details %}
+								{% if loop.first %}
+								<span>{{ detail.price|locale }}</span>
+								{% else %}
+								<span class="hidden">{{ detail.price|locale }}</span>
+								{% endif %}
+								{% endfor %}
+								</b>
+							</span>
 						</div>
 						{% if itemincart %}
-						<a href="" class="btn">加購</a>
+						<a add-addition-ajax href="/ajax/addition/add" item="{{ addition.details[0].id }}" class="btn">加購</a>
 						{% else %}
-						<div tool-tip class="btn btnGray disabled" title="請先將商品加入購物車哦！">加購</div>
+						<div add-addition-static tool-tip item="{{ addition.details[0].id }}" class="btn btnGray disabled" title="請先將商品加入購物車哦！">加購</div>
 						{% endif %}
 					</div>
 				</div>

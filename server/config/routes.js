@@ -176,7 +176,7 @@ module.exports = async function(app, passport) {
             res.render('product/detail', { 
                 itemdetail: item, 
                 additiondetail: additionDetails, 
-                itemincart: isItemInCart(item, req.session.cart)
+                itemincart: isItemInCart(item, req.session.cart || [])
             });
         } else {
             next({ response: { status: 404, statusText: "Not Found" } })
