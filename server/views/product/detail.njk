@@ -223,9 +223,9 @@
 							</span>
 						</div>
 						{% if itemincart %}
-						<a add-addition-ajax href="/ajax/addition/add" item="{{ addition.details[0].id }}" class="btn">加購</a>
+						<a add-addition-ajax href="/ajax/addition/add" item="{{ addition.details[0].id }}" pitem="{{ itemdetail.id }}" class="btn">加購</a>
 						{% else %}
-						<div add-addition-static tool-tip item="{{ addition.details[0].id }}" class="btn btnGray disabled" title="請先將商品加入購物車哦！">加購</div>
+						<div add-addition-static tool-tip item="{{ addition.details[0].id }}" pitem="{{ itemdetail.id }}" class="btn btnGray disabled" title="請先將商品加入購物車哦！">加購</div>
 						{% endif %}
 					</div>
 				</div>

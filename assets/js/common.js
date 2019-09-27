@@ -163,10 +163,30 @@ function bindAddCartAjax(){
 					$("div[add-addition-static]").each(function(){
 						var jqthis = $(this);
 						var itemId = jqthis.attr("item");
-						jqthis.replaceWith('<a add-addition-ajax href="/ajax/addition/add" item="' + itemId + '" class="btn">加購</a>');
+						var pitemId = jqthis.attr("pitem");
+						jqthis.replaceWith('<a add-addition-ajax href="/ajax/addition/add" item="' + itemId
+							 + '" pitem="' + pitemId + '" class="btn">加購</a>');
 					});
+					bindAddAdditionAjax();
 					alert("已加入購物車");
-				}
+				} else alert(response.message || errorMsg);
+				if (response.count) $("a[cart-link] span[cart-count]").text(response.count);
+			})
+			.fail(function(e){ 
+				console.error(e);
+				alert(errorMsg);
+			});	
+	});
+}
+
+function bindAddAdditionAjax(){
+	$('a[add-addition-ajax]').click(function(e){
+		e.preventDefault();
+		var jqthis = $(this);
+		var errorMsg = "加購失敗";
+		$.ajax({ url: jqthis.attr('href'), method: "POST", data: { item: jqthis.attr('item'), pitem: jqthis.attr('pitem') } })
+			.done(function(response){
+				if (response.success) alert(response.message || "已加入購物車");
 				else alert(response.message || errorMsg);
 				if (response.count) $("a[cart-link] span[cart-count]").text(response.count);
 			})
@@ -284,6 +304,7 @@ $(document).ready(function() {
 	bindLogoutLink();
 	bindTooltip();
 	bindAdditionTypeSelection();
+	bindAddAdditionAjax();
 
 	$('a[fast-search-link]').click(function(event){
 		event.preventDefault();
@@ -314,6 +335,7 @@ $(document).on('pjax:end', function(event) {
 		bindSindexkv();
 		bindTooltip();
 		bindAdditionTypeSelection();
+		bindAddAdditionAjax();
 	}
 	if ( window._toLogged ) {
 		$("a[login-link]").replaceWith('<a logout-link href="/auth/logout">登出</a>' + 

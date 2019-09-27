@@ -49,6 +49,7 @@ function checkReferer(req, path){
 module.exports = async function(app, passport) {
 
     let normalKeywords = await interface.getKeywords(),
+        additionItems = await interface.getAdditions(),
         hotKeywords = [];
 
     let keywordsMap = utils.getPropMapObject(normalKeywords, "id");
@@ -118,12 +119,28 @@ module.exports = async function(app, passport) {
         };
     }
 
-    function isItemInCart(item, cart){
-        return cart.filter(m => m.id == item.id).length > 0;
+    function getSessionAdditionItem(item, pid){
+        return {
+            pid: pid,
+            id: item.id,
+            title: item.title,
+            price: item.price,
+            type: item.additionType
+        };
     }
 
-    async function getAdditionItems(){
-        let additionItems = await interface.getAdditions();
+    function isItemInCart(item, cart, query){
+        query = query || { id: item.id };
+        var queryKeys = Object.keys(query);
+        return cart
+            .filter(m => {
+                return queryKeys
+                    .map(key => m[key] == item[key])
+                    .reduce((acc, cur) => { return acc && cur; }, true);
+            }).length > 0;
+    }
+
+    let additionDetails = (function(){
         let additionMap = utils.getPropMapArrayObject(additionItems, "title");
         let res = [];
         Object.keys(additionMap).forEach(addition => {
@@ -140,9 +157,9 @@ module.exports = async function(app, passport) {
             });
         });
         return res;
-    }
+    })();
 
-    let additionDetails = await getAdditionItems();
+    let additionIdMap = utils.getPropMapObject(additionItems, "id");
 
     app.get('/', async (req, res) => { 
         let popularItems = await interface.getItems( { limit: 5 } );
@@ -319,6 +336,27 @@ module.exports = async function(app, passport) {
             } else {
                 sessionCart.push( getSessionCartItem(item) );
                 res.send({ success: true, count: sessionCart.length });
+            }
+        } else next({ response: { status: 400, statusText: "Bad Request" } });
+    }));
+
+    app.post('/ajax/addition/add', loginRequired, asyncHandler(async (req, res, next) => {
+        let itemId = req.body.item;
+        let pitemId = req.body.pitem;
+        let isValid = checkReferer(req, "/items/" + pitemId);
+        let item;
+        if ( isValid && (item = additionIdMap[itemId]) ) {
+            let sessionCart = req.session.cart;
+            let sessionAdditionItem = getSessionAdditionItem(item, pitemId);
+            if ( isItemInCart(sessionAdditionItem, sessionCart, { pid: pitemId, id: itemId }) ) {
+                res.send({ success: false, message: "已經加購囉", count: sessionCart.length });
+            } else {
+                sessionCart.push( sessionAdditionItem );
+                res.send({ 
+                    success: true, 
+                    message: "已將 " + item.title + (item.additionType ? (" " + item.additionType) : "") + " 加入購物車",
+                    count: sessionCart.length
+                });
             }
         } else next({ response: { status: 400, statusText: "Bad Request" } });
     }));
