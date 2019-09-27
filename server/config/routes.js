@@ -100,10 +100,13 @@ module.exports = async function(app, passport) {
 
     function getSessionCartItem(item){
         return {
+            id: item.id,
             title: item.title,
             price: item.price,
             urgentPrice: item.urgentPrice,
-            customizePrice: item.customizePrice
+            customizePrice: item.customizePrice,
+            advancePayment: item.price * 0.8,
+            finalPayment: item.price * 0.2
         };
     }
 
@@ -126,16 +129,20 @@ module.exports = async function(app, passport) {
     // =====================================
     // ITEMS ===============================
     // =====================================
-    app.get('/items/:id', asyncHandler(async (req, res) => {
+    app.get('/items/:id', asyncHandler(async (req, res, next) => {
         const lookId = req.params.id;
         let item = await interface.getItem(lookId);
-        prepareDetailItem(item);
+        if (item) {
+            prepareDetailItem(item);
 
-        let keywordRelateds = await interface.getItemsByTag({ tags: item.keywords });
-        item.recommendProds = utils.getRandom(keywordRelateds, Math.min(keywordRelateds.length, 3) );
-        item.recommendProds.forEach(prepareDetailItem);
-        
-        res.render('product/detail', { itemdetail: item });
+            let keywordRelateds = await interface.getItemsByTag({ tags: item.keywords });
+            item.recommendProds = utils.getRandom(keywordRelateds, Math.min(keywordRelateds.length, 3) );
+            item.recommendProds.forEach(prepareDetailItem);
+            
+            res.render('product/detail', { itemdetail: item });
+        } else {
+            next({ response: { status: 404, statusText: "Not Found" } })
+        }
     }));
 
     app.get('/itemlist/', asyncHandler(async (req, res) => {
@@ -250,7 +257,8 @@ module.exports = async function(app, passport) {
     // USER - CART =========================
     // =====================================
     app.get('/user/cart', loginRequired, asyncHandler(async (req, res) => {
-        res.render('user/cart');
+        let cartItems = req.session.cart || [];
+        res.render('user/cart', { cartitems: cartItems } );
     }));
     app.get('/user/cart/confirm', loginRequired, asyncHandler(async (req, res) => {
         res.render('user/cart/confirm');
@@ -264,15 +272,22 @@ module.exports = async function(app, passport) {
     app.post('/ajax/cart/add', loginRequired, asyncHandler(async (req, res, next) => {
         let itemId = req.body.item;
         let isValid = checkReferer(req, "/items/" + itemId);
-        if (isValid) {
-            let item = await interface.getItem(itemId);
+        let item;
+        if (isValid && (item = await interface.getItem(itemId)) ) {
             let sessionCart = req.session.cart;
             if ( !sessionCart ) sessionCart = req.session.cart = [];
-            sessionCart.push( getSessionCartItem(item) );
-            res.send({ success: true, count: sessionCart.length });
+            if (sessionCart.filter(m => m.id == itemId).length > 0){
+                res.send({ success: false, message: "已經加入囉", count: sessionCart.length });
+            } else {
+                sessionCart.push( getSessionCartItem(item) );
+                res.send({ success: true, count: sessionCart.length });
+            }
         } else next({ response: { status: 400, statusText: "Bad Request" } });
     }));
 
+    // =====================================
+    // USER - ORDER ========================
+    // =====================================
     app.get('/user/orders', loginRequired, asyncHandler(async (req, res) => {
         res.render('user/orders');
     }));

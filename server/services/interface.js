@@ -89,9 +89,15 @@ module.exports = {
 		return axiosIns.get("items/count", { params: params }).then(response => response.data);
 	},
 	getItem: function(id){
-		var params = { itemType: "normal" };
+		var params = { _limit: -1, itemType: "normal", id: id };
+		// var params = { itemType: "normal" };
 		if (typeof id === "undefined" || isNaN(id)) return Promise.reject("[getItem] id is invalid.");
-		return axiosIns.get("items/" + id).then(response => response.data);
+		return axiosIns.get("items", { params: params }).then(
+			response => {
+				let items = response.data;
+				return items.length ? items[0] : null;
+			}
+		);
 	},
 	getKeywords: function(){
 		var params = { _limit: -1 };

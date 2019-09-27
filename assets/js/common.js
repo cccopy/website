@@ -155,16 +155,17 @@ function bindMoreAjax(){
 function bindAddCartAjax(){
 	$('a[addcart-ajax]').click(function(e){
 		e.preventDefault();
+		var errorMsg = "加入購物車失敗";
 		$.ajax({ url: $(this).attr('href'), method: "POST", data: { item: $(this).attr('item') } })
 			.done(function(response){
-				if (response.success) {
-					$("a[cart-link] span[cart-count]").text(response.count);
-					alert("已加入購物車");
-				} else {
-					alert("加入購物車失敗");
-				}
+				if (response.success) alert("已加入購物車");
+				else alert(response.message || errorMsg);
+				if (response.count) $("a[cart-link] span[cart-count]").text(response.count);
 			})
-			.fail(function(){ alert("加入購物車失敗"); });	
+			.fail(function(e){ 
+				console.error(e);
+				alert(errorMsg);
+			});	
 	});
 }
 

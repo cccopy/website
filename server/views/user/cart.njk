@@ -29,6 +29,7 @@
 						<div class="item"><span>付款</span></div>
 						<div class="item"><span>訂購完成</span></div>
 					</div>
+					{% for item in cartitems %}
 					<div class="stable">
 						<div class="row thead">
 							<div class="th col-lg-4"><span>項目</span></div>
@@ -40,12 +41,12 @@
 							<div class="th col-lg-2 edit"><span>變更</span></div>
 						</div>
 						<div class="row tbody">
-							<div class="td col-lg-4">「ASMR顱內高潮」手法！用聲音產生記憶點</div>
-							<div class="td col-lg-2"><span class="sth">價格</span>$50,000</div>
-							<div class="td col-lg-1"><span class="sth">急件加價</span>無</div>
-							<div class="td col-lg-1"><span class="sth">特殊加價</span>無</div>
-							<div class="td col-lg-1"><span class="sth">訂金</span>$40,000</div>
-							<div class="td col-lg-1"><span class="sth">尾款</span>$10,000</div>
+							<div class="td col-lg-4">{{ item.title }}</div>
+							<div class="td col-lg-2"><span class="sth">價格</span>${{ item.price|locale }}</div>
+							<div class="td col-lg-1"><span class="sth">急件加價</span>{% if item.urgentPrice|length %}{{ item.urgentPrice|locale }}{% else %}無{% endif %}</div>
+							<div class="td col-lg-1"><span class="sth">特殊加價</span>{% if item.customizePrice|length %}{{ item.customizePrice|locale }}{% else %}無{% endif %}</div>
+							<div class="td col-lg-1"><span class="sth">訂金</span>${{ item.advancePayment|locale }}</div>
+							<div class="td col-lg-1"><span class="sth">尾款</span>${{ item.finalPayment|locale }}</div>
 							<div class="td col-lg-2 edit"><a href="">刪除</a> / <a href="">加入收藏</a></div>
 						</div>
 						<div class="row thead theadg">
@@ -81,7 +82,7 @@
 								<a href="">加入</a>
 							</div>
 						</div>
-						<div class="row tbody">
+						<!-- <div class="row tbody">
 							<div class="td col-lg-4"><span>
 								<span class="sth">加購項目</span>
 								名稱名稱
@@ -98,13 +99,15 @@
 							<div class="td col-lg-1"></div>
 							<div class="td col-lg-1"></div>
 							<div class="td col-lg-2 edit"><span><a href="">刪除</a></span></div>
-						</div>
+						</div> -->
 						<div class="row tbtm">
 							<div class="td col total">
 								小計 (不含尾款)  NT$ <span>46,500</span> 元
 							</div> 
 						</div>
 					</div>
+					{% endfor %}
+					
 					<div class="notice">
 						<h3>重要提醒</h3>
 						<ol>
