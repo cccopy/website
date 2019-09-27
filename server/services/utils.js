@@ -9,6 +9,14 @@ module.exports = {
 		});
 		return resMap;
 	},
+	getPropMapArrayObject: function(arr, keyname){
+		let resMap = {};
+		arr.forEach(item => {
+			if ( !resMap[item[keyname]] ) resMap[item[keyname]] = [];
+			resMap[item[keyname]].push(item);
+		});
+		return resMap;
+	},
 	getYoutubeEmbedUrl: function(url){
         var match = url.match(youtubeRegExp);
         if (match && match[2].length == 11) {

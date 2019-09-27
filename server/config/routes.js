@@ -13,6 +13,14 @@ var isDev = process.env.NODE_ENV === 'development';
 
 const DEFAULT_AFTER_LOGIN = '/user/ugindex';
 
+const ADDITION_IMAGE_MAP = {
+    "精簡秒數": "/assets/images/img_bmSec.png",
+    "英文字幕": "/assets/images/img_bmEng.png",
+    "尺寸調整": "/assets/images/img_bmSize.png",
+    "加購劇照": "/assets/images/img_bmPic.png",
+    "毛帶全拿": "/assets/images/img_bmFlim.png"
+};
+
 const asyncHandler = fn => (req, res, next) => {
     return Promise
         .resolve(fn(req, res, next))
@@ -46,7 +54,7 @@ module.exports = async function(app, passport) {
     let keywordsMap = utils.getPropMapObject(normalKeywords, "id");
     let keywordsWordMap = utils.getPropMapObject(normalKeywords, "word");
 
-    var nunEnv = nunjucks.configure(app.get('views'), {
+    let nunEnv = nunjucks.configure(app.get('views'), {
         autoescape: true,
         watch: true,
         express: app
@@ -110,6 +118,32 @@ module.exports = async function(app, passport) {
         };
     }
 
+    function isItemInCart(item, cart){
+        return cart.filter(m => m.id == item.id).length > 0;
+    }
+
+    async function getAdditionItems(){
+        let additionItems = await interface.getAdditions();
+        let additionMap = utils.getPropMapArrayObject(additionItems, "title");
+        let res = [];
+        Object.keys(additionMap).forEach(addition => {
+            res.push({
+                title: addition,
+                image: ADDITION_IMAGE_MAP[addition],
+                details: additionMap[addition].map(detail => {
+                    return {
+                        id: detail.id,
+                        type: detail.additionType,
+                        price: detail.price
+                    };
+                })
+            });
+        });
+        return res;
+    }
+
+    let additionDetails = await getAdditionItems();
+
     app.get('/', async (req, res) => { 
         let popularItems = await interface.getItems( { limit: 5 } );
         let newItems = await interface.getItems( { limit: 5, sort: "created_at:DESC" } );
@@ -138,8 +172,12 @@ module.exports = async function(app, passport) {
             let keywordRelateds = await interface.getItemsByTag({ tags: item.keywords });
             item.recommendProds = utils.getRandom(keywordRelateds, Math.min(keywordRelateds.length, 3) );
             item.recommendProds.forEach(prepareDetailItem);
-            
-            res.render('product/detail', { itemdetail: item });
+
+            res.render('product/detail', { 
+                itemdetail: item, 
+                additiondetail: additionDetails, 
+                itemincart: isItemInCart(item, req.session.cart)
+            });
         } else {
             next({ response: { status: 404, statusText: "Not Found" } })
         }
@@ -215,6 +253,7 @@ module.exports = async function(app, passport) {
             req.logIn(user, function(err) {
                 if (err) return next(err);
                 let dest = req.body.next || DEFAULT_AFTER_LOGIN;
+                req.session.cart = req.session.cart || [];  // init
                 req.session.redirectTo = dest;
                 req.session.loginState = "loggedIn";
                 return res.redirect(dest);
@@ -257,7 +296,7 @@ module.exports = async function(app, passport) {
     // USER - CART =========================
     // =====================================
     app.get('/user/cart', loginRequired, asyncHandler(async (req, res) => {
-        let cartItems = req.session.cart || [];
+        let cartItems = req.session.cart;
         res.render('user/cart', { cartitems: cartItems } );
     }));
     app.get('/user/cart/confirm', loginRequired, asyncHandler(async (req, res) => {
@@ -275,8 +314,7 @@ module.exports = async function(app, passport) {
         let item;
         if (isValid && (item = await interface.getItem(itemId)) ) {
             let sessionCart = req.session.cart;
-            if ( !sessionCart ) sessionCart = req.session.cart = [];
-            if (sessionCart.filter(m => m.id == itemId).length > 0){
+            if ( isItemInCart(item, sessionCart) ){
                 res.send({ success: false, message: "已經加入囉", count: sessionCart.length });
             } else {
                 sessionCart.push( getSessionCartItem(item) );

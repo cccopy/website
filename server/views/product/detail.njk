@@ -185,6 +185,45 @@
 		</div>
 	</section>
 
+	<section class="content">
+		<div class="container">
+			<div class="sptitle">
+				<h2 class="title"><span>加購項目</span></h2>
+				<div class="note">同筆訂單加購享 <b>9</b> 折優惠</div>
+			</div>
+			<div class="splist buyMore owl-carousel">
+				{% for addition in additiondetail %}
+				<div class="splbx">
+					<div class="inner">
+						<div class="img">
+							<img src="{{ addition.image }}" alt="">
+						</div>
+						<h4>{{ addition.title }}</h4>
+						<div class="main">
+							<p><span>交期：</span>成品交付後7日</p>
+							{% if addition.details|length > 1 %}
+							<select name="" id="">
+							{% for detail in addition.details %}
+								<option value="0">{{ detail.type }}</option>
+							{% endfor %}
+							</select>
+							{% endif %}
+						</div>
+						<div class="price">
+							價格 <span>＄<b>{{ addition.details[0].price|locale }}</b></span>
+						</div>
+						{% if itemincart %}
+						<a href="" class="btn">加購</a>
+						{% else %}
+						<div tool-tip class="btn btnGray disabled" title="請先將商品加入購物車哦！">加購</div>
+						{% endif %}
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+
 	{% if itemdetail.recommendProds|length %}
 	<section class="content">
 		<div class="container">

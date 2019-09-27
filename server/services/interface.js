@@ -102,5 +102,9 @@ module.exports = {
 	getKeywords: function(){
 		var params = { _limit: -1 };
 		return axiosIns.get("keywords", { params: params }).then(response => response.data);
+	},
+	getAdditions: function(){
+		var params = { _limit: -1, itemType: "addition" };
+		return axiosIns.get("items", { params: params }).then(response => response.data);
 	}
 };

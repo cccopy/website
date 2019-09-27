@@ -178,6 +178,13 @@ function moreAjaxHandler(e) {
 		});
 }
 
+function bindTooltip(){
+	$(document.body).tooltip({
+		selector: "[tool-tip]",
+		container: "#main-pjax-container"
+	});
+}
+
 $(document).ready(function() {
 	var x; 
 	x=$(window).width();
@@ -254,6 +261,7 @@ $(document).ready(function() {
 	bindFormSubmit();
 	bindAddCartAjax();
 	bindLogoutLink();
+	bindTooltip();
 
 	$('a[fast-search-link]').click(function(event){
 		event.preventDefault();
@@ -282,6 +290,7 @@ $(document).on('pjax:end', function(event) {
 		bindBuyMore();
 		bindSwebFlow();
 		bindSindexkv();
+		bindTooltip();
 	}
 	if ( window._toLogged ) {
 		$("a[login-link]").replaceWith('<a logout-link href="/auth/logout">登出</a>' + 
