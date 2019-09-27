@@ -120,7 +120,7 @@
 						{% endfor %}
 						<div class="row tbtm">
 							<div class="td col total">
-								小計 (不含尾款)  NT$ <span>46,500</span> 元
+								小計 (不含尾款)  NT$ <span>{{ item.subtotal|locale }}</span> 元
 							</div> 
 						</div>
 					</div>
@@ -142,7 +142,7 @@
 
 					{% if cartitems|length %}
 					<div class="mmeat alltotal">
-						訂單金額總計 (不含尾款)  NT$ <span>86,500</span> 元
+						訂單金額總計 (不含尾款)  NT$ <span>{{ totalprice|locale }}</span> 元
 					</div>
 					<div class="btns">
 						<a main-pjax-link href="/user/cart/confirm" class="btn btnIm">確認訂單</a>

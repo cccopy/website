@@ -137,6 +137,7 @@ module.exports = async function(app, passport) {
         return _.map(normalItems, item => {
             let res = _.clone(item);
             res.additions = _.map(additionPidMap[item.id], additem => _.clone(additem));
+            res.subtotal = item.advancePayment + _.reduce(_.map(res.additions, "price"), (sum, n) => sum + n, 0);
             return res;
         });
     }
@@ -325,7 +326,11 @@ module.exports = async function(app, passport) {
     // USER - CART =========================
     // =====================================
     app.get('/user/cart', loginRequired, asyncHandler(async (req, res) => {
-        res.render('user/cart', { cartitems: getLayoutCartItems(req.session.cart) } );
+        let layoutCart = getLayoutCartItems(req.session.cart);
+        res.render('user/cart', { 
+            cartitems: layoutCart,
+            totalprice: _.reduce(_.map(layoutCart, "subtotal"), (sum, n) => sum + n, 0)
+        });
     }));
     app.get('/user/cart/confirm', loginRequired, asyncHandler(async (req, res) => {
         res.render('user/cart/confirm');
