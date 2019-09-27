@@ -29,6 +29,22 @@
 						<div class="item"><span>付款</span></div>
 						<div class="item"><span>訂購完成</span></div>
 					</div>
+					{% if not cartitems|length %}
+					<div class="stable">
+						<div class="row thead">
+							<div class="th col-lg-4"><span>項目</span></div>
+							<div class="th col-lg-2"><span>價格</span></div>
+							<div class="th col-lg-1"><span>急件加價</span></div>
+							<div class="th col-lg-1"><span>特殊加價</span></div>
+							<div class="th col-lg-1"><span>訂金</span></div>
+							<div class="th col-lg-1"><span>尾款</span></div>
+							<div class="th col-lg-2 edit"><span>變更</span></div>
+						</div>
+						<div class="row tbody">
+							<div class="td col-lg-12">購物車無商品</div>
+						</div>
+					</div>
+					{% endif %}
 					{% for item in cartitems %}
 					<div class="stable">
 						<div class="row thead">
@@ -82,24 +98,26 @@
 								<a href="">加入</a>
 							</div>
 						</div>
-						<!-- <div class="row tbody">
+						{% for addition in item.additions %}
+						<div class="row tbody">
 							<div class="td col-lg-4"><span>
 								<span class="sth">加購項目</span>
-								名稱名稱
+								{{ addition.title }}
 							</span></div>
 							<div class="td col-lg-2"><span>
 								<span class="sth">規格</span>
-								1
+								{{ addition.type }}
 							</span></div>
 							<div class="td col-lg-1"><span>
 								<span class="sth">價格</span>
-								$5,000
+								${{ addition.price|locale }}
 							</span></div>
 							<div class="td col-lg-1"></div>
 							<div class="td col-lg-1"></div>
 							<div class="td col-lg-1"></div>
 							<div class="td col-lg-2 edit"><span><a href="">刪除</a></span></div>
-						</div> -->
+						</div>
+						{% endfor %}
 						<div class="row tbtm">
 							<div class="td col total">
 								小計 (不含尾款)  NT$ <span>46,500</span> 元
@@ -121,12 +139,15 @@
 							<li>當支付訂金後，即開立發票；待尾款支付後，將開立第二張發票。</li>
 						</ol>
 					</div>
+
+					{% if cartitems|length %}
 					<div class="mmeat alltotal">
 						訂單金額總計 (不含尾款)  NT$ <span>86,500</span> 元
 					</div>
 					<div class="btns">
 						<a main-pjax-link href="/user/cart/confirm" class="btn btnIm">確認訂單</a>
 					</div>
+					{% endif %}
 				</div>
 				{% endblock %}
 			</div>

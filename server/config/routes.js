@@ -1,15 +1,15 @@
 /**
  * Routes for express app
  */
-var express = require('express');
-var path = require('path');
+const express = require('express');
+const path = require('path');
 const url = require('url');
-// var utils = require('../services/utils');
-var interface = require('../services/interface');
-var utils = require('../services/utils');
-var nunjucks = require('nunjucks');
+const _ = require('lodash');
+const interface = require('../services/interface');
+const utils = require('../services/utils');
+const nunjucks = require('nunjucks');
 
-var isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV === 'development';
 
 const DEFAULT_AFTER_LOGIN = '/user/ugindex';
 
@@ -127,6 +127,18 @@ module.exports = async function(app, passport) {
             price: item.price,
             type: item.additionType
         };
+    }
+
+    function getLayoutCartItems(cartlist){
+        // find addition items
+        var additionPidMap = utils.getPropMapArrayObject(
+                cartlist.filter(item => !!item.pid), "pid");
+        var normalItems = cartlist.filter(item => !item.pid);
+        return _.map(normalItems, item => {
+            let res = _.clone(item);
+            res.additions = _.map(additionPidMap[item.id], additem => _.clone(additem));
+            return res;
+        });
     }
 
     function isItemInCart(item, cart, query){
@@ -313,8 +325,7 @@ module.exports = async function(app, passport) {
     // USER - CART =========================
     // =====================================
     app.get('/user/cart', loginRequired, asyncHandler(async (req, res) => {
-        let cartItems = req.session.cart;
-        res.render('user/cart', { cartitems: cartItems } );
+        res.render('user/cart', { cartitems: getLayoutCartItems(req.session.cart) } );
     }));
     app.get('/user/cart/confirm', loginRequired, asyncHandler(async (req, res) => {
         res.render('user/cart/confirm');
