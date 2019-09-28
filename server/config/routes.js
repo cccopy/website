@@ -357,6 +357,31 @@ module.exports = async function(app, passport) {
         } else next({ response: { status: 400, statusText: "Bad Request" } });
     }));
 
+    app.post('/ajax/cart/remove', loginRequired, asyncHandler(async (req, res, next) => {
+        let itemId = req.body.item;
+        let isValid = checkReferer(req, "/user/cart");
+        if (isValid) {
+            let sessionCart = req.session.cart;
+            let targetTitle = "";
+            if ( isItemInCart({ id: itemId }, sessionCart) ){
+                for(let tidx = sessionCart.length - 1; tidx >= 0; tidx-- ) {
+                    let cartItem = sessionCart[tidx]
+                    if (cartItem.id == itemId || cartItem.pid == itemId) {
+                        if (cartItem.id == itemId) targetTitle = cartItem.title;
+                        sessionCart.splice(tidx, 1);
+                    }
+                }
+                res.send({
+                    success: true, 
+                    message: "已將 " + targetTitle + " 刪除",
+                    count: sessionCart.length
+                });
+            } else {
+                res.send({ success: false, message: "這項商品並不在你的購物車", count: sessionCart.length });
+            }
+        }
+    }));
+
     app.post('/ajax/addition/add', loginRequired, asyncHandler(async (req, res, next) => {
         let itemId = req.body.item;
         let pitemId = req.body.pitem;

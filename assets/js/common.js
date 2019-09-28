@@ -343,6 +343,35 @@ function bindRemoveAdditionAjax(){
 	});
 }
 
+function bindRemoveCartAjax(){
+	$(document.body).on('click', 'a[removecart-ajax]', function(e){
+		e.preventDefault();
+		var jqthis = $(this);
+		var errorMsg = "刪除失敗";
+		$.ajax({ url: jqthis.attr('href'), method: "POST", data: { item: jqthis.attr('item') } })
+			.done(function(response){
+				if (response.success) {
+					var stableWrap = jqthis.parents("[jq-group]");	
+					if ( response.count == 0 ) {
+						stableWrap.removeAttr("jq-group");
+						$("[remove-when-empty]").remove();
+						stableWrap.append('<div class="row tbody"><div class="td col-lg-12">購物車無商品</div></div>');
+					} else {
+						stableWrap.remove();
+						triggerCartPriceRefresh();
+					}
+					alert(response.message || "已刪除");
+				}
+				else alert(response.message || errorMsg);
+				if (response.count) $("a[cart-link] span[cart-count]").text(response.count);
+			})
+			.fail(function(e){ 
+				console.error(e);
+				alert(errorMsg);
+			});	
+	});
+}
+
 $(document).ready(function() {
 	var x; 
 	x=$(window).width();
@@ -424,6 +453,7 @@ $(document).ready(function() {
 	bindAddAdditionAjax();
 	bindCartDomEvents();
 	bindRemoveAdditionAjax();
+	bindRemoveCartAjax();
 
 	$('a[fast-search-link]').click(function(event){
 		event.preventDefault();

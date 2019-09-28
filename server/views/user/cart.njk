@@ -56,16 +56,19 @@
 							<div class="th col-lg-1"><span>尾款</span></div>
 							<div class="th col-lg-2 edit"><span>變更</span></div>
 						</div>
-						<div class="row tbody" jq-price="{{ item.advancePayment }}">
+						<div class="row tbody" jq-price="{{ item.advancePayment }}" remove-when-empty>
 							<div class="td col-lg-4">{{ item.title }}</div>
 							<div class="td col-lg-2"><span class="sth">價格</span>${{ item.price|locale }}</div>
 							<div class="td col-lg-1"><span class="sth">急件加價</span>{% if item.urgentPrice|length %}{{ item.urgentPrice|locale }}{% else %}無{% endif %}</div>
 							<div class="td col-lg-1"><span class="sth">特殊加價</span>{% if item.customizePrice|length %}{{ item.customizePrice|locale }}{% else %}無{% endif %}</div>
 							<div class="td col-lg-1"><span class="sth">訂金</span>${{ item.advancePayment|locale }}</div>
 							<div class="td col-lg-1"><span class="sth">尾款</span>${{ item.finalPayment|locale }}</div>
-							<div class="td col-lg-2 edit"><a href="">刪除</a> / <a href="">加入收藏</a></div>
+							<div class="td col-lg-2 edit">
+								<a removecart-ajax href="/ajax/cart/remove" item="{{ item.id }}">刪除</a>
+								<!-- / <a href="">加入收藏</a> -->
+							</div>
 						</div>
-						<div class="row thead theadg">
+						<div class="row thead theadg" remove-when-empty>
 							<div class="th col-lg-4"><span>加購項目</span></div>
 							<div class="th col-lg-2"><span>規格</span></div>
 							<div class="th col-lg-1"><span>價格</span></div>
@@ -74,7 +77,7 @@
 							<div class="th col-lg-1"><span></span></div>
 							<div class="th col-lg-2 edit"><span>變更</span></div>
 						</div>
-						<div class="row tbody" new-addition-append>
+						<div class="row tbody" new-addition-append remove-when-empty>
 							<div class="td col-lg-4">
 								<span class="sth">加購項目</span>
 								<select maintype>
@@ -109,7 +112,7 @@
 							</div>
 						</div>
 						{% for addition in item.additions %}
-						<div class="row tbody" new-addition-append jq-price="{{ addition.price }}">
+						<div class="row tbody" new-addition-append jq-price="{{ addition.price }}" remove-when-empty>
 							<div class="td col-lg-4"><span>
 								<span class="sth">加購項目</span>
 								{{ addition.title }}
@@ -130,7 +133,7 @@
 							</div>
 						</div>
 						{% endfor %}
-						<div class="row tbtm">
+						<div class="row tbtm" remove-when-empty>
 							<div class="td col total">
 								小計 (不含尾款)  NT$ <span jq-total>{{ item.subtotal|locale }}</span> 元
 							</div> 
@@ -153,10 +156,10 @@
 					</div>
 
 					{% if cartitems|length %}
-					<div class="mmeat alltotal">
+					<div remove-when-empty class="mmeat alltotal">
 						訂單金額總計 (不含尾款)  NT$ <span jq-alltotal>{{ totalprice|locale }}</span> 元
 					</div>
-					<div class="btns">
+					<div remove-when-empty class="btns">
 						<a main-pjax-link href="/user/cart/confirm" class="btn btnIm">確認訂單</a>
 					</div>
 					{% endif %}
