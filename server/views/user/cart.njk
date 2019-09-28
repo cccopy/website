@@ -46,7 +46,7 @@
 					</div>
 					{% endif %}
 					{% for item in cartitems %}
-					<div class="stable">
+					<div class="stable" jq-group="{{ item.id }}">
 						<div class="row thead">
 							<div class="th col-lg-4"><span>項目</span></div>
 							<div class="th col-lg-2"><span>價格</span></div>
@@ -56,7 +56,7 @@
 							<div class="th col-lg-1"><span>尾款</span></div>
 							<div class="th col-lg-2 edit"><span>變更</span></div>
 						</div>
-						<div class="row tbody">
+						<div class="row tbody" jq-price="{{ item.advancePayment }}">
 							<div class="td col-lg-4">{{ item.title }}</div>
 							<div class="td col-lg-2"><span class="sth">價格</span>${{ item.price|locale }}</div>
 							<div class="td col-lg-1"><span class="sth">急件加價</span>{% if item.urgentPrice|length %}{{ item.urgentPrice|locale }}{% else %}無{% endif %}</div>
@@ -74,32 +74,42 @@
 							<div class="th col-lg-1"><span></span></div>
 							<div class="th col-lg-2 edit"><span>變更</span></div>
 						</div>
-						<div class="row tbody">
+						<div class="row tbody" new-addition-append>
 							<div class="td col-lg-4">
 								<span class="sth">加購項目</span>
-								<select name="" id="">
+								<select maintype>
 									<option value="">請選擇</option>
+									{% for adetail in additiondetail %}
+									<option link-to="{{ adetail.title }}" value="{{ adetail.details[0].id }}" price="{{ adetail.details[0].price }}">{{ adetail.title }}</option>
+									{% endfor %}
 								</select>
 							</div>
 							<div class="td col-lg-2">
 								<span class="sth">規格</span>
-								<select name="" id="">
-									<option value="">請選擇</option>
+								<select subtype>
+									<option init value="">請選擇</option>
+									{% for adetail in additiondetail %}
+									{% if adetail.details|length > 1 %}
+										{% for des in adetail.details %}
+										<option link-from="{{ adetail.title }}" value="{{ des.id }}" price="{{ des.price }}" hidden>{{ des.type }}</option>
+										{% endfor %}
+									{% endif %}
+									{% endfor %}
 								</select>
 							</div>
 							<div class="td col-lg-1">
 								<span class="sth">價格</span>
-								-
+								<span type-price>-</span>
 							</div>
 							<div class="td col-lg-1"></div>
 							<div class="td col-lg-1"></div>
 							<div class="td col-lg-1"></div>
 							<div class="td col-lg-2 edit">
-								<a href="">加入</a>
+								<a add-addition-ajax-cart href="/ajax/addition/add" pitem="{{ item.id }}" item="">加入</a>
 							</div>
 						</div>
 						{% for addition in item.additions %}
-						<div class="row tbody">
+						<div class="row tbody" new-addition-append jq-price="{{ addition.price }}">
 							<div class="td col-lg-4"><span>
 								<span class="sth">加購項目</span>
 								{{ addition.title }}
@@ -115,12 +125,14 @@
 							<div class="td col-lg-1"></div>
 							<div class="td col-lg-1"></div>
 							<div class="td col-lg-1"></div>
-							<div class="td col-lg-2 edit"><span><a href="">刪除</a></span></div>
+							<div class="td col-lg-2 edit">
+								<span><a remove-addition-ajax href="/ajax/addition/remove" pitem="{{ item.id }}" item="{{ addition.id }}">刪除</a></span>
+							</div>
 						</div>
 						{% endfor %}
 						<div class="row tbtm">
 							<div class="td col total">
-								小計 (不含尾款)  NT$ <span>{{ item.subtotal|locale }}</span> 元
+								小計 (不含尾款)  NT$ <span jq-total>{{ item.subtotal|locale }}</span> 元
 							</div> 
 						</div>
 					</div>
@@ -142,7 +154,7 @@
 
 					{% if cartitems|length %}
 					<div class="mmeat alltotal">
-						訂單金額總計 (不含尾款)  NT$ <span>{{ totalprice|locale }}</span> 元
+						訂單金額總計 (不含尾款)  NT$ <span jq-alltotal>{{ totalprice|locale }}</span> 元
 					</div>
 					<div class="btns">
 						<a main-pjax-link href="/user/cart/confirm" class="btn btnIm">確認訂單</a>

@@ -329,7 +329,8 @@ module.exports = async function(app, passport) {
         let layoutCart = getLayoutCartItems(req.session.cart);
         res.render('user/cart', { 
             cartitems: layoutCart,
-            totalprice: _.reduce(_.map(layoutCart, "subtotal"), (sum, n) => sum + n, 0)
+            totalprice: _.reduce(_.map(layoutCart, "subtotal"), (sum, n) => sum + n, 0),
+            additiondetail: additionDetails
         });
     }));
     app.get('/user/cart/confirm', loginRequired, asyncHandler(async (req, res) => {
@@ -359,7 +360,7 @@ module.exports = async function(app, passport) {
     app.post('/ajax/addition/add', loginRequired, asyncHandler(async (req, res, next) => {
         let itemId = req.body.item;
         let pitemId = req.body.pitem;
-        let isValid = checkReferer(req, "/items/" + pitemId);
+        let isValid = checkReferer(req, "/items/" + pitemId) || checkReferer(req, "/user/cart");
         let item;
         if ( isValid && (item = additionIdMap[itemId]) ) {
             let sessionCart = req.session.cart;
@@ -371,8 +372,34 @@ module.exports = async function(app, passport) {
                 res.send({ 
                     success: true, 
                     message: "已將 " + item.title + (item.additionType ? (" " + item.additionType) : "") + " 加入購物車",
+                    infos: sessionAdditionItem,
                     count: sessionCart.length
                 });
+            }
+        } else next({ response: { status: 400, statusText: "Bad Request" } });
+    }));
+
+    app.post('/ajax/addition/remove', loginRequired, asyncHandler(async (req, res, next) => {
+        let itemId = req.body.item;
+        let pitemId = req.body.pitem;
+        let isValid = checkReferer(req, "/items/" + pitemId) || checkReferer(req, "/user/cart");
+        let item;
+        if ( isValid && (item = additionIdMap[itemId]) ) {
+            let sessionCart = req.session.cart;
+            let sessionAdditionItem = getSessionAdditionItem(item, pitemId);
+            if ( isItemInCart(sessionAdditionItem, sessionCart, { pid: pitemId, id: itemId }) ) {
+                let idx = _.findIndex(sessionCart, function(o){
+                    return o.pid == pitemId && o.id == itemId;
+                });
+                sessionCart.splice(idx, 1);
+                res.send({
+                    success: true, 
+                    message: "已將 " + item.title + (item.additionType ? (" " + item.additionType) : "") + " 刪除",
+                    infos: sessionAdditionItem,
+                    count: sessionCart.length
+                });
+            } else {
+                res.send({ success: false, message: "這項加購並不在你的購物車", count: sessionCart.length });
             }
         } else next({ response: { status: 400, statusText: "Bad Request" } });
     }));

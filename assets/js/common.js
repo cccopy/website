@@ -226,6 +226,123 @@ function bindAdditionTypeSelection(){
 	});
 }
 
+function bindCartDomEvents(){
+	// maybe change to Vue
+	function getAdditionTuple(price, title, type, pid, id){
+		return '<div class="row tbody" jq-price="' + price + '">' + 
+			'<div class="td col-lg-4"><span>' +
+				'<span class="sth">加購項目</span>' +
+				title +
+			'</span></div>' +
+			'<div class="td col-lg-2"><span>' +
+				'<span class="sth">規格</span>' +
+				type +
+			'</span></div>' +
+			'<div class="td col-lg-1"><span>' +
+				'<span class="sth">價格</span>' +
+				'$' + parseInt(price).toLocaleString() +
+			'</span></div>' +
+			'<div class="td col-lg-1"></div>' +
+			'<div class="td col-lg-1"></div>' +
+			'<div class="td col-lg-1"></div>' +
+			'<div class="td col-lg-2 edit">' +
+				'<span><a remove-addition-ajax href="/ajax/addition/remove" pitem="' + pid +
+				'" item="' + id + '">刪除</a></span>' +
+			'</div>' +
+		'</div>';
+	}
+
+	$("[jq-group]").each(function(){
+		var jqthis = $(this);
+		var maintype = jqthis.find("select[maintype]");
+		var subtype = jqthis.find("select[subtype]");
+		var typeprice = jqthis.find("span[type-price]");
+		var ajaxAnchor = jqthis.find("a[add-addition-ajax-cart]");
+		maintype.change(function(){
+			var option = maintype.children(":selected");
+			var linkgroupName = option.attr("link-to");
+			var linkOptions = subtype.children("option[link-from=" + linkgroupName + "]");
+			subtype.children("option[link-from]").attr("hidden", "");
+			if (linkOptions.length) {
+				linkOptions.removeAttr("hidden");
+				typeprice.text("-");
+				ajaxAnchor.attr("item", "");
+				subtype.val("").show();
+			} else {
+				subtype.hide();
+				ajaxAnchor.attr("item", option.val());
+				typeprice.text( "$" + parseInt(option.attr("price")).toLocaleString() );
+			}
+		});
+		subtype.change(function(){
+			var option = subtype.children(":selected");
+			ajaxAnchor.attr("item", option.val());
+			typeprice.text( "$" + parseInt(option.attr("price")).toLocaleString() );
+		});
+
+		ajaxAnchor.click(function(e){
+			e.preventDefault();
+			var item = ajaxAnchor.attr("item");
+			var pitem = ajaxAnchor.attr("pitem");
+			var errorMsg = "加入購物車失敗";
+			if ( item == "") alert("請選擇規格");
+			else {
+				$.ajax({ url: ajaxAnchor.attr('href'), method: "POST", data: { item: item, pitem: pitem } })
+					.done(function(response){
+						if (response.success) {
+							var infos = response.infos;
+							var insertHtml = getAdditionTuple(infos.price, infos.title, infos.type, infos.pid, infos.id);
+							$(insertHtml).insertAfter(jqthis.find("[new-addition-append]").last());
+							triggerCartPriceRefresh();
+							alert(response.message || "已加入購物車");
+						} else alert(response.message || errorMsg);
+						if (response.count) $("a[cart-link] span[cart-count]").text(response.count);
+					})
+					.fail(function(e){ 
+						console.error(e);
+						alert(errorMsg);
+					});	
+			}
+		});
+	});
+}
+
+function triggerCartPriceRefresh(){
+	var totalPrice = 0;
+	$("[jq-group]").each(function(){
+		var jqthis = $(this);
+		var sum = 0;
+		jqthis.find("[jq-price]").each(function(){
+			sum += parseInt($(this).attr("jq-price"));
+		});
+		jqthis.find("[jq-total]").text(sum.toLocaleString());
+		totalPrice += sum;
+	});
+	$("[jq-alltotal]").text( totalPrice.toLocaleString() );
+}
+
+function bindRemoveAdditionAjax(){
+	$(document.body).on('click', 'a[remove-addition-ajax]', function(e){
+		e.preventDefault();
+		var jqthis = $(this);
+		var errorMsg = "刪除失敗";
+		$.ajax({ url: jqthis.attr('href'), method: "POST", data: { item: jqthis.attr('item'), pitem: jqthis.attr('pitem') } })
+			.done(function(response){
+				if (response.success) {
+					jqthis.parents("[new-addition-append]").remove();
+					triggerCartPriceRefresh();
+					alert(response.message || "已刪除");
+				}
+				else alert(response.message || errorMsg);
+				if (response.count) $("a[cart-link] span[cart-count]").text(response.count);
+			})
+			.fail(function(e){ 
+				console.error(e);
+				alert(errorMsg);
+			});	
+	});
+}
+
 $(document).ready(function() {
 	var x; 
 	x=$(window).width();
@@ -305,6 +422,8 @@ $(document).ready(function() {
 	bindTooltip();
 	bindAdditionTypeSelection();
 	bindAddAdditionAjax();
+	bindCartDomEvents();
+	bindRemoveAdditionAjax();
 
 	$('a[fast-search-link]').click(function(event){
 		event.preventDefault();
@@ -336,6 +455,7 @@ $(document).on('pjax:end', function(event) {
 		bindTooltip();
 		bindAdditionTypeSelection();
 		bindAddAdditionAjax();
+		bindCartDomEvents();
 	}
 	if ( window._toLogged ) {
 		$("a[login-link]").replaceWith('<a logout-link href="/auth/logout">登出</a>' + 
