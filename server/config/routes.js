@@ -314,8 +314,30 @@ module.exports = async function(app, passport) {
         res.render('user/info');
     }));
 
+    // =====================================
+    // USER - LIKE =========================
+    // =====================================
     app.get('/user/like', loginRequired, asyncHandler(async (req, res) => {
-        res.render('user/like');
+        let likeItems = await interface.getItemsByIds(req.user.favorites);
+        likeItems.forEach(prepareItemAllKey);
+        res.render('user/like', { likeitems: likeItems } );
+    }));
+    app.post('/ajax/favorite/add', loginRequired, asyncHandler(async (req, res, next) => {
+        let itemId = req.body.item;
+        let isValid = checkReferer(req, "/items/" + itemId);
+        if ( isValid ) {
+            let intItemId = parseInt(itemId);
+            let favoriteIds = req.user.favorites;
+            let hasAdded = _.indexOf(favoriteIds, intItemId) != -1;
+            if ( hasAdded ) {
+                res.send({ success: false, message: "已經加入囉" });
+            } else {
+                favoriteIds.push(intItemId);
+                let updatedUser = await interface.updateUserFavorites(req.user.id, favoriteIds);
+                req.user = updatedUser;
+                res.send({ success: true });
+            }
+        } else next({ response: { status: 400, statusText: "Bad Request" } });
     }));
 
     app.get('/user/ecoupon', loginRequired, asyncHandler(async (req, res) => {

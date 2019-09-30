@@ -21,6 +21,11 @@ function appendContainsInArray(paramObj, field, value){
 	paramObj.append(field + "_contains", "," + value + "]");
 }
 
+function reduceUser(userObj){
+	userObj.favorites = _.map(userObj.favorites, fav => fav.id);
+	return userObj;
+}
+
 module.exports = {
 	validUser: function(email, password){
 		return new Promise(function(resolve, reject){
@@ -33,13 +38,16 @@ module.exports = {
 			.then(function(response){
 				const users = response.data;
 				if (users && users.length == 1) {
-					resolve(users[0]);
+					resolve(reduceUser(users[0]));
 				} else {
 					reject("email or password is not correct.");
 				}
 			})
 			.catch( err => { reject(err); });
 		});
+	},
+	getUserById: function(id){
+		return axiosIns.get("clients/" + id).then(response => reduceUser(response.data));
 	},
 	getItems: function(query){
 		var params = { _limit: -1, itemType: "normal" };
@@ -88,6 +96,17 @@ module.exports = {
 		}
 		return axiosIns.get("items/count", { params: params }).then(response => response.data);
 	},
+	getItemsByIds: function(ids){
+		let params = new URLSearchParams();
+		// default
+		params.set("itemType", "normal");
+		params.set("_limit", -1);
+		if ( Array.isArray(ids) && ids.length ) {
+			_.each(ids, id => { params.append("id_in", id); });
+			return axiosIns.get("items", { params: params }).then(response => response.data);
+		}
+		return Promise.resolve([]);
+	},
 	getItem: function(id){
 		var params = { _limit: -1, itemType: "normal", id: id };
 		// var params = { itemType: "normal" };
@@ -106,5 +125,9 @@ module.exports = {
 	getAdditions: function(){
 		var params = { _limit: -1, itemType: "addition" };
 		return axiosIns.get("items", { params: params }).then(response => response.data);
+	},
+	updateUserFavorites: function(userId, ids){
+		let params = { favorites: ids || [] };
+		return axiosIns.put("clients/" + userId, params ).then(response => reduceUser(response.data));
 	}
 };

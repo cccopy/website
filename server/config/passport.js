@@ -18,13 +18,17 @@ module.exports = function(passport) {
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
-        done(null, user.id);
+        done(null, user);
     });
 
     // used to deserialize the user
-    passport.deserializeUser(function(id, done) {
-        done(null, id);
-    });
+    passport.deserializeUser(function(user, done) {
+        done(null, user);
+        // interface.getUserById(id)
+        //     .then(function(user){
+        //         done(null, user);
+        //     });
+    }); 
 
     // =========================================================================
     // LOCAL LOGIN =============================================================

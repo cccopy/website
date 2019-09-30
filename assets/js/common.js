@@ -123,7 +123,7 @@ function bindIndexPL(){
 
 function bindFormSubmit(){
 	$(document.body).on('submit', 'section.login form', function(event) {
-		// event.preventDefault(); // stop default submit behavior when it bubbles to <body>
+		event.preventDefault(); // stop default submit behavior when it bubbles to <body>
 		$.pjax.submit(event, '#main-pjax-container', { 
 			scrollTo: false,
 			timeout: 5000, 
@@ -134,6 +134,7 @@ function bindFormSubmit(){
 	});
 
 	$(document.body).on('submit', 'form[header-search]', function(event){
+		event.preventDefault();
 		$.pjax.submit(event, '#main-pjax-container', { timeout: 5000, type: "GET" });
 	});
 }
@@ -171,6 +172,23 @@ function bindAddCartAjax(){
 					alert("已加入購物車");
 				} else alert(response.message || errorMsg);
 				if (response.count) $("a[cart-link] span[cart-count]").text(response.count);
+			})
+			.fail(function(e){ 
+				console.error(e);
+				alert(errorMsg);
+			});	
+	});
+}
+
+function bindAddFavoriteAjax(){
+	$(document.body).on('click', 'a[add-favorite-ajax]', function(e){
+		e.preventDefault();
+		var errorMsg = "加入收藏失敗";
+		$.ajax({ url: $(this).attr('href'), method: "POST", data: { item: $(this).attr('item') } })
+			.done(function(response){
+				if (response.success) {
+					alert("已加入收藏");
+				} else alert(response.message || errorMsg);
 			})
 			.fail(function(e){ 
 				console.error(e);
@@ -454,6 +472,7 @@ $(document).ready(function() {
 	bindCartDomEvents();
 	bindRemoveAdditionAjax();
 	bindRemoveCartAjax();
+	bindAddFavoriteAjax();
 
 	$('a[fast-search-link]').click(function(event){
 		event.preventDefault();
