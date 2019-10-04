@@ -1,7 +1,20 @@
 
 const youtubeRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
 
+function lessTenAddZero(v) { return v < 10? ("0" + v) : v; };
+
 module.exports = {
+	dateToContinueFormat: function(dte){
+		var year = dte.getUTCFullYear(),
+			month = dte.getUTCMonth() + 1,
+			day = dte.getUTCDate(),
+			hour = dte.getUTCHours(),
+			min = dte.getUTCMinutes(),
+			sec = dte.getUTCSeconds();
+		return [year.toString().slice(2), lessTenAddZero(month), lessTenAddZero(day), 
+				lessTenAddZero(hour), lessTenAddZero(min), lessTenAddZero(sec)
+			].join("");
+	},
 	getPropMapObject: function(arr, keyname){
 		let resMap = {};
 		arr.forEach(item => {

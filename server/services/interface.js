@@ -2,6 +2,7 @@ var axios = require('axios');
 var _ = require('lodash');
 var md5 = require('md5');
 var api = require('../config/constants.json').api;
+var utils = require('./utils');
 
 var axiosIns = axios.create({
 	baseURL: api.base,
@@ -129,5 +130,54 @@ module.exports = {
 	updateUserFavorites: function(userId, ids){
 		let params = { favorites: ids || [] };
 		return axiosIns.put("clients/" + userId, params ).then(response => reduceUser(response.data));
+	},
+	// not debug yet
+	createOrder: async function(userId, cart){
+		let cloneCart = _.cloneDeep(cart);
+		let masters = _.filter(cloneCart, c => !c.pid);
+		let additions = _.filter(cloneCart, c => !!c.pid);
+
+		let advance = _.sum(_.map(masters, "advancePayment")) + _.sum(_.map(additions, "price"));
+		let final = _.sum(_.map(masters, "finalPayment"));
+		
+		// create order 
+		let contFormat = utils.dateToContinueFormat(new Date());
+		let orderSerial = "O" + userId + (additions.length ? "A" : "") + contFormat;
+		let resOrder = await axiosIns.post("orders", {
+			serialNumber: orderSerial,
+			status: "未付款",
+			ownClient: userId,
+			advancePayment: advance,
+			finalPayment: final
+		});
+		
+		// cache order id for convinent
+		_.each(cloneCart, c => { c.orderId = resOrder.id } );
+
+		// create details (master)
+		_.each(masters, async c => {
+			let masterDetail = await axiosIns.post("orderdetails", {
+				status: "等待審核素材",
+				ownOrder: c.orderId,
+				item: c.id
+			});
+			c.detailId = masterDetail.id;
+			_.each(_.filter(additions, ad => ad.pid == c.id), child => { child.pdetail = c.detailId; });
+		});
+
+		// create details (child)
+		_.each(additions, async c => {
+			let childDetail = await axiosIns.post("orderdetails", {
+				ownOrder: c.orderId,
+				item: c.id
+				parentDetail: c.pdetail
+			});
+			c.detailId = childDetail.id;
+		});
+
+		// update order with linking
+		await axiosIns.put("orders/" + resOrder.id, {
+			details: _.map(cloneCart, "detailId")
+		});
 	}
 };
