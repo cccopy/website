@@ -160,7 +160,9 @@
 						訂單金額總計 (不含尾款)  NT$ <span jq-alltotal>{{ totalprice|locale }}</span> 元
 					</div>
 					<div remove-when-empty class="btns">
-						<a main-pjax-link href="/user/cart/confirm" class="btn btnIm">確認訂單</a>
+						<form cart-confirm action="/user/cart/confirm">
+							<button type="submit" class="btn btnIm">確認訂單</button>
+						</form>
 					</div>
 					{% endif %}
 				</div>

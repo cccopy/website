@@ -150,34 +150,32 @@ module.exports = {
 			advancePayment: advance,
 			finalPayment: final
 		});
-		
-		// cache order id for convinent
-		_.each(cloneCart, c => { c.orderId = resOrder.id } );
 
+		const resOrderData = resOrder.data;
+		const resOrderId = resOrderData.id;
+		
 		// create details (master)
 		_.each(masters, async c => {
 			let masterDetail = await axiosIns.post("orderdetails", {
 				status: "等待審核素材",
-				ownOrder: c.orderId,
+				ownOrder: resOrderId,
 				item: c.id
 			});
-			c.detailId = masterDetail.id;
-			_.each(_.filter(additions, ad => ad.pid == c.id), child => { child.pdetail = c.detailId; });
+
+			const masterDetailId = masterDetail.data.id;
+
+			_.each(
+				_.filter(additions, ad => ad.pid == c.id),
+				async child => { 
+					let childDetail = await axiosIns.post("orderdetails", {
+						ownOrder: resOrderId,
+						item: child.id,
+						parentDetail: masterDetailId
+					});
+				}
+			);
 		});
 
-		// create details (child)
-		_.each(additions, async c => {
-			let childDetail = await axiosIns.post("orderdetails", {
-				ownOrder: c.orderId,
-				item: c.id
-				parentDetail: c.pdetail
-			});
-			c.detailId = childDetail.id;
-		});
-
-		// update order with linking
-		await axiosIns.put("orders/" + resOrder.id, {
-			details: _.map(cloneCart, "detailId")
-		});
+		return resOrderData;
 	}
 };

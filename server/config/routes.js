@@ -357,13 +357,18 @@ module.exports = async function(app, passport) {
     }));
     app.get('/user/cart/confirm', loginRequired, asyncHandler(async (req, res) => {
         // redirect
+        let dest = '/user/orders';
+        req.session.redirectTo = dest;
+        res.redirect(dest);
     }));
     app.post('/user/cart/confirm', loginRequired, asyncHandler(async (req, res, next) => {
         let isValid = checkReferer(req, "/user/cart");
         let sessionCart = req.session.cart;
         if ( isValid && sessionCart && sessionCart.length ) {
             let order = await interface.createOrder(req.user.id, sessionCart);
-            res.render('user/cart/confirm' { serialnumber: order.serialNumber } );
+            // clear the cart
+            req.session.cart = [];
+            res.render('user/cart/confirm', { serialnumber: order.serialNumber } );
         } else next({ response: { status: 400, statusText: "Bad Request" } });
     }));
     app.get('/user/cart/paying', loginRequired, asyncHandler(async (req, res) => {

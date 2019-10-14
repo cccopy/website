@@ -126,7 +126,7 @@ function bindFormSubmit(){
 		event.preventDefault(); // stop default submit behavior when it bubbles to <body>
 		$.pjax.submit(event, '#main-pjax-container', { 
 			scrollTo: false,
-			timeout: 5000, 
+			timeout: 7000, 
 			push: false, 
 			replace: true,
 			type: "POST"
@@ -135,14 +135,27 @@ function bindFormSubmit(){
 
 	$(document.body).on('submit', 'form[header-search]', function(event){
 		event.preventDefault();
-		$.pjax.submit(event, '#main-pjax-container', { timeout: 5000, type: "GET" });
+		$.pjax.submit(event, '#main-pjax-container', { timeout: 7000, type: "GET" });
+	});
+}
+
+function bindCartConfirm(){
+	$(document.body).on('submit', 'form[cart-confirm]', function(event){
+		event.preventDefault();
+		$.pjax.submit(event, '#main-pjax-container', { 
+			timeout: 7000, 
+			push: false, 
+			replace: true,
+			type: "POST"
+		});
 	});
 }
 
 function bindLogoutLink(){
 	$(document.body).on('click', 'a[logout-link]', function(event) {
+		event.preventDefault();
 		$.pjax.click(event, '#main-pjax-container', {
-			timeout: 5000, 
+			timeout: 7000, 
 			push: false, 
 			replace: true
 		});
@@ -460,10 +473,11 @@ $(document).ready(function() {
 		$('.pop').fadeOut();
 	});
 
-	$(document).pjax('a[main-pjax-link]', '#main-pjax-container', { timeout: 5000 });
+	$(document).pjax('a[main-pjax-link]', '#main-pjax-container', { timeout: 7000 });
 
 	bindMoreAjax();
 	bindFormSubmit();
+	bindCartConfirm();
 	bindAddCartAjax();
 	bindLogoutLink();
 	bindTooltip();
