@@ -126,7 +126,7 @@ function bindIndexPL(){
 
 function bindFormSubmit(){
 	$(document.body).on('submit', 'section.login form', function(event) {
-		event.preventDefault(); // stop default submit behavior when it bubbles to <body>
+		// event.preventDefault(); // stop default submit behavior when it bubbles to <body>
 		$.pjax.submit(event, '#main-pjax-container', { 
 			scrollTo: false,
 			timeout: 7000, 
@@ -137,14 +137,14 @@ function bindFormSubmit(){
 	});
 
 	$(document.body).on('submit', 'form[header-search]', function(event){
-		event.preventDefault();
+		// event.preventDefault();
 		$.pjax.submit(event, '#main-pjax-container', { timeout: 7000, type: "GET" });
 	});
 }
 
 function bindCartConfirm(){
 	$(document.body).on('submit', 'form[cart-confirm]', function(event){
-		event.preventDefault();
+		// event.preventDefault();
 		$.pjax.submit(event, '#main-pjax-container', { 
 			timeout: 7000, 
 			push: false, 
@@ -156,7 +156,7 @@ function bindCartConfirm(){
 
 function bindLogoutLink(){
 	$(document.body).on('click', 'a[logout-link]', function(event) {
-		event.preventDefault();
+		// event.preventDefault();
 		$.pjax.click(event, '#main-pjax-container', {
 			timeout: 7000, 
 			push: false, 
@@ -527,7 +527,6 @@ $(document).on('pjax:end', function(event) {
 		$("a[login-link]").replaceWith('<a logout-link href="/auth/logout">登出</a>' + 
 			'<a ugindex-link main-pjax-link href="/user/ugindex">會員專區</a>' + 
 			'<a cart-link main-pjax-link href="/user/cart">購物車(<span cart-count>' + window._cartCount + '</span>)</a>');
-		bindLogoutLink();
 		window._toLogged = false;
 	}
 	if ( window._toLogout ) {
