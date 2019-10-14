@@ -1,4 +1,7 @@
 
+window.paceOptions = {
+	ajax: { trackMethods: ['GET', 'POST'] }
+};
 
 function bindMoreRC(){
 	$(".moreRC").owlCarousel({
