@@ -69,6 +69,10 @@ module.exports = async function(app, passport) {
         return utils.getYoutubeThumbnailUrl(url);
     });
 
+    nunEnv.addFilter("dateFormat", function(iso){
+        return utils.dateToNormalFormat(new Date(iso));
+    });
+    
     nunEnv.addFilter("locale", function(num){
         return Number(num).toLocaleString();
     });
@@ -468,7 +472,8 @@ module.exports = async function(app, passport) {
     // USER - ORDER ========================
     // =====================================
     app.get('/user/orders', loginRequired, asyncHandler(async (req, res) => {
-        res.render('user/orders');
+        let orders = await interface.getOrdersByUser(req.user.id);
+        res.render('user/orders', { orders: orders } );
     }));
 
     app.get('/user/promote', loginRequired, asyncHandler(async (req, res) => {

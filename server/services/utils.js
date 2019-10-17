@@ -15,6 +15,13 @@ module.exports = {
 				lessTenAddZero(hour), lessTenAddZero(min), lessTenAddZero(sec)
 			].join("");
 	},
+	dateToNormalFormat: function(dte, split){
+		split = split || "/";
+		var year = dte.getUTCFullYear(),
+			month = dte.getUTCMonth() + 1,
+			day = dte.getUTCDate();
+		return [year.toString(), lessTenAddZero(month), lessTenAddZero(day)].join(split);
+	},
 	getPropMapObject: function(arr, keyname){
 		let resMap = {};
 		arr.forEach(item => {

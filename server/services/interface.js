@@ -127,11 +127,14 @@ module.exports = {
 		var params = { _limit: -1, itemType: "addition" };
 		return axiosIns.get("items", { params: params }).then(response => response.data);
 	},
+	getOrdersByUser: async function(userId){
+		let user = await this.getUserById(userId);
+		return user.orders;
+	},
 	updateUserFavorites: function(userId, ids){
 		let params = { favorites: ids || [] };
 		return axiosIns.put("clients/" + userId, params ).then(response => reduceUser(response.data));
 	},
-	// not debug yet
 	createOrder: async function(userId, cart){
 		let cloneCart = _.cloneDeep(cart);
 		let masters = _.filter(cloneCart, c => !c.pid);

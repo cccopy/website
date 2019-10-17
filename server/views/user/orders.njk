@@ -22,71 +22,9 @@
 				{% include "user/_nav.njk"%}
 
 				<div class="main">
-					<div class="webflow swebflow owl-carousel">
-						<div class="wfbx">
-							<div class="icon">
-								<span class="num">1</span>
-								<div class="img">
-									<img src="/assets/images/i_wfVideo.png" alt="">
-								</div>
-								<b>選擇模組</b>
-							</div>
-						</div>
-						<div class="wfbx">
-							<div class="icon">
-								<span class="num">2</span>
-								<div class="img">
-									<img src="/assets/images/i_wfPay.png" alt="">
-								</div>
-								<b>訂金支付</b>
-							</div>
-						</div>
-						<div class="wfbx">
-							<div class="icon">
-								<span class="num">3</span>
-								<div class="img">
-									<img src="/assets/images/i_wfNote.png" alt="">
-								</div>
-								<b>填寫＆上傳</b>
-							</div>
-						</div>
-						<div class="wfbx">
-							<div class="icon">
-								<span class="num">4</span>
-								<div class="img">
-									<img src="/assets/images/i_wfFlim.png" alt="">
-								</div>
-								<b>拍攝</b>
-							</div>
-						</div>
-						<div class="wfbx">
-							<div class="icon">
-								<span class="num">5</span>
-								<div class="img">
-									<img src="/assets/images/i_wfEdit.png" alt="">
-								</div>
-								<b>修改</b>
-							</div>
-						</div>
-						<div class="wfbx">
-							<div class="icon">
-								<span class="num">6</span>
-								<div class="img">
-									<img src="/assets/images/i_wfPay.png" alt="">
-								</div>
-								<b>尾款支付</b>
-							</div>
-						</div>
-						<div class="wfbx">
-							<div class="icon">
-								<span class="num">7</span>
-								<div class="img">
-									<img src="/assets/images/i_wfVideoOk.png" alt="">
-								</div>
-								<b>成品交付</b>
-							</div>
-						</div>
-					</div>
+					
+					{% include "user/orders/_flows.njk"%}
+
 					<div class="stable">
 						<div class="row thead">
 							<div class="th col-lg-4"><span>訂單進度查詢</span></div>
@@ -95,7 +33,27 @@
 							<div class="th col-lg-2"><span>尾款</span></div>
 							<div class="th col-lg-2"><span>變更</span></div>
 						</div>
+						{% for order in orders %}
 						<div class="row tbody">
+							<div class="td col-lg-4">{{ order.serialNumber }}</div>
+							<div class="td col-lg-2">
+								<span class="sth">訂購時間</span>
+								{{ order.created_at|dateFormat }}
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">應付訂金</span>
+								${{ order.advancePayment|locale }}
+							</div>
+							<div class="td col-lg-2">
+								<span class="sth">尾款</span>
+								${{ order.finalPayment|locale }}
+							</div>
+							<div class="td col-lg-2 edit">
+								<a href="">立即付款</a>
+							</div>
+						</div>
+						{% endfor %}
+						<!-- <div class="row tbody">
 							<div class="td col-lg-4">OD0456123789</div>
 							<div class="td col-lg-2">
 								<span class="sth">訂購時間</span>
@@ -112,8 +70,8 @@
 							<div class="td col-lg-2 edit">
 								<a href="">立即付款</a>
 							</div>
-						</div>
-						<div class="row tbody">
+						</div> -->
+						<!-- <div class="row tbody">
 							<div class="td col-lg-4"><a href="odStatus.html" class="link">OD0456123789</a></div>
 							<div class="td col-lg-2">
 								<span class="sth">訂購時間</span>
@@ -130,8 +88,8 @@
 							<div class="td col-lg-2 edit">
 								<a href="odCancel.html">取消訂單</a> / <a href="">加購</a>
 							</div>
-						</div>
-						<div class="row tbody">
+						</div> -->
+						<!-- <div class="row tbody">
 							<div class="td col-lg-4">OD0456123789</div>
 							<div class="td col-lg-2">
 								<span class="sth">訂購時間</span>
@@ -148,7 +106,7 @@
 							<div class="td col-lg-2 edit">
 								<a href="odScore.html">評價</a>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 			</div>
