@@ -131,6 +131,9 @@ module.exports = {
 		let user = await this.getUserById(userId);
 		return user.orders;
 	},
+	getOrderdetails: async function(orderId){
+		return axiosIns.get("orders/" + orderId).then(response => response.data);
+	},
 	updateUserFavorites: function(userId, ids){
 		let params = { favorites: ids || [] };
 		return axiosIns.put("clients/" + userId, params ).then(response => reduceUser(response.data));
@@ -162,7 +165,8 @@ module.exports = {
 			let masterDetail = await axiosIns.post("orderdetails", {
 				status: "等待審核素材",
 				ownOrder: resOrderId,
-				item: c.id
+				item: c.id,
+				itemInfo: _.omit(c, ["id", "pid"])
 			});
 
 			const masterDetailId = masterDetail.data.id;
@@ -173,7 +177,8 @@ module.exports = {
 					let childDetail = await axiosIns.post("orderdetails", {
 						ownOrder: resOrderId,
 						item: child.id,
-						parentDetail: masterDetailId
+						parentDetail: masterDetailId,
+						itemInfo: _.omit(child, ["id", "pid"])
 					});
 				}
 			);

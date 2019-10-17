@@ -13,6 +13,9 @@ const isDev = process.env.NODE_ENV === 'development';
 
 const DEFAULT_AFTER_LOGIN = '/user/ugindex';
 
+const FORBIDDEN = { response: { status: 403, statusText: "Forbidden" } };
+const BAD_REQUEST = { response: { status: 400, statusText: "Bad request" } };
+
 const ADDITION_IMAGE_MAP = {
     "精簡秒數": "/assets/images/img_bmSec.png",
     "英文字幕": "/assets/images/img_bmEng.png",
@@ -263,7 +266,7 @@ module.exports = async function(app, passport) {
                 hasmore: moreLength == limit,
                 nextidx: offset + moreitems.length
             });
-        } else next({ response: { status: 400, statusText: "Bad Request" } });
+        } else next(FORBIDDEN);
     }));
 
     // =====================================
@@ -341,7 +344,7 @@ module.exports = async function(app, passport) {
                 req.user = updatedUser;
                 res.send({ success: true });
             }
-        } else next({ response: { status: 400, statusText: "Bad Request" } });
+        } else next(FORBIDDEN);
     }));
 
     app.get('/user/ecoupon', loginRequired, asyncHandler(async (req, res) => {
@@ -373,10 +376,14 @@ module.exports = async function(app, passport) {
             // clear the cart
             req.session.cart = [];
             res.render('user/cart/confirm', { serialnumber: order.serialNumber } );
-        } else next({ response: { status: 400, statusText: "Bad Request" } });
+        } else next(FORBIDDEN);
     }));
-    app.get('/user/cart/paying', loginRequired, asyncHandler(async (req, res) => {
-        res.render('user/cart/paying');
+    app.get('/user/cart/paying', loginRequired, asyncHandler(async (req, res, next) => {
+        // /user/cart/paying?serial={{ serialnumber }}
+        let serial = req.query.serial;
+        if ( serial ) {
+            res.render('user/cart/paying');
+        } else next(BAD_REQUEST);
     }));
     app.get('/user/cart/payresult', loginRequired, asyncHandler(async (req, res) => {
         res.render('user/cart/payresult');
@@ -393,7 +400,7 @@ module.exports = async function(app, passport) {
                 sessionCart.push( getSessionCartItem(item) );
                 res.send({ success: true, count: sessionCart.length });
             }
-        } else next({ response: { status: 400, statusText: "Bad Request" } });
+        } else next(FORBIDDEN);
     }));
 
     app.post('/ajax/cart/remove', loginRequired, asyncHandler(async (req, res, next) => {
@@ -440,7 +447,7 @@ module.exports = async function(app, passport) {
                     count: sessionCart.length
                 });
             }
-        } else next({ response: { status: 400, statusText: "Bad Request" } });
+        } else next(FORBIDDEN);
     }));
 
     app.post('/ajax/addition/remove', loginRequired, asyncHandler(async (req, res, next) => {
@@ -465,7 +472,7 @@ module.exports = async function(app, passport) {
             } else {
                 res.send({ success: false, message: "這項加購並不在你的購物車", count: sessionCart.length });
             }
-        } else next({ response: { status: 400, statusText: "Bad Request" } });
+        } else next(FORBIDDEN);
     }));
 
     // =====================================
@@ -474,6 +481,15 @@ module.exports = async function(app, passport) {
     app.get('/user/orders', loginRequired, asyncHandler(async (req, res) => {
         let orders = await interface.getOrdersByUser(req.user.id);
         res.render('user/orders', { orders: orders } );
+    }));
+    app.get('/user/orders/:serial', loginRequired, asyncHandler(async (req, res, next) => {
+        let serial = req.params.serial;
+        let orders = await interface.getOrdersByUser(req.user.id);
+        let found = _.find(orders, { serialNumber: serial });
+        if ( found ) {
+            let details = await interface.getOrderdetails(found.id);
+            res.render('user/orders/status', { orderdetail: details });
+        } else next(FORBIDDEN);
     }));
 
     app.get('/user/promote', loginRequired, asyncHandler(async (req, res) => {
