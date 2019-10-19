@@ -114,6 +114,11 @@ module.exports = async function(app, passport) {
         item.highlightList = item.highlight.split("\r\n");
     }
 
+    function prepareOrderOverview(order){
+        order.canPay = order.status == "未付款";
+        order.canShowDetail = order.status == "已付款";
+    }
+
     function getSessionCartItem(item){
         return {
             id: item.id,
@@ -145,6 +150,19 @@ module.exports = async function(app, passport) {
             let res = _.clone(item);
             res.additions = _.map(additionPidMap[item.id], additem => _.clone(additem));
             res.subtotal = item.advancePayment + _.reduce(_.map(res.additions, "price"), (sum, n) => sum + n, 0);
+            return res;
+        });
+    }
+
+    function getLayoutDetails(details){
+        let additionsMap = utils.getPropMapArrayObject(
+            details.filter(det => !!det.parentDetail), "parentDetail");  
+        let normalDetails = details.filter(det => !det.parentDetail);
+        return _.map(normalDetails, det => {
+            let info = det.itemInfo;
+            let res = _.clone(info);
+            res.additions = _.map(additionsMap[det.id], adddet => _.clone(adddet.itemInfo));
+            res.subtotal = info.advancePayment + _.reduce(_.map(res.additions, "price"), (sum, n) => sum + n, 0);
             return res;
         });
     }
@@ -382,7 +400,16 @@ module.exports = async function(app, passport) {
         // /user/cart/paying?serial={{ serialnumber }}
         let serial = req.query.serial;
         if ( serial ) {
-            res.render('user/cart/paying');
+            let orders = await interface.getOrdersByUser(req.user.id);
+            let found = _.find(orders, { serialNumber: serial, status: "未付款" });
+            if ( found ) {
+                let details = await interface.getOrderdetails(found.id);
+                let layoutDetails = getLayoutDetails(details);
+                res.render('user/cart/paying', { 
+                    orderdetails: layoutDetails,
+                    totalprice: _.reduce(_.map(layoutDetails, "subtotal"), (sum, n) => sum + n, 0)
+                });
+            } else next(FORBIDDEN);
         } else next(BAD_REQUEST);
     }));
     app.get('/user/cart/payresult', loginRequired, asyncHandler(async (req, res) => {
@@ -480,6 +507,7 @@ module.exports = async function(app, passport) {
     // =====================================
     app.get('/user/orders', loginRequired, asyncHandler(async (req, res) => {
         let orders = await interface.getOrdersByUser(req.user.id);
+        orders.forEach(prepareOrderOverview);
         res.render('user/orders', { orders: orders } );
     }));
     app.get('/user/orders/:serial', loginRequired, asyncHandler(async (req, res, next) => {

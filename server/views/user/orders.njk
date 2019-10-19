@@ -35,7 +35,13 @@
 						</div>
 						{% for order in orders %}
 						<div class="row tbody">
-							<div class="td col-lg-4"><a main-pjax-link href="/user/orders/{{ order.serialNumber }}">{{ order.serialNumber }}</a></div>
+							<div class="td col-lg-4">
+								{% if order.canShowDetail %}
+								<a main-pjax-link href="/user/orders/{{ order.serialNumber }}">{{ order.serialNumber }}</a>
+								{% else %}
+								{{ order.serialNumber }}
+								{% endif %}
+							</div>
 							<div class="td col-lg-2">
 								<span class="sth">訂購時間</span>
 								{{ order.created_at|dateFormat }}
@@ -49,7 +55,9 @@
 								${{ order.finalPayment|locale }}
 							</div>
 							<div class="td col-lg-2 edit">
-								<a href="">立即付款</a>
+								{% if order.canPay %}
+								<a main-pjax-link href="/user/cart/paying?serial={{ order.serialNumber }}">立即付款</a>
+								{% endif %}
 							</div>
 						</div>
 						{% endfor %}

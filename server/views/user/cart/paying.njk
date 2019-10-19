@@ -9,6 +9,8 @@
 			<div class="item active"><span>付款</span></div>
 			<div class="item"><span>訂購完成</span></div>
 		</div>
+
+		{% for detail in orderdetails %}
 		<div class="stable">
 			<div class="row thead">
 				<div class="th col-lg-4"><span>項目</span></div>
@@ -20,47 +22,53 @@
 				<div class="th col-lg-2 edit"></div>
 			</div>
 			<div class="row tbody">
-				<div class="td col-lg-4"><span>「ASMR顱內高潮」手法！用聲音產生記憶點</span></div>
-				<div class="td col-lg-2"><span><span class="sth">價格：</span>$50,000</span></div>
-				<div class="td col-lg-1"><span><span class="sth">急件加價：</span>無</span></div>
-				<div class="td col-lg-1"><span><span class="sth">特殊加價：</span>無</span></div>
-				<div class="td col-lg-1"><span><span class="sth">訂金：</span>$40,000</span></div>
-				<div class="td col-lg-1"><span><span class="sth">尾款：</span>$10,000</span></div>
+				<div class="td col-lg-4"><span>{{ detail.title }}</span></div>
+				<div class="td col-lg-2"><span><span class="sth">價格：</span>${{ detail.price|locale }}</span></div>
+				<div class="td col-lg-1"><span><span class="sth">急件加價：</span>{% if detail.urgentPrice|length %}{{ detail.urgentPrice|locale }}{% else %}無{% endif %}</span></div>
+				<div class="td col-lg-1"><span><span class="sth">特殊加價：</span>{% if detail.customizePrice|length %}{{ detail.customizePrice|locale }}{% else %}無{% endif %}</span></div>
+				<div class="td col-lg-1"><span><span class="sth">訂金：</span>${{ detail.advancePayment|locale }}</span></div>
+				<div class="td col-lg-1"><span><span class="sth">尾款：</span>${{ detail.finalPayment|locale }}</span></div>
 				<div class="td col-lg-2 edit"></div>
 			</div>
-			<div class="row thead theadg">
-				<div class="th col-lg-4"><span>加購項目</span></div>
-				<div class="th col-lg-2"><span>規格</span></div>
-				<div class="th col-lg-1"><span>價格</span></div>
-				<div class="th col-lg-1"><span></span></div>
-				<div class="th col-lg-1"><span></span></div>
-				<div class="th col-lg-1"><span></span></div>
-				<div class="th col-lg-2 edit"></div>
-			</div>
-			<div class="row tbody">
-				<div class="td col-lg-4"><span>
-					<span class="sth">加購項目：</span>
-					名稱名稱
-				</span></div>
-				<div class="td col-lg-2"><span>
-					<span class="sth">規格：</span>
-					1
-				</span></div>
-				<div class="td col-lg-1"><span>
-					<span class="sth">價格：</span>
-					$5,000
-				</span></div>
-				<div class="td col-lg-1"></div>
-				<div class="td col-lg-1"></div>
-				<div class="td col-lg-1"></div>
-				<div class="td col-lg-2 edit"></div>
-			</div>
+			{% if detail.additions|length %}
+				<div class="row thead theadg">
+					<div class="th col-lg-4"><span>加購項目</span></div>
+					<div class="th col-lg-2"><span>規格</span></div>
+					<div class="th col-lg-1"><span>價格</span></div>
+					<div class="th col-lg-1"><span></span></div>
+					<div class="th col-lg-1"><span></span></div>
+					<div class="th col-lg-1"><span></span></div>
+					<div class="th col-lg-2 edit"></div>
+				</div>
+				{% for addition in detail.additions %}
+				<div class="row tbody">
+					<div class="td col-lg-4"><span>
+						<span class="sth">加購項目：</span>
+						{{ addition.title }}
+					</span></div>
+					<div class="td col-lg-2"><span>
+						<span class="sth">規格：</span>
+						{{ addition.type }}
+					</span></div>
+					<div class="td col-lg-1"><span>
+						<span class="sth">價格：</span>
+						${{ addition.price|locale }}
+					</span></div>
+					<div class="td col-lg-1"></div>
+					<div class="td col-lg-1"></div>
+					<div class="td col-lg-1"></div>
+					<div class="td col-lg-2 edit"></div>
+				</div>
+				{% endfor %}
+			{% endif %}
 			<div class="row tbtm">
 				<div class="td col total">
-					小計 (不含尾款)  NT$ <span>46,500</span> 元
+					小計 (不含尾款)  NT$ <span>{{ detail.subtotal|locale }}</span> 元
 				</div> 
 			</div>
 		</div>
+		{% endfor %}
+
 		<div class="notice">
 			<h3>重要提醒</h3>
 			<ol>
@@ -74,6 +82,7 @@
 				<li>當支付訂金後，即開立發票；待尾款支付後，將開立第二張發票。</li>
 			</ol>
 		</div>
+
 		<div class="mmeat">
 			輸入折扣碼：<input type="text">
 		</div>
@@ -95,7 +104,7 @@
 			<!-- <label for=""><input type="checkbox" name="checkbox"><span class="checkmark"></span> 個人戶</label> -->
 		</div>
 		<div class="mmeat alltotal">
-			訂單金額總計 (不含尾款)  NT$ <span>86,500</span> 元
+			訂單金額總計 (不含尾款)  NT$ <span>{{ totalprice|locale }}</span> 元
 		</div>
 		<div class="btns">
 			<a main-pjax-link href="/user/cart/payresult" class="btn btnIm">確認付款</a>

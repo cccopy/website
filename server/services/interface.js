@@ -131,8 +131,8 @@ module.exports = {
 		let user = await this.getUserById(userId);
 		return user.orders;
 	},
-	getOrderdetails: async function(orderId){
-		return axiosIns.get("orders/" + orderId).then(response => response.data);
+	getOrderdetails: function(orderId){
+		return axiosIns.get("orders/" + orderId).then(response => response.data.details);
 	},
 	updateUserFavorites: function(userId, ids){
 		let params = { favorites: ids || [] };
