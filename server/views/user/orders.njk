@@ -62,6 +62,8 @@
 							<div class="td col-lg-2 edit">
 								{% if order.canPay %}
 								<a main-pjax-link href="/user/cart/paying?serial={{ order.serialNumber }}">立即付款</a>
+								{% elif order.canCancel %}
+								<a main-pjax-link href="/user/orders/{{ order.serialNumber }}/cancel">取消訂單</a>
 								{% endif %}
 							</div>
 						</div>

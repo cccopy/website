@@ -118,6 +118,8 @@ module.exports = async function(app, passport) {
     function prepareOrderOverview(order){
         order.canPay = rule.orderCanPay(order);
         order.canShowDetail = rule.orderCanShowDetail(order);
+        order.canCancel = rule.orderCanCancel(order);
+        order.canEvaluate = rule.orderCanEvaluate(order);
     }
 
     function getSessionCartItem(item){
@@ -537,6 +539,20 @@ module.exports = async function(app, passport) {
                 serialnumber: found.serialNumber,
                 canFinalPay: rule.orderCanFinalPay(details)
             });
+        } else next(FORBIDDEN);
+    }));
+    app.get('/user/orders/:serial/cancel', loginRequired, asyncHandler(async (req, res, next) => {
+        let isValid = checkReferer(req, "/user/orders");
+        if (isValid) {
+            let serial = req.params.serial;
+            let orders = await interface.getOrdersByUser(req.user.id);
+            let found = _.find(_.filter(orders, rule.orderCanCancel), { serialNumber: serial });
+            if ( found ) {
+                res.render('user/orders/cancel', {
+                    order: found,
+                    alltotalprice: found.advancePayment + found.finalPayment
+                });
+            } else next(FORBIDDEN);
         } else next(FORBIDDEN);
     }));
 
