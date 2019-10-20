@@ -100,7 +100,11 @@
 					</div>
 					<div class="btns">
 						<a href="" class="btn">列印報價單<em>提供備存</em></a>
-						<a href="odPay.html" class="btn btnGray">尾款支付</a>
+						{% if canFinalPay %}
+						<a href="odPay.html" class="btn">尾款支付</a>
+						{% else %}
+						<div class="btn btnGray disabled">尾款支付</div>
+						{% endif %}
 					</div>
 				</div>
 			</div>

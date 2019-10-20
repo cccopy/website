@@ -16,7 +16,7 @@
 		<li {% if currentpath|isGroupWith("/user/cart") %}class="active"{% endif %}>
 			<a main-pjax-link href="/user/cart">購物車</a>
 		</li>
-		<li {% if currentpath == "/user/orders" %}class="active"{% endif %}>
+		<li {% if currentpath|isGroupWith("/user/orders") %}class="active"{% endif %}>
 			<a main-pjax-link href="/user/orders">訂單管理</a>
 		</li>
 		<li {% if currentpath == "/user/promote" %}class="active"{% endif %}>

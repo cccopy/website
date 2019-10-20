@@ -142,6 +142,9 @@ module.exports = {
 		let params = { status: status };
 		return axiosIns.put("orders/" + orderId, params ).then(response => response.data);
 	},
+	makeOrderToPaied: async function(orderId){
+		return await this.updateOrderStatus(orderId, "已付款" );
+	},
 	createOrder: async function(userId, cart){
 		let cloneCart = _.cloneDeep(cart);
 		let masters = _.filter(cloneCart, c => !c.pid);

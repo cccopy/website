@@ -7,6 +7,7 @@ const url = require('url');
 const _ = require('lodash');
 const interface = require('../services/interface');
 const utils = require('../services/utils');
+const rule = require('../services/rule');
 const nunjucks = require('nunjucks');
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -115,8 +116,8 @@ module.exports = async function(app, passport) {
     }
 
     function prepareOrderOverview(order){
-        order.canPay = order.status == "未付款";
-        order.canShowDetail = order.status == "已付款";
+        order.canPay = rule.orderCanPay(order);
+        order.canShowDetail = rule.orderCanShowDetail(order);
     }
 
     function getSessionCartItem(item){
@@ -400,7 +401,7 @@ module.exports = async function(app, passport) {
         let serial = req.query.serial;
         if ( serial ) {
             let orders = await interface.getOrdersByUser(req.user.id);
-            let found = _.find(orders, { serialNumber: serial, status: "未付款" });
+            let found = _.find(_.filter(orders, rule.orderCanPay), { serialNumber: serial });
             if ( found ) {
                 let details = await interface.getOrderdetails(found.id);
                 let layoutDetails = getLayoutDetails(details);
@@ -418,9 +419,9 @@ module.exports = async function(app, passport) {
         let isValid = checkReferer(req, "/user/cart/paying");
         if (isValid) {
             let orders = await interface.getOrdersByUser(req.user.id);
-            let found = _.find(orders, { serialNumber: serial, status: "未付款" });
+            let found = _.find(_.filter(orders, rule.orderCanPay), { serialNumber: serial });
             if ( found ) {
-                let order = await interface.updateOrderStatus(found.id, "已付款" );
+                let order = await interface.makeOrderToPaied(found.id);
                 res.render('user/cart/payresult');
             }
         } else next(FORBIDDEN);
@@ -524,7 +525,7 @@ module.exports = async function(app, passport) {
     app.get('/user/orders/:serial', loginRequired, asyncHandler(async (req, res, next) => {
         let serial = req.params.serial;
         let orders = await interface.getOrdersByUser(req.user.id);
-        let found = _.find(orders, { serialNumber: serial, status: "已付款" });
+        let found = _.find(_.filter(orders, rule.orderCanShowDetail), { serialNumber: serial });
         if ( found ) {
             let details = await interface.getOrderdetails(found.id);
             let layoutDetails = getLayoutDetails(details);
@@ -533,7 +534,8 @@ module.exports = async function(app, passport) {
                 totalprice: found.advancePayment,
                 finalprice: found.finalPayment,
                 alltotalprice: found.advancePayment + found.finalPayment,
-                serialnumber: found.serialNumber
+                serialnumber: found.serialNumber,
+                canFinalPay: rule.orderCanFinalPay(details)
             });
         } else next(FORBIDDEN);
     }));
