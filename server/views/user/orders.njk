@@ -33,6 +33,11 @@
 							<div class="th col-lg-2"><span>尾款</span></div>
 							<div class="th col-lg-2"><span>變更</span></div>
 						</div>
+						{% if not orders|length %}
+						<div class="row tbody">
+							<div class="td col-lg-12">無訂單紀錄</div>
+						</div>
+						{% endif %}
 						{% for order in orders %}
 						<div class="row tbody">
 							<div class="td col-lg-4">

@@ -397,7 +397,6 @@ module.exports = async function(app, passport) {
         } else next(FORBIDDEN);
     }));
     app.get('/user/cart/paying', loginRequired, asyncHandler(async (req, res, next) => {
-        // /user/cart/paying?serial={{ serialnumber }}
         let serial = req.query.serial;
         if ( serial ) {
             let orders = await interface.getOrdersByUser(req.user.id);
@@ -407,14 +406,26 @@ module.exports = async function(app, passport) {
                 let layoutDetails = getLayoutDetails(details);
                 res.render('user/cart/paying', { 
                     orderdetails: layoutDetails,
-                    totalprice: _.reduce(_.map(layoutDetails, "subtotal"), (sum, n) => sum + n, 0)
+                    totalprice: _.reduce(_.map(layoutDetails, "subtotal"), (sum, n) => sum + n, 0),
+                    serialnumber: found.serialNumber
                 });
             } else next(FORBIDDEN);
         } else next(BAD_REQUEST);
     }));
-    app.get('/user/cart/payresult', loginRequired, asyncHandler(async (req, res) => {
-        res.render('user/cart/payresult');
+    // ==== Will be changed when the Flow Binding
+    app.get('/user/cart/payresult', loginRequired, asyncHandler(async (req, res, next) => {
+        let serial = req.query.serial;
+        let isValid = checkReferer(req, "/user/cart/paying");
+        if (isValid) {
+            let orders = await interface.getOrdersByUser(req.user.id);
+            let found = _.find(orders, { serialNumber: serial, status: "未付款" });
+            if ( found ) {
+                let order = await interface.updateOrderStatus(found.id, "已付款" );
+                res.render('user/cart/payresult');
+            }
+        } else next(FORBIDDEN);
     }));
+
     app.post('/ajax/cart/add', loginRequired, asyncHandler(async (req, res, next) => {
         let itemId = req.body.item;
         let isValid = checkReferer(req, "/items/" + itemId);

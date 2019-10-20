@@ -107,7 +107,7 @@
 			訂單金額總計 (不含尾款)  NT$ <span>{{ totalprice|locale }}</span> 元
 		</div>
 		<div class="btns">
-			<a main-pjax-link href="/user/cart/payresult" class="btn btnIm">確認付款</a>
+			<a main-pjax-link href="/user/cart/payresult?serial={{ serialnumber }}" class="btn btnIm">確認付款</a>
 		</div>
 	</div>
 {% endblock %}

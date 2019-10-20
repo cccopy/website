@@ -138,6 +138,10 @@ module.exports = {
 		let params = { favorites: ids || [] };
 		return axiosIns.put("clients/" + userId, params ).then(response => reduceUser(response.data));
 	},
+	updateOrderStatus: function(orderId, status){
+		let params = { status: status };
+		return axiosIns.put("orders/" + orderId, params ).then(response => response.data);
+	},
 	createOrder: async function(userId, cart){
 		let cloneCart = _.cloneDeep(cart);
 		let masters = _.filter(cloneCart, c => !c.pid);
