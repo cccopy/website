@@ -406,7 +406,7 @@ module.exports = async function(app, passport) {
                 let layoutDetails = getLayoutDetails(details);
                 res.render('user/cart/paying', { 
                     orderdetails: layoutDetails,
-                    totalprice: _.reduce(_.map(layoutDetails, "subtotal"), (sum, n) => sum + n, 0),
+                    totalprice: found.advancePayment,
                     serialnumber: found.serialNumber
                 });
             } else next(FORBIDDEN);
@@ -524,10 +524,17 @@ module.exports = async function(app, passport) {
     app.get('/user/orders/:serial', loginRequired, asyncHandler(async (req, res, next) => {
         let serial = req.params.serial;
         let orders = await interface.getOrdersByUser(req.user.id);
-        let found = _.find(orders, { serialNumber: serial });
+        let found = _.find(orders, { serialNumber: serial, status: "已付款" });
         if ( found ) {
             let details = await interface.getOrderdetails(found.id);
-            res.render('user/orders/status', { orderdetail: details });
+            let layoutDetails = getLayoutDetails(details);
+            res.render('user/orders/status', { 
+                orderdetails: layoutDetails,
+                totalprice: found.advancePayment,
+                finalprice: found.finalPayment,
+                alltotalprice: found.advancePayment + found.finalPayment,
+                serialnumber: found.serialNumber
+            });
         } else next(FORBIDDEN);
     }));
 

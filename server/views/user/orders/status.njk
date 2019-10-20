@@ -40,58 +40,63 @@
 							<div class="th col-lg-1"><span>處理狀態</span></div>
 							<div class="th col-lg-3"><span>備註</span></div>
 						</div>
-
-						<div class="row tbody">
-							<div class="td col-lg-4">「ASMR顱內高潮」手法！用聲音產生記憶點</div>
-							<div class="td col-lg-1">
-								<span class="sth">已付訂金</span>
-								$46,500
+						{% for detail in orderdetails %}
+							<div class="row tbody">
+								<div class="td col-lg-4">{{ detail.title }}</div>
+								<div class="td col-lg-1">
+									<span class="sth">已付訂金</span>
+									${{ detail.advancePayment|locale }}
+								</div>
+								<div class="td col-lg-1">
+									<span class="sth">尾款</span>
+									${{ detail.finalPayment|locale }}
+								</div>
+								<div class="td col-lg-1">
+									<span class="sth">素材提交</span>
+									<a href="odItempush.html">提交</a>
+								</div>
+								<div class="td col-lg-1">
+									<span class="sth">成品交付</span>
+									<a href="">查看</a>
+								</div>
+								<div class="td col-lg-1">
+									<span class="sth">處理狀態</span>
+									處理中
+								</div>
+								<div class="td col-lg-3">
+									<span class="sth">備註</span>
+									預計將於2019/05/30交付Acopy
+								</div>
 							</div>
-							<div class="td col-lg-1">
-								<span class="sth">尾款</span>
-								$10,000
-							</div>
-							<div class="td col-lg-1">
-								<span class="sth">素材提交</span>
-								<a href="odItempush.html">提交</a>
-							</div>
-							<div class="td col-lg-1">
-								<span class="sth">成品交付</span>
-								<a href="">查看</a>
-							</div>
-							<div class="td col-lg-1">
-								<span class="sth">處理狀態</span>
-								處理中
-							</div>
-							<div class="td col-lg-3">
-								<span class="sth">備註</span>
-								預計將於2019/05/30交付Acopy
-							</div>
-						</div>
-						<div class="row tbody">
-							<div class="td col-lg-4">加購：英文字幕</div>
-							<div class="td col-lg-1">
-								<span class="sth">已付訂金</span>
-								$5,000
-							</div>
-							<div class="td col-lg-1"></div>
-							<div class="td col-lg-1"></div>
-							<div class="td col-lg-1"></div>
-							<div class="td col-lg-1">
-								<span class="sth">處理狀態</span>
-								已接收
-							</div>
-							<div class="td col-lg-3"></div>
-						</div>
+							{% if detail.additions|length %}
+								{% for addition in detail.additions %}
+								<div class="row tbody">
+									<div class="td col-lg-4">加購：{{ addition.title }} {{ addition.type }}</div>
+									<div class="td col-lg-1">
+										<span class="sth">已付訂金</span>
+										${{ addition.price|locale }}
+									</div>
+									<div class="td col-lg-1"></div>
+									<div class="td col-lg-1"></div>
+									<div class="td col-lg-1"></div>
+									<div class="td col-lg-1">
+										<span class="sth">處理狀態</span>
+										已接收
+									</div>
+									<div class="td col-lg-3"></div>
+								</div>
+								{% endfor %}
+							{% endif %}
+						{% endfor %}
 					</div>
 
 					<div class="note fontS">
 						*說明：同筆訂單若購買一支影片以上，須於同時間進行成品下載，並同時支付尾款；當以上訂單內容處理狀態皆為「成品已確認」，即可進行尾款支付。
 					</div>
 					<div class="mmeat alltotal">
-						<div class="atn">已支付訂金  NT$ <span>52,500</span> 元</div>
-						<div class="atn">待支侍尾款  NT$ <span>10,500</span> 元</div>
-						訂單金額總計  NT$ <span>62,500</span> 元
+						<div class="atn">已支付訂金  NT$ <span>{{ totalprice|locale }}</span> 元</div>
+						<div class="atn">待支侍尾款  NT$ <span>{{ finalprice|locale }}</span> 元</div>
+						訂單金額總計  NT$ <span>{{ alltotalprice|locale }}</span> 元
 					</div>
 					<div class="btns">
 						<a href="" class="btn">列印報價單<em>提供備存</em></a>
