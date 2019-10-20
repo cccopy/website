@@ -30,26 +30,28 @@
 						</div>
 					</div>
 
-					<div class="mmeat">
-						請務必正確填入您的退款資訊：
-						<p>
-							<span class="fontR">*</span> 戶　　名：<input type="text">
-						</p>
-						<p>
-							<span class="fontR">*</span> 銀行代碼：<input type="text">
-						</p>
-						<p>
-							<span class="fontR">*</span> 帳　　號：<input type="text">
-						</p>
-						<p>
-							<span class="fontS">如有任何問題，請來信客服信箱：<a href="mailto:videoarmy2018@gmail.com">videoarmy2018@gmail.com</a></span>
-						</p>
-					</div>
+					<form order-cancel action="{{ currentpath }}">
+						<div class="mmeat">
+							請務必正確填入您的退款資訊：
+							<p>
+								<span class="fontR">*</span> 戶　　名：<input type="text" required>
+							</p>
+							<p>
+								<span class="fontR">*</span> 銀行代碼：<input type="text" required>
+							</p>
+							<p>
+								<span class="fontR">*</span> 帳　　號：<input type="text" required>
+							</p>
+							<p>
+								<span class="fontS">如有任何問題，請來信客服信箱：<a href="mailto:videoarmy2018@gmail.com">videoarmy2018@gmail.com</a></span>
+							</p>
+						</div>
 
-					<div class="btns">
-						<a href="odList.html" class="btn">回訂單管理 </a>
-						<a href="odCancelin.html" class="btn btnIm">確認取消</a>
-					</div>
+						<div class="btns">
+							<a main-pjax-link href="/user/orders" class="btn">回訂單管理 </a>
+							<button type="submit" class="btn btnIm">確認取消</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>

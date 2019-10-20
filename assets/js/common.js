@@ -140,6 +140,15 @@ function bindFormSubmit(){
 		// event.preventDefault();
 		$.pjax.submit(event, '#main-pjax-container', { timeout: 7000, type: "GET" });
 	});
+
+	$(document.body).on('submit', 'form[order-cancel]', function(event){
+		$.pjax.submit(event, '#main-pjax-container', { 
+			timeout: 7000, 
+			push: false, 
+			replace: true,
+			type: "POST"
+		});
+	});
 }
 
 function bindCartConfirm(){
