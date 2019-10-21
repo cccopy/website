@@ -145,8 +145,9 @@ module.exports = {
 	makeOrderToPaied: async function(orderId){
 		return await this.updateOrderStatus(orderId, "已付款" );
 	},
-	makeOrderToCancel: async function(orderId){
-		return await this.updateOrderStatus(orderId, "已取消" );
+	makeOrderToCancel: async function(orderId, cancelInfo){
+		let params = { status: "已取消", cancelInfo: cancelInfo };
+		return axiosIns.put("orders/" + orderId, params ).then(response => response.data);
 	},
 	createOrder: async function(userId, cart){
 		let cloneCart = _.cloneDeep(cart);

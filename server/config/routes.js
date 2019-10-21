@@ -563,7 +563,7 @@ module.exports = async function(app, passport) {
             let orders = await interface.getOrdersByUser(req.user.id);
             let found = _.find(_.filter(orders, rule.orderCanCancel), { serialNumber: serial });
             if ( found ) {
-                let order = await interface.makeOrderToCancel(found.id);
+                let order = await interface.makeOrderToCancel(found.id, _.pick(req.body, ['name', 'code', 'account']) );
                 let dest = '/user/orders';
                 req.session.redirectTo = dest;
                 res.redirect(dest);
