@@ -578,6 +578,36 @@ module.exports = async function(app, passport) {
         } else next(FORBIDDEN);
     }));
     
+    // =====================================
+    // USER - ORDER - Paying ===============
+    // =====================================
+    app.get('/user/orders/:serial/paying', loginRequired, asyncHandler(async (req, res, next) => {
+        let serial = req.params.serial;
+        let orders = await interface.getOrdersByUser(req.user.id);
+        let found = _.find(_.filter(orders, rule.orderCanFinalPay), { serialNumber: serial });
+        if ( found ) {
+            let details = await interface.getOrderdetails(found.id);
+            let layoutDetails = getLayoutDetails(details);
+            res.render('user/orders/paying', { 
+                orderdetails: layoutDetails,
+                totalprice: found.finalPayment,
+                serialnumber: found.serialNumber
+            });
+        } else next(FORBIDDEN);
+    }));
+    // ==== Will be changed when the Flow Binding ==== 
+    app.get('/user/orders/:serial/payresult', loginRequired, asyncHandler(async (req, res, next) => {
+        let serial = req.params.serial;
+        let orders = await interface.getOrdersByUser(req.user.id);
+        let found = _.find(_.filter(orders, rule.orderCanFinalPay), { serialNumber: serial });
+        let isValid = checkReferer(req, "/user/orders/" + serial + "/paying");
+        if ( isValid && found ){
+            let order = await interface.makeOrderToCompleted(found.id);
+            res.render('user/orders/payresult');
+        } else res.redirect('/user/orders');
+    }));
+
+
     app.get('/user/promote', loginRequired, asyncHandler(async (req, res) => {
         res.render('user/promote');
     }));

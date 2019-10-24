@@ -149,6 +149,9 @@ module.exports = {
 		let params = { status: "已取消", cancelInfo: cancelInfo };
 		return axiosIns.put("orders/" + orderId, params ).then(response => response.data);
 	},
+	makeOrderToCompleted: async function(orderId){
+		return await this.updateOrderStatus(orderId, "已完成" );
+	},
 	updateOrderRating: async function(orderId, ratingInfo){
 		let params = { ratingInfo: ratingInfo };
 		return axiosIns.put("orders/" + orderId, params ).then(response => response.data);
