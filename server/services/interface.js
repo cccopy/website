@@ -149,6 +149,10 @@ module.exports = {
 		let params = { status: "已取消", cancelInfo: cancelInfo };
 		return axiosIns.put("orders/" + orderId, params ).then(response => response.data);
 	},
+	updateOrderRating: async function(orderId, ratingInfo){
+		let params = { ratingInfo: ratingInfo };
+		return axiosIns.put("orders/" + orderId, params ).then(response => response.data);
+	},
 	createOrder: async function(userId, cart){
 		let cloneCart = _.cloneDeep(cart);
 		let masters = _.filter(cloneCart, c => !c.pid);

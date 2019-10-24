@@ -174,6 +174,38 @@ function bindLogoutLink(){
 	});
 }
 
+function bindRatingForm(){
+	$(document.body).on('click', 'form[rating-form] .score span', function(event) {
+		var selfjq = $(this),
+			selfParent = selfjq.parent(), 
+			starSpans = selfParent.children(),
+			prepare = selfParent.siblings(".prepare"),
+			ratingInput = selfParent.siblings("input[name=rating]"),
+			activeSrc = prepare.children("img[rating-active]").attr("src"),
+			emptySrc = prepare.children("img[rating-empty]").attr("src"),
+			index = selfjq.index();
+
+		starSpans.each(function(idx){
+			var img = $(this).children("img");
+			if ( idx <= index ) {
+				img.attr("src", activeSrc);
+			} else {
+				img.attr("src", emptySrc);
+			}
+		});
+		ratingInput.val(index + 1);
+	});
+
+	$(document.body).on('submit', 'form[rating-form]', function(event){
+		$.pjax.submit(event, '#main-pjax-container', { 
+			timeout: 7000, 
+			push: false, 
+			replace: true,
+			type: "POST"
+		});
+	});
+}
+
 function bindMoreAjax(){
 	$('a[more-ajax]').click(moreAjaxHandler);
 }
@@ -499,6 +531,7 @@ $(document).ready(function() {
 	bindRemoveAdditionAjax();
 	bindRemoveCartAjax();
 	bindAddFavoriteAjax();
+	bindRatingForm();
 
 	$('a[fast-search-link]').click(function(event){
 		event.preventDefault();

@@ -120,6 +120,8 @@ module.exports = async function(app, passport) {
         order.canShowDetail = rule.orderCanShowDetail(order);
         order.canCancel = rule.orderCanCancel(order);
         order.canEvaluate = rule.orderCanEvaluate(order);
+        order.hasCancelled = rule.orderHasCancelled(order);
+        order.canRating = rule.orderCanRating(order);
     }
 
     function getSessionCartItem(item){
@@ -571,6 +573,27 @@ module.exports = async function(app, passport) {
         } else next(FORBIDDEN);
     }));
 
+    // =====================================
+    // USER - ORDER - Rating ===============
+    // =====================================
+    app.get('/user/orders/:serial/rating', loginRequired, asyncHandler(async (req, res, next) => {
+        let serial = req.params.serial;
+        let orders = await interface.getOrdersByUser(req.user.id);
+        let found = _.find(_.filter(orders, rule.orderCanRating), { serialNumber: serial });
+        if ( found ) {
+            res.render('user/orders/rating');
+        } else next(FORBIDDEN);
+    }));
+    app.post('/user/orders/:serial/rating', loginRequired, asyncHandler(async (req, res, next) => {
+        let serial = req.params.serial;
+        let orders = await interface.getOrdersByUser(req.user.id);
+        let found = _.find(_.filter(orders, rule.orderCanRating), { serialNumber: serial });
+        if ( found ) {
+            let order = await interface.updateOrderRating(found.id, _.pick(req.body, ['rating', 'comment']) );
+            res.render('user/orders/rating', { hassend: true } );
+        } else next(FORBIDDEN);
+    }));
+    
     app.get('/user/promote', loginRequired, asyncHandler(async (req, res) => {
         res.render('user/promote');
     }));

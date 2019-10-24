@@ -2272,3 +2272,26 @@ a.menu-link {
 .hidden{
   display: none;
 }
+
+.prepare{
+  position: fixed;
+  width:100px;
+  height:100px;
+  left:-100px;
+  top:-100px;
+}
+
+.prepare img{
+  position: absolute;
+  left: 0; top:0;
+}
+
+form[rating-form] input[name=rating]{
+  width: 0;
+  opacity: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  left: 100px;
+  position: absolute;
+}
