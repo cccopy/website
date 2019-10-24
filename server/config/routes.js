@@ -565,7 +565,7 @@ module.exports = async function(app, passport) {
         let found = _.find(_.filter(orders, rule.orderCanRating), { serialNumber: serial });
         if ( found ) {
             res.render('user/orders/rating');
-        } else next(FORBIDDEN);
+        } else res.redirect('/user/orders');
     }));
     app.post('/user/orders/:serial/rating', loginRequired, asyncHandler(async (req, res, next) => {
         let serial = req.params.serial;
