@@ -1,71 +1,48 @@
 
-{% set pageinfo = 
-	{ 
-		headtitle: '訂單管理', 
-		wrapcls: 'inpage', 
-		subcrumb: { 
-			href: '/user/ugindex', title: '會員專區'
-		}
-	} 
-%}
+{% extends "user/orders.njk" %}
 
-{% extends "base.njk" %}
+{% block ordercontent %}
 
-{% block content %}
-	
-	{% include "crumbnav.njk" %}
-
-	<section class="content">
-		<div class="container">
-			<div class="member">
-
-				{% include "user/_nav.njk"%}
-
-				{% if hassend %}
-				<div class="main">
-					<div class="text">
-						<h2 class="title">評價已提交</h2>
-						<div class="inner">
-							<h4>折扣碼98折優惠：XXXXXXX</h4>
-							<p>
-								如有任何問題，請來信客服信箱：<a href="mailto:videoarmy2018@gmail.com">videoarmy2018@gmail.com</a>
-							</p>
-						</div>
-					</div>
+<div class="main">
+	{% if hassend %}
+	<div class="text">
+		<h2 class="title">評價已提交</h2>
+		<div class="inner">
+			<h4>折扣碼98折優惠：XXXXXXX</h4>
+			<p>
+				如有任何問題，請來信客服信箱：<a href="mailto:videoarmy2018@gmail.com">videoarmy2018@gmail.com</a>
+			</p>
+		</div>
+	</div>
+	{% else %}
+	<h2 class="title"><span>用戶評價</span></h2>
+	<form rating-form action="{{ currentpath }}">
+		<div class="tform row">
+			<div class="tfth col-md-3"><span><em class="fontR">*</em>您對本次的成品滿意程度</span></div>
+			<div class="tftd col-md-9">
+				<div class="prepare">
+					<img rating-active src="/assets/images/i_starActive.png" alt="">
+					<img rating-empty src="/assets/images/i_star.png" alt="">
 				</div>
-				{% else %}
-				<div class="main">
-					<h2 class="title"><span>用戶評價</span></h2>
-					<form rating-form action="{{ currentpath }}">
-						<div class="tform row">
-							<div class="tfth col-md-3"><span><em class="fontR">*</em>您對本次的成品滿意程度</span></div>
-							<div class="tftd col-md-9">
-								<div class="prepare">
-									<img rating-active src="/assets/images/i_starActive.png" alt="">
-									<img rating-empty src="/assets/images/i_star.png" alt="">
-								</div>
-								<div class="score">
-									<span><img src="/assets/images/i_star.png" alt=""></span>
-									<span><img src="/assets/images/i_star.png" alt=""></span>
-									<span><img src="/assets/images/i_star.png" alt=""></span>
-									<span><img src="/assets/images/i_star.png" alt=""></span>
-									<span><img src="/assets/images/i_star.png" alt=""></span>
-								</div>
-								<input name="rating" type="number" required>
-							</div>
-							<div class="tfth col-md-3"><span>其它評價</span></div>
-							<div class="tftd col-md-9">
-								<textarea name="comment" rows="5"></textarea>
-							</div>
-						</div>
-						<div class="btns center">
-							<button type="submit" class="btn btnIm">確認提交</button>
-						</div>
-					</form>
+				<div class="score">
+					<span><img src="/assets/images/i_star.png" alt=""></span>
+					<span><img src="/assets/images/i_star.png" alt=""></span>
+					<span><img src="/assets/images/i_star.png" alt=""></span>
+					<span><img src="/assets/images/i_star.png" alt=""></span>
+					<span><img src="/assets/images/i_star.png" alt=""></span>
 				</div>
-				{% endif %}
+				<input name="rating" type="number" required>
+			</div>
+			<div class="tfth col-md-3"><span>其它評價</span></div>
+			<div class="tftd col-md-9">
+				<textarea name="comment" rows="5"></textarea>
 			</div>
 		</div>
-	</section>
+		<div class="btns center">
+			<button type="submit" class="btn btnIm">確認提交</button>
+		</div>
+	</form>
+	{% endif %}
+</div>
 
 {% endblock %}

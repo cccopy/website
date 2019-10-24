@@ -1,60 +1,40 @@
-{% set pageinfo = 
-	{ 
-		headtitle: '訂單管理', 
-		wrapcls: 'inpage', 
-		subcrumb: { 
-			href: '/user/ugindex', title: '會員專區'
-		}
-	} 
-%}
 
-{% extends "base.njk" %}
+{% extends "user/orders.njk" %}
 
-{% block content %}
-	
-	{% include "crumbnav.njk" %}
+{% block ordercontent %}
 
-	<section class="content">
-		<div class="container">
-			<div class="member">
-
-				{% include "user/_nav.njk"%}
-
-				<div class="main">
-					<div class="text">
-						<h2 class="title">取消訂單</h2>
-						<div class="inner">
-							<p>
-								提醒您：您於 {{ order.created_at|dateFormat }} 的訂單 {{ order.serialNumber }} 如欲取消，將於扣除訂單總金額 ${{ alltotalprice|locale }} 之 10% 做成交易手續費。
-							</p>
-						</div>
-					</div>
-
-					<form order-cancel action="{{ currentpath }}">
-						<div class="mmeat">
-							請務必正確填入您的退款資訊：
-							<p>
-								<span class="fontR">*</span> 戶　　名：<input name="name" type="text" required>
-							</p>
-							<p>
-								<span class="fontR">*</span> 銀行代碼：<input name="code" type="text" required>
-							</p>
-							<p>
-								<span class="fontR">*</span> 帳　　號：<input name="account" type="text" required>
-							</p>
-							<p>
-								<span class="fontS">如有任何問題，請來信客服信箱：<a href="mailto:videoarmy2018@gmail.com">videoarmy2018@gmail.com</a></span>
-							</p>
-						</div>
-
-						<div class="btns">
-							<a main-pjax-link href="/user/orders" class="btn">回訂單管理 </a>
-							<button type="submit" class="btn btnIm">確認取消</button>
-						</div>
-					</form>
-				</div>
-			</div>
+<div class="main">
+	<div class="text">
+		<h2 class="title">取消訂單</h2>
+		<div class="inner">
+			<p>
+				提醒您：您於 {{ order.created_at|dateFormat }} 的訂單 {{ order.serialNumber }} 如欲取消，將於扣除訂單總金額 ${{ alltotalprice|locale }} 之 10% 做成交易手續費。
+			</p>
 		</div>
-	</section>
+	</div>
+
+	<form order-cancel action="{{ currentpath }}">
+		<div class="mmeat">
+			請務必正確填入您的退款資訊：
+			<p>
+				<span class="fontR">*</span> 戶　　名：<input name="name" type="text" required>
+			</p>
+			<p>
+				<span class="fontR">*</span> 銀行代碼：<input name="code" type="text" required>
+			</p>
+			<p>
+				<span class="fontR">*</span> 帳　　號：<input name="account" type="text" required>
+			</p>
+			<p>
+				<span class="fontS">如有任何問題，請來信客服信箱：<a href="mailto:videoarmy2018@gmail.com">videoarmy2018@gmail.com</a></span>
+			</p>
+		</div>
+
+		<div class="btns">
+			<a main-pjax-link href="/user/orders" class="btn">回訂單管理 </a>
+			<button type="submit" class="btn btnIm">確認取消</button>
+		</div>
+	</form>
+</div>
 
 {% endblock %}
