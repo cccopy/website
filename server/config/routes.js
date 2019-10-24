@@ -39,9 +39,7 @@ function loginRequired(req, res, next) {
     if(req.isAuthenticated()) return next();
 
     // if they aren't redirect them to the home page
-    let dest = '/auth/login?next=' + encodeURIComponent(req.originalUrl);
-    req.session.redirectTo = dest;
-    res.redirect(dest);
+    res.redirect('/auth/login?next=' + encodeURIComponent(req.originalUrl));
 }
 
 function checkReferer(req, path){
@@ -297,9 +295,7 @@ module.exports = async function(app, passport) {
     // =====================================
     app.get('/auth/login', asyncHandler(async (req, res) => {
         if ( req.isAuthenticated() ) {
-            let dest = decodeURIComponent(req.query.next || DEFAULT_AFTER_LOGIN);
-            req.session.redirectTo = dest;
-            res.redirect( dest );
+            res.redirect(decodeURIComponent(req.query.next || DEFAULT_AFTER_LOGIN));
         } else {
             // render the page and pass in any flash data if it exists
             let message = req.flash('message');
@@ -312,25 +308,20 @@ module.exports = async function(app, passport) {
             if (err || !user) return next(err);
             req.logIn(user, function(err) {
                 if (err) return next(err);
-                let dest = req.body.next || DEFAULT_AFTER_LOGIN;
                 req.session.cart = req.session.cart || [];  // init
-                req.session.redirectTo = dest;
                 req.session.loginState = "loggedIn";
-                return res.redirect(dest);
+                return res.redirect(req.body.next || DEFAULT_AFTER_LOGIN);
             });
         })(req, res, next);
     }, function(req, res, next){
-        let failureDest = '/auth/login?next=' + encodeURIComponent(req.body.next || DEFAULT_AFTER_LOGIN);
-        req.session.redirectTo = failureDest;
-        res.redirect(failureDest);
+        res.redirect('/auth/login?next=' + encodeURIComponent(req.body.next || DEFAULT_AFTER_LOGIN));
     });
 
     app.get('/auth/logout', loginRequired, asyncHandler(async (req, res) => {
-        let dest = "/";
+        // let dest = "/";
         req.logout();
-        req.session.redirectTo = dest;
         req.session.loginState = "loggedOut";
-        res.redirect(dest);
+        res.redirect("/");
     }));
     
     // =====================================
@@ -386,10 +377,7 @@ module.exports = async function(app, passport) {
         });
     }));
     app.get('/user/cart/confirm', loginRequired, asyncHandler(async (req, res) => {
-        // redirect
-        let dest = '/user/orders';
-        req.session.redirectTo = dest;
-        res.redirect(dest);
+        res.redirect('/user/orders');
     }));
     app.post('/user/cart/confirm', loginRequired, asyncHandler(async (req, res, next) => {
         let isValid = checkReferer(req, "/user/cart");
