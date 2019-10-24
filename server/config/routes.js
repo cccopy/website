@@ -117,9 +117,9 @@ module.exports = async function(app, passport) {
         order.canPay = rule.orderCanPay(order);
         order.canShowDetail = rule.orderCanShowDetail(order);
         order.canCancel = rule.orderCanCancel(order);
-        order.canEvaluate = rule.orderCanEvaluate(order);
         order.hasCancelled = rule.orderHasCancelled(order);
         order.canRating = rule.orderCanRating(order);
+        order.canFinalPay = rule.orderCanFinalPay(order);
     }
 
     function getSessionCartItem(item){
@@ -405,7 +405,7 @@ module.exports = async function(app, passport) {
             } else next(FORBIDDEN);
         } else next(BAD_REQUEST);
     }));
-    // ==== Will be changed when the Flow Binding
+    // ==== Will be changed when the Flow Binding ====
     app.get('/user/cart/payresult', loginRequired, asyncHandler(async (req, res, next) => {
         let serial = req.query.serial;
         let isValid = checkReferer(req, "/user/cart/paying");
@@ -527,7 +527,8 @@ module.exports = async function(app, passport) {
                 finalprice: found.finalPayment,
                 alltotalprice: found.advancePayment + found.finalPayment,
                 serialnumber: found.serialNumber,
-                canFinalPay: rule.orderCanFinalPay(details)
+                canFinalPay: rule.detailsCanFinalPay(details),
+                readOnly: rule.orderReadOnly(found)
             });
         } else next(FORBIDDEN);
     }));

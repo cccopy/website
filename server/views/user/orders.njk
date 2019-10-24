@@ -21,6 +21,7 @@
 
 				{% include "user/_nav.njk"%}
 
+				{% block ordercontent %}
 				<div class="main">
 					
 					{% include "user/orders/_flows.njk"%}
@@ -64,6 +65,8 @@
 								<a main-pjax-link href="/user/cart/paying?serial={{ order.serialNumber }}">立即付款</a>
 								{% elif order.canCancel %}
 								<a main-pjax-link href="/user/orders/{{ order.serialNumber }}/cancel">取消訂單</a>
+								{% elif order.canFinalPay %}
+								<a main-pjax-link href="/user/orders/{{ order.serialNumber }}/paying">尾款支付</a>
 								{% elif order.canRating %}
 								<a main-pjax-link href="/user/orders/{{ order.serialNumber }}/rating">評價</a>
 								{% elif order.hasCancelled %}
@@ -128,6 +131,7 @@
 						</div> -->
 					</div>
 				</div>
+				{% endblock %}
 			</div>
 		</div>
 	</section>
