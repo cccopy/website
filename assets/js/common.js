@@ -311,7 +311,7 @@ function bindCartDomEvents(){
 			'</span></div>' +
 			'<div class="td col-lg-2"><span>' +
 				'<span class="sth">規格</span>' +
-				type +
+				(type || "") +
 			'</span></div>' +
 			'<div class="td col-lg-1"><span>' +
 				'<span class="sth">價格</span>' +
