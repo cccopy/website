@@ -531,33 +531,28 @@ module.exports = async function(app, passport) {
             });
         } else next(FORBIDDEN);
     }));
+    // =====================================
+    // USER - ORDER - Cancel ===============
+    // =====================================
     app.get('/user/orders/:serial/cancel', loginRequired, asyncHandler(async (req, res, next) => {
-        let isValid = checkReferer(req, "/user/orders");
-        if (isValid) {
-            let serial = req.params.serial;
-            let orders = await interface.getOrdersByUser(req.user.id);
-            let found = _.find(_.filter(orders, rule.orderCanCancel), { serialNumber: serial });
-            if ( found ) {
-                res.render('user/orders/cancel', {
-                    order: found,
-                    alltotalprice: found.advancePayment + found.finalPayment
-                });
-            } else next(FORBIDDEN);
+        let serial = req.params.serial;
+        let orders = await interface.getOrdersByUser(req.user.id);
+        let found = _.find(_.filter(orders, rule.orderCanCancel), { serialNumber: serial });
+        if ( found ) {
+            res.render('user/orders/cancel', {
+                order: found,
+                alltotalprice: found.advancePayment + found.finalPayment
+            });
         } else next(FORBIDDEN);
     }));
     app.post('/user/orders/:serial/cancel', loginRequired, asyncHandler(async (req, res, next) => {
         // collect the submit form to order
         let serial = req.params.serial;
-        let isValid = checkReferer(req, "/user/orders/" + serial + "/cancel");
-        if (isValid) {
-            let orders = await interface.getOrdersByUser(req.user.id);
-            let found = _.find(_.filter(orders, rule.orderCanCancel), { serialNumber: serial });
-            if ( found ) {
-                let order = await interface.makeOrderToCancel(found.id, _.pick(req.body, ['name', 'code', 'account']) );
-                let dest = '/user/orders';
-                req.session.redirectTo = dest;
-                res.redirect(dest);
-            } else next(FORBIDDEN);
+        let orders = await interface.getOrdersByUser(req.user.id);
+        let found = _.find(_.filter(orders, rule.orderCanCancel), { serialNumber: serial });
+        if ( found ) {
+            let order = await interface.makeOrderToCancel(found.id, _.pick(req.body, ['name', 'code', 'account']) );
+            res.redirect('/user/orders');
         } else next(FORBIDDEN);
     }));
 
