@@ -12,6 +12,7 @@ module.exports = {
 	orderCanRating: order => order.status == "已完成" && _.isEmpty(order.ratingInfo),
 	orderHasCancelled: order => order.status == "已取消",
 	orderReadOnly: order => order.status == "已完成",
+	orderCanShowQuote: order => _.includes(["已付款", "成品已確認"], order.status),
 
 	// details
 	detailsCanFinalPay: details => _.filter(details, detailProductConfirm).length == details.length,

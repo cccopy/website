@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+	<meta charset="UTF-8">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>CCcopy</title>
+
+	<meta property="og:title" content="" />
+	<meta property="og:description" content="">
+	<meta property="og:site_name" content="">
+	<meta property="og:image" content="images/share.jpg" />
+	<meta property="og:url" content="" />
+	<meta property="og:type" content="website" />
+	
+	<link rel="icon" href="images/favicon_2x.png" type="image/png" sizes="16x16">
+
+<style type="text/css">
+
+	body {
+		font-family: 'Open Sans',Arial,Helvetica,sans-serif,'微軟正黑體','Microsoft JhengHei','STHeiti Light','儷黑 Pro','LiHei Pro','Microsoft Yahei','Microsoft JhengHei','新細明體';
+		font-size: 16px;
+		line-height: 1.5;
+		letter-spacing: 0.05em;
+	}
+
+	fieldset,img { border: 0; }
+	
+	h1,h2,h3,h4,h5,h6 {
+		margin: 1rem 0;
+	}
+	h1 { font-size: 36px; }
+	h2 { font-size: 24px; }
+	h3 { font-size: 20px; }
+	h4 { font-size: 16px; }
+	h5 { font-size: 14px; }
+	h6 { font-size: 12px; }
+
+	h2 {
+		text-align: center;
+	}
+
+	a {
+		color: #f39c00; 
+		text-decoration: underline;
+	}
+
+	table { border-collapse: collapse; border-spacing: 0; font-style: inherit; }
+
+	td,th {
+		padding: 10px 15px;
+	}
+
+	.tborder td {
+		border: 1px solid #ccc;
+	}
+	.tstyle {
+		font-size: 14px;
+	}
+	.tstyle th {
+		background: #f9be00;
+		border: 1px solid #f9be00;
+	}
+	.tstyle td {
+		border: 1px solid #f9be00;
+	}
+	.note {
+		color: #666;
+		font-size: 14px;
+		margin: 10px 0;
+		padding: 10px;
+		border-bottom: 2px dotted #ddd;
+	}
+	.total {
+		text-align: right;
+	}
+	.total span {
+		font-size: 20px;
+		color: #eb6100;
+	}
+	.total b {
+		font-size: 1.5em;
+	}
+
+</style>
+
+</head>
+<body style="margin: 15px;">
+
+<table align="center" border="0" cellpadding="0" cellspacing="0" style="width: 1000px; border: 1px solid #ddd; background-color: #fff;">
+	<tbody>
+		<tr>
+			<td align="center" width="60%">
+				<h1>錨點影音<span style="font-size: 24px;">整合行銷有限公司</span></h1>
+				<h3>報價單　QUOTATION</h3>
+			</td>
+			<td align="left" width="40%" style="font-size: 12px;">
+				地址：北市研究院路2段70巷37弄8號7樓<br>
+				電話：0988152488<br>
+				網址：https://www.video-army.com/<br>
+				聯絡信箱：videoarmy2018@gmail.com <br>
+				聯絡人：馮鈺媛<br>
+				統一編號：5265-9069
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<table width="100%" class="tborder">
+					<tr>
+						<td width="15%">公司名稱</td>
+						<td width="35%"></td>
+						<td width="15%">聯絡人</td>
+						<td width="35%">{{ headerinfo.name }}</td>
+					</tr>
+					<tr>
+						<td width="15%">統一編號</td>
+						<td width="35%"></td>
+						<td width="15%">報價日期</td>
+						<td width="35%">{{ headerinfo.date|dateFormat }}</td>
+					</tr>
+					<tr>
+						<td width="15%">專案名稱</td>
+						<td width="85%" colspan="3">CC copy影音創意智庫</td>
+					</tr>
+					<tr>
+						<td width="15%">專案內容</td>
+						<td width="85%" colspan="3">如下列項目</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<table width="100%" class="tstyle">
+					<tr>
+						<th width="50%">項目</th>
+						<th width="15%">已付訂金</th>
+						<th width="15%">尾款</th>
+						<th width="20%">備註</th>
+					</tr>
+					{% for detail in orderdetails %}
+					{% set info = detail.itemInfo %}
+					<tr>
+						<td>{{ info.title }}</td>
+						<td>${{ info.advancePayment|locale }}</td>
+						<td>${{ info.finalPayment|locale }}</td>
+						<td></td>
+					</tr>
+					{% if detail.additions|length %}
+						{% for addition in detail.additions %}
+						{% set addinfo = addition.itemInfo %}
+						<tr>
+							<td>加購：{{ addinfo.title }} {{ addinfo.type }}</td>
+							<td>${{ addinfo.price|locale }}</td>
+							<td>無</td>
+							<td></td>
+						</tr>
+						{% endfor %}
+					{% endif %}
+					{% endfor %}
+				</table>
+				<!-- <div class="note">*說明：同筆訂單若購買一支影片以上，須於同時間進行成品下載，並同時支付尾款；當以上訂單內容處理狀態皆為「成品已確認」，即可進行尾款支付。</div> -->
+				<div class="total">
+					已支付訂金 NT$ <b>{{ totalprice|locale }}</b> 元<br>
+					待支侍尾款 NT$ <b>{{ finalprice|locale }}</b> 元<br>
+					<span>訂單金額總計 NT$ <b>{{ alltotalprice|locale }}</b> 元</span>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<br>
+<br>
+<table align="center" style="width: 1000px;">
+	<tr>
+		<td colspan="2">
+			<h2>專案製作合約</h2>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="right" width="12%">第一條</td>
+		<td>
+			合約履行及期限<br>
+			1.　乙方同意於民國_____年___月___日前結案完成。<br>
+			2.　若乙方未能依照期限交件，得以提前說明且經甲方同意後，延長交件之期限；若乙方無故違約交件，甲方有權立即終止本契約，若甲方受有損害時，甲方並得向乙方請求損害賠償。<br>
+			3.　如非乙方之過失而中途停止或取消本案之執行時，其已執行部份仍需計費，甲方不得以本案尚未全部完成為理由而拒絕付款。
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="right" width="12%">第二條</td>
+		<td>
+			審查日期<br>
+			1.	簽約之整案計畫審查：雙方須合議詳細時程規劃，於拍攝前簽訂，並一起留底至結案，該時程規劃亦屬本合約之一部分。<br>
+			2.	乙方於簽約日起，即開始執行本專案。如非因乙方之過失而甲方欲改變時程規劃、專案發生問題時，更改之時程應經雙方同意合訂，並乙方有權就已執行部份收取款項，甲方不得以本案尚未全部完成為理由而拒絕付款。<br>
+			3.	本案最後驗收：民國_____年___月___日前，雙方確認本案合作項目皆完成後結案。
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="right" width="12%">第三條</td>
+		<td>
+			修改次數<br>
+			甲方於審查本專案時，可通知乙方進行修改，但修改次數每個工作項目不得超過三次；如甲方欲增加修改次數，乙方可視修改幅度為評斷增加製作費用，作為增加修改之工作酬勞。
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="right" width="12%">第四條</td>
+		<td>
+			驗收方式<br>
+			1. 驗收日期：民國_____年___月___日<br>
+			2. 驗收單位：____________________。<br>
+			3. 交付物件：乙方完成此專案之本合約標的物，包含「_____________」及「_____________」乙支，乙方應提供甲方高清原檔下載連結，或以雙方協議定之方式交付檔案。
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="right" width="12%">第五條</td>
+		<td>
+			標的價格<br>
+			1.	全案結算金額共計新台幣_____________元整（含稅新臺幣_____________元整）。<br>
+			2.	甲方匯款後，統一花費由乙方自行控管。
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="right" width="12%">第六條</td>
+		<td>
+			付款辦法<br>
+			1.	付款方式：☐ 現金、☐ 匯款<br>
+			匯款資訊：銀行名稱：富邦銀行南港分行(代碼：0124209) <br>
+			帳　　號：420102066030（戶名：錨點影音整合行銷有限公司）<br>
+			2.	訂金頭款：甲乙方確認簽約後，甲方應於簽約日（民國_____年___月___日）後45日內給付訂金（50%）新台幣_____________萬元整（含稅新臺幣_____________元整）給乙方，以當乙方影片製作之作業成本。如甲方匯款超出時間，乙方有權每月行使延遲罰款(罰款金額為整案費用5%，此案每月罰款金為新台幣_____________元整)，並延後工作期程。<br>
+			3.	結案尾款：本案應於民國_____年___月___日前結案，甲方應於結案日後45日內給付尾款（50%）新台幣_____________元整（含稅新臺幣_____________元整）給乙方，如超出時間，乙方有權每月行使延遲罰款(罰款金額為整案費用5%，此案每月罰款金為新台幣_____________元整)。
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="right" width="12%">第七條</td>
+		<td>
+			規格變更<br>
+			1.甲方應於需求訪談階段確認本標的物之規格與詳細內容。<br>
+			2.甲方對於本標的物內容，除審查與驗收約定之修改需求，乙方得依甲方修改需求提出報價，完成之時間表雙方另議訂之。<br>
+			3.	甲方於專案結案後，如欲變更合約標的物之內容，乙方得依甲方需求提出報價，完成之時間表雙方另議訂之。
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="right" width="12%">第八條</td>
+		<td>
+			權利擔保與使用<br>
+			1.	甲乙雙方著作產權之歸屬盡參照國家智慧財產權規範，乙方擔保對甲方製作之內容並無不法侵害他人權利或著作權之情事，若有違反本條擔保條，甲方得拒絕驗收或支付費用，且相關法律責任由乙方負責。<br>
+			2.	本合約雙方為承攬關係，雙方皆同意本片之所有素材使用、著作財產權參照台灣著作權法，乙方不得額外加收任何其他授權費用，如有歸屬不明時，推定為雙方共有。
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="right" width="12%">第九條</td>
+		<td>
+			保密約定<br>
+			雙方同意因參與本專案而知悉或持有互相之商業機密及其他機密資訊，負有保密義務，雙方皆不得以任何方法洩漏或公開予其他第三人，亦不得為自己或其他人之利益，使用該資訊。若違反本契約之約定者，受損害之一方有權立即終止本契約，並得向違約方請求損害賠償。雙方員工之違約行為，亦視為該方自己之違約。
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="right" width="12%">第十條</td>
+		<td>
+			爭議處理<br>
+			1.若因本合約未能履行或履行不力所生之爭議赳紛，雙方同意先本誠信原則磋商之，磋商不協時，雙方同意以中華民國商務仲裁條例提付商務仲裁。<br>
+			2.本合約如需涉訟，雙方同意以甲方所在地地法院為第一審管轄法院。
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="right" width="12%">第十一條</td>
+		<td>
+			其他<br>
+			1.本合約未約定事項，雙方得以書面方式另行約定，修正時亦同。<br>
+			2.本合約之附件視為合約一部份，本合約計正本兩份，由雙方各執乙份。
+		</td>
+	</tr>
+	<tr>
+		<td valign="top" align="right" width="12%">立合約人</td>
+		<td>
+			甲　　　方：_____________<br>
+			負　責　人：_____________<br>
+			地　　　址：_____________<br>
+			統一編號　：_____________<br>
+			承　辦　人：_____________<br>
+			電　　　話：_____________<br>
+			<br>
+			乙　　　方：錨點影音整合行銷有限公司<br>
+			負　責　人： 馮鈺媛<br>
+			地　　　址： 研究院路2段70巷37弄8號7F<br>
+			統一編號(身分證號)：52659069<br>
+			承　辦　人：_____________<br>
+			電　　　話：_____________
+		</td>
+	</tr>
+	<tr>
+		<td align="right" colspan="2">
+			中華民國 __________ 年 __________ 月 __________ 日
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>

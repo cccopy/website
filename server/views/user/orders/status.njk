@@ -113,7 +113,7 @@
 		訂單金額總計  NT$ <span>{{ alltotalprice|locale }}</span> 元
 	</div>
 	<div class="btns">
-		<a href="" class="btn">列印報價單<em>提供備存</em></a>
+		<a href="/user/orders/{{ serialnumber }}/quote" target="_blank" class="btn">列印報價單<em>提供備存</em></a>
 		{% if canFinalPay %}
 		<a main-pjax-link href="/user/orders/{{ serialnumber }}/paying" class="btn">尾款支付</a>
 		{% else %}

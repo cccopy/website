@@ -619,6 +619,28 @@ module.exports = async function(app, passport) {
         } else res.redirect('/user/orders');
     }));
 
+    // =====================================
+    // USER - ORDER - Quote ================
+    // =====================================
+    app.get('/user/orders/:serial/quote', loginRequired, asyncHandler(async (req, res, next) => {
+        let serial = req.params.serial;
+        let orders = await interface.getOrdersByUser(req.user.id);
+        let found = _.find(_.filter(orders, rule.orderCanShowQuote), { serialNumber: serial });
+        if ( found ) {
+            let details = await interface.getOrderdetails(found.id);
+            let layoutDetails = getLayoutDetails(details);
+            res.render('user/orders/quote', {
+                orderdetails: layoutDetails,
+                totalprice: found.advancePayment,
+                finalprice: found.finalPayment,
+                alltotalprice: found.advancePayment + found.finalPayment,
+                headerinfo: {
+                    name: req.user.name,
+                    date: found.created_at
+                }
+            });
+        } else next(FORBIDDEN);
+    }));
 
     app.get('/user/promote', loginRequired, asyncHandler(async (req, res) => {
         res.render('user/promote');
