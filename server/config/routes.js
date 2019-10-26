@@ -122,6 +122,19 @@ module.exports = async function(app, passport) {
         order.canFinalPay = rule.orderCanFinalPay(order);
     }
 
+    function prepareOrderDetailStatus(detail){
+        detail.canSubmitFactor = rule.detailCanSubmitFactor(detail);
+        detail.hasSubmitFactor = rule.detailHasSubmitFactor(detail);
+        detail.hasReviewFactor = rule.detailHasReviewFactor(detail);
+        detail.canModify = rule.detailCanModify(detail);
+        detail.hasSubmitModify = rule.detailHasSubmitModify(detail);
+        detail.canSeeAcopy = rule.detailCanSeeAcopy(detail);
+        detail.canSeeBcopy = rule.detailCanSeeBcopy(detail);
+        detail.canSeeCcopy = rule.detailCanSeeCcopy(detail);
+        detail.waitFinalPay = rule.detailWaitFinalPay(detail);
+        detail.canDownload = rule.detailCanDownload(detail);
+    }
+
     function getSessionCartItem(item){
         return {
             id: item.id,
@@ -518,6 +531,7 @@ module.exports = async function(app, passport) {
         let found = _.find(_.filter(orders, rule.orderCanShowDetail), { serialNumber: serial });
         if ( found ) {
             let details = await interface.getOrderdetailsDeep(found.id);
+            details.forEach(prepareOrderDetailStatus);
             let layoutDetails = getLayoutDetails(details);
             res.render('user/orders/status', { 
                 orderdetails: layoutDetails,

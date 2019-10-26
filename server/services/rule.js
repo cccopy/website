@@ -14,5 +14,19 @@ module.exports = {
 	orderReadOnly: order => order.status == "已完成",
 
 	// details
-	detailsCanFinalPay: details => _.filter(details, detailProductConfirm).length == details.length
+	detailsCanFinalPay: details => _.filter(details, detailProductConfirm).length == details.length,
+
+	// detail for actions
+	detailCanSubmitFactor: detail => _.includes(["等待審核素材", "素材審核失敗"], detail.status),
+	detailHasSubmitFactor: detail => detail.status == "素材審核中",
+	detailHasReviewFactor: detail => detail.status == "拍攝剪輯中",
+	detailCanModify: detail => _.includes(["A copy交付", "B copy交付"], detail.status),
+	detailHasSubmitModify: detail => _.includes(["A copy修改", "B copy修改"], detail.status),
+
+	// detail for product
+	detailCanSeeAcopy: detail => _.includes(["A copy交付", "A copy修改"], detail.status),
+	detailCanSeeBcopy: detail => _.includes(["B copy交付", "B copy修改"], detail.status),
+	detailCanSeeCcopy: detail => detail.status == "C copy交付",
+	detailWaitFinalPay: detail => detail.status == "成品已確認",
+	detailCanDownload: detail => detail.status == "成品已確認" && (detail.products && detail.products.length)
 };

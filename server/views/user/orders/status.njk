@@ -34,19 +34,41 @@
 				</div>
 				<div class="td col-lg-1">
 					<span class="sth">素材提交</span>
-					<a href="odItempush.html">提交</a>
+					{% if detail.canSubmitFactor %}
+					<a href="odItempush.html">提交素材(儲存/修改)</a>
+					{% elif detail.hasSubmitFactor %}
+					素材已提交
+					{% elif detail.hasReviewFactor %}
+					素材審核完成
+					{% elif detail.canModify %}
+					修改單(儲存/修改)
+					{% elif detail.hasSubmitModify %}
+					修改單(已提交)
+					{% endif %}
 				</div>
 				<div class="td col-lg-1">
 					<span class="sth">成品交付</span>
-					<a href="">查看</a>
+					{% if detail.canSeeAcopy %}
+					A copy
+					{% elif detail.canSeeBcopy %}
+					B copy
+					{% elif detail.canSeeCcopy %}
+					C copy
+					{% elif readOnly %}
+						{% if detail.canDownload %}
+						成品下載
+						{% endif %}
+					{% elif detail.waitFinalPay %}
+					尾款待支付
+					{% endif %}
 				</div>
 				<div class="td col-lg-1">
 					<span class="sth">處理狀態</span>
-					處理中
+					{{ detail.status }}
 				</div>
 				<div class="td col-lg-3">
 					<span class="sth">備註</span>
-					預計將於2019/05/30交付Acopy
+					<!-- 預計將於2019/05/30交付Acopy -->
 				</div>
 			</div>
 			{% if detail.additions|length %}
@@ -60,10 +82,19 @@
 					</div>
 					<div class="td col-lg-1"></div>
 					<div class="td col-lg-1"></div>
-					<div class="td col-lg-1"></div>
+					<div class="td col-lg-1">
+						<span class="sth">成品交付</span>
+						{% if readOnly %}
+							{% if addition.canDownload %}
+							成品下載
+							{% endif %}
+						{% elif addition.waitFinalPay %}
+						尾款待支付
+						{% endif %}
+					</div>
 					<div class="td col-lg-1">
 						<span class="sth">處理狀態</span>
-						已接收
+						{{ addition.status }}
 					</div>
 					<div class="td col-lg-3"></div>
 				</div>
