@@ -21,15 +21,16 @@
 			<div class="th col-lg-3"><span>備註</span></div>
 		</div>
 		{% for detail in orderdetails %}
+			{% set info = detail.itemInfo %}
 			<div class="row tbody">
-				<div class="td col-lg-4">{{ detail.title }}</div>
+				<div class="td col-lg-4">{{ info.title }}</div>
 				<div class="td col-lg-1">
 					<span class="sth">已付訂金</span>
-					${{ detail.advancePayment|locale }}
+					${{ info.advancePayment|locale }}
 				</div>
 				<div class="td col-lg-1">
 					<span class="sth">尾款</span>
-					${{ detail.finalPayment|locale }}
+					${{ info.finalPayment|locale }}
 				</div>
 				<div class="td col-lg-1">
 					<span class="sth">素材提交</span>
@@ -50,11 +51,12 @@
 			</div>
 			{% if detail.additions|length %}
 				{% for addition in detail.additions %}
+				{% set addinfo = addition.itemInfo %}
 				<div class="row tbody">
-					<div class="td col-lg-4">加購：{{ addition.title }} {{ addition.type }}</div>
+					<div class="td col-lg-4">加購：{{ addinfo.title }} {{ addinfo.type }}</div>
 					<div class="td col-lg-1">
 						<span class="sth">已付訂金</span>
-						${{ addition.price|locale }}
+						${{ addinfo.price|locale }}
 					</div>
 					<div class="td col-lg-1"></div>
 					<div class="td col-lg-1"></div>

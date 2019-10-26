@@ -162,11 +162,9 @@ module.exports = async function(app, passport) {
             details.filter(det => !!det.parentDetail), "parentDetail");  
         let normalDetails = details.filter(det => !det.parentDetail);
         return _.map(normalDetails, det => {
-            let info = det.itemInfo;
-            let res = _.clone(info);
-            res.additions = _.map(additionsMap[det.id], adddet => _.clone(adddet.itemInfo));
-            res.subtotal = info.advancePayment + _.reduce(_.map(res.additions, "price"), (sum, n) => sum + n, 0);
-            return res;
+            det.additions = additionsMap[det.id];
+            det.subtotal = det.itemInfo.advancePayment + _.sum(_.map(det.additions, add => add.itemInfo.price));
+            return det;
         });
     }
 
@@ -519,7 +517,7 @@ module.exports = async function(app, passport) {
         let orders = await interface.getOrdersByUser(req.user.id);
         let found = _.find(_.filter(orders, rule.orderCanShowDetail), { serialNumber: serial });
         if ( found ) {
-            let details = await interface.getOrderdetails(found.id);
+            let details = await interface.getOrderdetailsDeep(found.id);
             let layoutDetails = getLayoutDetails(details);
             res.render('user/orders/status', { 
                 orderdetails: layoutDetails,

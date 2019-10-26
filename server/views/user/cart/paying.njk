@@ -11,6 +11,7 @@
 		</div>
 
 		{% for detail in orderdetails %}
+		{% set info = detail.itemInfo %}
 		<div class="stable">
 			<div class="row thead">
 				<div class="th col-lg-4"><span>項目</span></div>
@@ -22,12 +23,12 @@
 				<div class="th col-lg-2 edit"></div>
 			</div>
 			<div class="row tbody">
-				<div class="td col-lg-4"><span>{{ detail.title }}</span></div>
-				<div class="td col-lg-2"><span><span class="sth">價格：</span>${{ detail.price|locale }}</span></div>
-				<div class="td col-lg-1"><span><span class="sth">急件加價：</span>{% if detail.urgentPrice|length %}{{ detail.urgentPrice|locale }}{% else %}無{% endif %}</span></div>
-				<div class="td col-lg-1"><span><span class="sth">特殊加價：</span>{% if detail.customizePrice|length %}{{ detail.customizePrice|locale }}{% else %}無{% endif %}</span></div>
-				<div class="td col-lg-1"><span><span class="sth">訂金：</span>${{ detail.advancePayment|locale }}</span></div>
-				<div class="td col-lg-1"><span><span class="sth">尾款：</span>${{ detail.finalPayment|locale }}</span></div>
+				<div class="td col-lg-4"><span>{{ info.title }}</span></div>
+				<div class="td col-lg-2"><span><span class="sth">價格：</span>${{ info.price|locale }}</span></div>
+				<div class="td col-lg-1"><span><span class="sth">急件加價：</span>{% if info.urgentPrice|length %}{{ info.urgentPrice|locale }}{% else %}無{% endif %}</span></div>
+				<div class="td col-lg-1"><span><span class="sth">特殊加價：</span>{% if info.customizePrice|length %}{{ info.customizePrice|locale }}{% else %}無{% endif %}</span></div>
+				<div class="td col-lg-1"><span><span class="sth">訂金：</span>${{ info.advancePayment|locale }}</span></div>
+				<div class="td col-lg-1"><span><span class="sth">尾款：</span>${{ info.finalPayment|locale }}</span></div>
 				<div class="td col-lg-2 edit"></div>
 			</div>
 			{% if detail.additions|length %}
@@ -41,18 +42,19 @@
 					<div class="th col-lg-2 edit"></div>
 				</div>
 				{% for addition in detail.additions %}
+				{% set addinfo = addition.itemInfo %}
 				<div class="row tbody">
 					<div class="td col-lg-4"><span>
 						<span class="sth">加購項目：</span>
-						{{ addition.title }}
+						{{ addinfo.title }}
 					</span></div>
 					<div class="td col-lg-2"><span>
 						<span class="sth">規格：</span>
-						{{ addition.type }}
+						{{ addinfo.type }}
 					</span></div>
 					<div class="td col-lg-1"><span>
 						<span class="sth">價格：</span>
-						${{ addition.price|locale }}
+						${{ addinfo.price|locale }}
 					</span></div>
 					<div class="td col-lg-1"></div>
 					<div class="td col-lg-1"></div>

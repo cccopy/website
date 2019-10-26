@@ -134,6 +134,19 @@ module.exports = {
 	getOrderdetails: function(orderId){
 		return axiosIns.get("orders/" + orderId).then(response => response.data.details);
 	},
+	getOrderdetailsDeep: function(orderId){
+		var params = { _limit: -1, ownOrder_in: orderId };
+		return axiosIns.get("orderdetails", { params: params }).then(
+			response => {
+				let data = response.data;
+				data.forEach(d => {	// crop properties
+					d.item = d.item.id;
+					d.ownOrder = d.ownOrder.id;
+					if ( d.parentDetail ) d.parentDetail = d.parentDetail.id;
+				});
+				return data;
+			});
+	},
 	updateUserFavorites: function(userId, ids){
 		let params = { favorites: ids || [] };
 		return axiosIns.put("clients/" + userId, params ).then(response => reduceUser(response.data));

@@ -9,6 +9,7 @@
 
 	<div class="main">
 		{% for detail in orderdetails %}
+		{% set info = detail.itemInfo %}
 		<div class="stable">
 			<div class="row thead">
 				<div class="th col-lg-4"><span>項目</span></div>
@@ -20,12 +21,12 @@
 				<div class="th col-lg-2 edit"></div>
 			</div>
 			<div class="row tbody">
-				<div class="td col-lg-4"><span>{{ detail.title }}</span></div>
-				<div class="td col-lg-2"><span><span class="sth">價格：</span>${{ detail.price|locale }}</span></div>
-				<div class="td col-lg-1"><span><span class="sth">急件加價：</span>{% if detail.urgentPrice|length %}{{ detail.urgentPrice|locale }}{% else %}無{% endif %}</span></div>
-				<div class="td col-lg-1"><span><span class="sth">特殊加價：</span>{% if detail.customizePrice|length %}{{ detail.customizePrice|locale }}{% else %}無{% endif %}</span></div>
-				<div class="td col-lg-1"><span><span class="sth">訂金：</span>${{ detail.advancePayment|locale }}</span></div>
-				<div class="td col-lg-1"><span><span class="sth">尾款：</span>${{ detail.finalPayment|locale }}</span></div>
+				<div class="td col-lg-4"><span>{{ info.title }}</span></div>
+				<div class="td col-lg-2"><span><span class="sth">價格：</span>${{ info.price|locale }}</span></div>
+				<div class="td col-lg-1"><span><span class="sth">急件加價：</span>{% if info.urgentPrice|length %}{{ info.urgentPrice|locale }}{% else %}無{% endif %}</span></div>
+				<div class="td col-lg-1"><span><span class="sth">特殊加價：</span>{% if info.customizePrice|length %}{{ info.customizePrice|locale }}{% else %}無{% endif %}</span></div>
+				<div class="td col-lg-1"><span><span class="sth">訂金：</span>${{ info.advancePayment|locale }}</span></div>
+				<div class="td col-lg-1"><span><span class="sth">尾款：</span>${{ info.finalPayment|locale }}</span></div>
 				<div class="td col-lg-2 edit"></div>
 			</div>
 			{% if detail.additions|length %}
@@ -39,18 +40,19 @@
 					<div class="th col-lg-2 edit"></div>
 				</div>
 				{% for addition in detail.additions %}
+				{% set addinfo = addition.itemInfo %}
 				<div class="row tbody">
 					<div class="td col-lg-4"><span>
 						<span class="sth">加購項目：</span>
-						{{ addition.title }}
+						{{ addinfo.title }}
 					</span></div>
 					<div class="td col-lg-2"><span>
 						<span class="sth">規格：</span>
-						{{ addition.type }}
+						{{ addinfo.type }}
 					</span></div>
 					<div class="td col-lg-1"><span>
 						<span class="sth">價格：</span>
-						${{ addition.price|locale }}
+						${{ addinfo.price|locale }}
 					</span></div>
 					<div class="td col-lg-1"></div>
 					<div class="td col-lg-1"></div>
@@ -61,7 +63,7 @@
 			{% endif %}
 			<div class="row tbtm">
 				<div class="td col total">
-					尾款  NT$ <span>{{ detail.finalPayment|locale }}</span> 元
+					尾款  NT$ <span>{{ info.finalPayment|locale }}</span> 元
 				</div> 
 			</div>
 		</div>
@@ -82,9 +84,6 @@
 		</div>
 
 		<div class="mmeat">
-			輸入折扣碼：<input type="text">
-		</div>
-		<div class="mmeat">
 			<p>
 				發票資訊：
 				<label class="sp" for=""><input type="radio" name="radio"><span class="radiomark"></span> 個人戶</label>
@@ -95,9 +94,6 @@
 			</p>
 			<p>
 				<span class="fontR">*</span> 統一編號：<input type="text">
-			</p>
-			<p>
-				<span class="fontR fontS">* 開立之統一發票將扣除折扣後之款項。 (折扣碼優惠僅限折抵主商品，不得超過總商品金額5%) </span>
 			</p>
 			<!-- <label for=""><input type="checkbox" name="checkbox"><span class="checkmark"></span> 個人戶</label> -->
 		</div>
