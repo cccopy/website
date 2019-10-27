@@ -403,8 +403,7 @@ module.exports = async function(app, passport) {
     app.get('/user/cart/paying', loginRequired, asyncHandler(async (req, res, next) => {
         let serial = req.query.serial;
         if ( serial ) {
-            let orders = await interface.getOrdersByUser(req.user.id);
-            let found = _.find(_.filter(orders, rule.orderCanPay), { serialNumber: serial });
+            let found = await interface.findOrderByUserSerialRule(req.user.id, serial, rule.orderCanPay);
             if ( found ) {
                 let details = await interface.getOrderdetails(found.id);
                 let layoutDetails = getLayoutDetails(details);
@@ -421,8 +420,7 @@ module.exports = async function(app, passport) {
         let serial = req.query.serial;
         let isValid = checkReferer(req, "/user/cart/paying");
         if (isValid) {
-            let orders = await interface.getOrdersByUser(req.user.id);
-            let found = _.find(_.filter(orders, rule.orderCanPay), { serialNumber: serial });
+            let found = await interface.findOrderByUserSerialRule(req.user.id, serial, rule.orderCanPay);
             if ( found ) {
                 let order = await interface.makeOrderToPaied(found.id);
                 res.render('user/cart/payresult');
@@ -526,9 +524,7 @@ module.exports = async function(app, passport) {
         res.render('user/orders', { orders: orders } );
     }));
     app.get('/user/orders/:serial', loginRequired, asyncHandler(async (req, res, next) => {
-        let serial = req.params.serial;
-        let orders = await interface.getOrdersByUser(req.user.id);
-        let found = _.find(_.filter(orders, rule.orderCanShowDetail), { serialNumber: serial });
+        let found = await interface.findOrderByUserSerialRule(req.user.id, req.params.serial, rule.orderCanShowDetail);
         if ( found ) {
             let details = await interface.getOrderdetailsDeep(found.id);
             details.forEach(prepareOrderDetailStatus);
@@ -548,9 +544,7 @@ module.exports = async function(app, passport) {
     // USER - ORDER - Cancel ===============
     // =====================================
     app.get('/user/orders/:serial/cancel', loginRequired, asyncHandler(async (req, res, next) => {
-        let serial = req.params.serial;
-        let orders = await interface.getOrdersByUser(req.user.id);
-        let found = _.find(_.filter(orders, rule.orderCanCancel), { serialNumber: serial });
+        let found = await interface.findOrderByUserSerialRule(req.user.id, req.params.serial, rule.orderCanCancel);
         if ( found ) {
             res.render('user/orders/cancel', {
                 order: found,
@@ -560,9 +554,7 @@ module.exports = async function(app, passport) {
     }));
     app.post('/user/orders/:serial/cancel', loginRequired, asyncHandler(async (req, res, next) => {
         // collect the submit form to order
-        let serial = req.params.serial;
-        let orders = await interface.getOrdersByUser(req.user.id);
-        let found = _.find(_.filter(orders, rule.orderCanCancel), { serialNumber: serial });
+        let found = await interface.findOrderByUserSerialRule(req.user.id, req.params.serial, rule.orderCanCancel);
         if ( found ) {
             let order = await interface.makeOrderToCancel(found.id, _.pick(req.body, ['name', 'code', 'account']) );
             res.redirect('/user/orders');
@@ -573,17 +565,13 @@ module.exports = async function(app, passport) {
     // USER - ORDER - Rating ===============
     // =====================================
     app.get('/user/orders/:serial/rating', loginRequired, asyncHandler(async (req, res, next) => {
-        let serial = req.params.serial;
-        let orders = await interface.getOrdersByUser(req.user.id);
-        let found = _.find(_.filter(orders, rule.orderCanRating), { serialNumber: serial });
+        let found = await interface.findOrderByUserSerialRule(req.user.id, req.params.serial, rule.orderCanRating);
         if ( found ) {
             res.render('user/orders/rating');
         } else res.redirect('/user/orders');
     }));
     app.post('/user/orders/:serial/rating', loginRequired, asyncHandler(async (req, res, next) => {
-        let serial = req.params.serial;
-        let orders = await interface.getOrdersByUser(req.user.id);
-        let found = _.find(_.filter(orders, rule.orderCanRating), { serialNumber: serial });
+        let found = await interface.findOrderByUserSerialRule(req.user.id, req.params.serial, rule.orderCanRating);
         if ( found ) {
             let order = await interface.updateOrderRating(found.id, _.pick(req.body, ['rating', 'comment']) );
             res.render('user/orders/rating', { hassend: true } );
@@ -594,9 +582,7 @@ module.exports = async function(app, passport) {
     // USER - ORDER - Paying ===============
     // =====================================
     app.get('/user/orders/:serial/paying', loginRequired, asyncHandler(async (req, res, next) => {
-        let serial = req.params.serial;
-        let orders = await interface.getOrdersByUser(req.user.id);
-        let found = _.find(_.filter(orders, rule.orderCanFinalPay), { serialNumber: serial });
+        let found = await interface.findOrderByUserSerialRule(req.user.id, req.params.serial, rule.orderCanFinalPay);
         if ( found ) {
             let details = await interface.getOrderdetails(found.id);
             let layoutDetails = getLayoutDetails(details);
@@ -610,8 +596,7 @@ module.exports = async function(app, passport) {
     // ==== Will be changed when the Flow Binding ==== 
     app.get('/user/orders/:serial/payresult', loginRequired, asyncHandler(async (req, res, next) => {
         let serial = req.params.serial;
-        let orders = await interface.getOrdersByUser(req.user.id);
-        let found = _.find(_.filter(orders, rule.orderCanFinalPay), { serialNumber: serial });
+        let found = await interface.findOrderByUserSerialRule(req.user.id, serial, rule.orderCanFinalPay);
         let isValid = checkReferer(req, "/user/orders/" + serial + "/paying");
         if ( isValid && found ){
             let order = await interface.makeOrderToCompleted(found.id);
@@ -623,9 +608,7 @@ module.exports = async function(app, passport) {
     // USER - ORDER - Quote ================
     // =====================================
     app.get('/user/orders/:serial/quote', loginRequired, asyncHandler(async (req, res, next) => {
-        let serial = req.params.serial;
-        let orders = await interface.getOrdersByUser(req.user.id);
-        let found = _.find(_.filter(orders, rule.orderCanShowQuote), { serialNumber: serial });
+        let found = await interface.findOrderByUserSerialRule(req.user.id, req.params.serial, rule.orderCanShowQuote);
         if ( found ) {
             let details = await interface.getOrderdetails(found.id);
             let layoutDetails = getLayoutDetails(details);

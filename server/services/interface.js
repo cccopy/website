@@ -131,6 +131,10 @@ module.exports = {
 		let user = await this.getUserById(userId);
 		return user.orders;
 	},
+	findOrderByUserSerialRule: function(userId, serial, ruleFn) {
+		return this.getUserById(userId)
+			.then(user => _.find(_.filter(user.orders, ruleFn), { serialNumber: serial }) );
+	},
 	getOrderdetails: function(orderId){
 		return axiosIns.get("orders/" + orderId).then(response => response.data.details);
 	},
