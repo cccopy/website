@@ -22,83 +22,96 @@
 				{% include "user/_nav.njk"%}
 
 				<div class="main">
-					<div class="tform row">
-						<div class="tfth col-md-3"><span>真實姓名</span></div>
-						<div class="tftd col-md-9">
-							<span class="fixed">{{ user.name }}</span>
+					<form update-info action="{{ currentPath }}">
+						<div class="tform row">
+							<div class="tfth col-md-3"><span>真實姓名</span></div>
+							<div class="tftd col-md-9">
+								<span class="fixed">{{ user.name }}</span>
+							</div>
+							<div class="tfth col-md-3"><span><em class="fontR">*</em>暱稱</span></div>
+							<div class="tftd col-md-9">
+								<input type="text" name="nickname" value="{{ user.nickname }}" required>
+							</div>
+							<!-- <div class="tfth col-md-3"><span><em class="fontR">*</em>E-mail</span></div>
+							<div class="tftd col-md-9">
+								<input type="text" value="abcd123@gmail.com">
+							</div> -->
+							<div class="tfth col-md-3"><span>E-mail</span></div>
+							<div class="tftd col-md-9">
+								<span class="fixed">{{ user.email }}</span>
+								<!-- <a href="" class="btn">變更</a> -->
+							</div>
+							<div class="tfth col-md-3"><span>密碼</span></div>
+							<div class="tftd col-md-9">
+								<!-- <span class="fixed">*******</span> -->
+								<a pw-change href class="btn">變更</a>
+								<div pw-wrap class="hidden">
+									舊密碼 <input class="input-a" name="oldpw" type="password" value=""><br/>
+									新密碼 <input class="input-a" name="pw" type="password" value=""><br/>
+									<a pw-change-cancel href class="btn">取消</a>
+								</div>
+							</div>
+							<!-- <div class="tfth col-md-3"><span><em class="fontR">*</em>行動電話</span></div>
+							<div class="tftd col-md-9">
+								<input type="text" value="0912345678">
+							</div> -->
+							<div class="tfth col-md-3"><span>行動電話</span></div>
+							<div class="tftd col-md-9">
+								<span class="fixed">{{ user.cellphone }}</span>
+								<!-- <a href="" class="btn">變更</a> -->
+							</div>
+							<div class="tfth col-md-3"><span>聯絡市話</span></div>
+							<div class="tftd col-md-9">
+								<!-- <input class="input-w1" type="text" value=""> -->
+								<input class="input-a" type="text" name="phone" value="{{ user.phone }}">
+							</div>
+							<div class="tfth col-md-3"><span><em class="fontR">*</em>地址</span></div>
+							<div class="tftd col-md-9">
+								<select from-trigger to-target="county-select" name="city" required>
+									<option init value="">-- 請選擇 --</option>
+									{% for city in citycounty.cities %}
+										<option value="{{ city.name }}" {% if user.city == city.name %}selected{% endif %}>{{ city.name }}</option>
+									{% endfor %}
+								</select>
+								<select county-select name="county" required>
+									<option init value="">-- 請選擇 --</option>
+									{% for county in citycounty.counties %}
+										<option link-from="{{ county.city }}" value="{{ county.name }}" {% if user.city == county.city %}{% if user.county == county.name %}selected{% endif %}{% else %}hidden{% endif %}>{{ county.name }}</option>
+									{% endfor %}
+								</select>
+								<input type="text" name="address" value="{{ user.address }}" required>
+							</div>
+							<div class="tfth col-md-3"><span>產業別</span></div>
+							<div class="tftd col-md-9">
+								<select class="select-w1" name="industryCategory">
+									<option init value="">-- 請選擇 --</option>
+									{% for ind in industrycategory %}
+									<option value="{{ ind }}" {% if user.industryCategory == ind %}selected{% endif %}>{{ ind }}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<div class="tfth col-md-3"><span>公司名稱</span></div>
+							<div class="tftd col-md-9">
+								<input type="text" placeholder="請輸入公司名稱" onfocus="this.placeholder = ''" onblur="this.placeholder = '請輸入公司名稱'" name="company" value="{{ user.company }}">
+							</div>
+							<div class="tfth col-md-3"><span>統編</span></div>
+							<div class="tftd col-md-9">
+								<input type="text" placeholder="請輸入統編" onfocus="this.placeholder = ''" onblur="this.placeholder = '請輸入統編'" name="taxId" value="{{ user.taxId }}">
+							</div>
+							<div class="tfth col-md-3"><span>職稱</span></div>
+							<div class="tftd col-md-9">
+								<select class="select-w1" name="jobTitle">
+									<option init value="">-- 請選擇 --</option>
+									{% for job in jobtitle %}
+									<option value="{{ job }}" {% if user.jobTitle == job %}selected{% endif %}>{{ job }}</option>
+									{% endfor %}
+								</select>
+							</div>
 						</div>
-						<div class="tfth col-md-3"><span><em class="fontR">*</em>暱稱</span></div>
-						<div class="tftd col-md-9">
-							<input type="text" value="{{ user.nickname }}">
+						<div class="btns center">
+							<button type="submit" class="btn btnIm">確認送出</button>
 						</div>
-						<!-- <div class="tfth col-md-3"><span><em class="fontR">*</em>E-mail</span></div>
-						<div class="tftd col-md-9">
-							<input type="text" value="abcd123@gmail.com">
-						</div> -->
-						<div class="tfth col-md-3"><span>E-mail</span></div>
-						<div class="tftd col-md-9">
-							<span class="fixed">{{ user.email }}</span>
-							<!-- <a href="" class="btn">變更</a> -->
-						</div>
-						<div class="tfth col-md-3"><span>密碼</span></div>
-						<div class="tftd col-md-9">
-							<!-- <span class="fixed">*******</span> -->
-							<a href="" class="btn">變更</a>
-						</div>
-						<!-- <div class="tfth col-md-3"><span><em class="fontR">*</em>行動電話</span></div>
-						<div class="tftd col-md-9">
-							<input type="text" value="0912345678">
-						</div> -->
-						<div class="tfth col-md-3"><span>行動電話</span></div>
-						<div class="tftd col-md-9">
-							<span class="fixed">{{ user.cellphone }}</span>
-							<!-- <a href="" class="btn">變更</a> -->
-						</div>
-						<div class="tfth col-md-3"><span>聯絡市話</span></div>
-						<div class="tftd col-md-9">
-							<input class="input-w1" type="text" value="">
-							<input class="input-a" type="text" value="{{ user.phone }}">
-						</div>
-						<div class="tfth col-md-3"><span><em class="fontR">*</em>地址</span></div>
-						<div class="tftd col-md-9">
-							<select from-trigger to-target="county-select" name="city">
-								<option init value="">-- 請選擇 --</option>
-								{% for city in citycounty.cities %}
-									<option value="{{ city.name }}" {% if user.city == city.name %}selected{% endif %}>{{ city.name }}</option>
-								{% endfor %}
-							</select>
-							<select county-select name="county">
-								<option init value="">-- 請選擇 --</option>
-								{% for county in citycounty.counties %}
-									<option link-from="{{ county.city }}" value="{{ county.name }}" {% if user.city == county.city %}{% if user.county == county.name %}selected{% endif %}{% else %}hidden{% endif %}>{{ county.name }}</option>
-								{% endfor %}
-							</select>
-							<input type="text" value="{{ user.address }}">
-						</div>
-						<div class="tfth col-md-3"><span>產業別</span></div>
-						<div class="tftd col-md-9">
-							<select class="select-w1" name="" id="">
-								<option value="">出版業</option>
-							</select>
-						</div>
-						<div class="tfth col-md-3"><span>公司名稱</span></div>
-						<div class="tftd col-md-9">
-							<input type="text" placeholder="請輸入公司名稱" onfocus="this.placeholder = ''" onblur="this.placeholder = '請輸入公司名稱'" value="{{ user.company }}">
-						</div>
-						<div class="tfth col-md-3"><span>統編</span></div>
-						<div class="tftd col-md-9">
-							<input type="text" placeholder="請輸入統編" onfocus="this.placeholder = ''" onblur="this.placeholder = '請輸入統編'" value="{{ user.taxId }}">
-						</div>
-						<div class="tfth col-md-3"><span>職稱</span></div>
-						<div class="tftd col-md-9">
-							<select class="select-w1" name="" id="">
-								<option value="">行銷企劃</option>
-							</select>
-						</div>
-					</div>
-					<div class="btns center">
-						<a href="" class="btn btnIm">確認送出</a>
-					</div>
+					</form>
 				</div>
 			</div>
 		</div>

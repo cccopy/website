@@ -53,6 +53,8 @@ module.exports = async function(app, passport) {
     let normalKeywords = await interface.getKeywords(),
         additionItems = await interface.getAdditions(),
         cityCounty = await interface.getCityCounty(),
+        industryCategory = await interface.getIndustryCategory(),
+        jobTitle = await interface.getJobTitle(),
         hotKeywords = [];
 
     let keywordsMap = utils.getPropMapObject(normalKeywords, "id");
@@ -347,8 +349,15 @@ module.exports = async function(app, passport) {
         let user = await interface.getUserById(req.user.id);
         res.render('user/info', { 
             user: user,
-            citycounty: cityCounty
+            citycounty: cityCounty,
+            industrycategory: industryCategory,
+            jobtitle: jobTitle
         } );
+    }));
+    app.post('/user/info', loginRequired, asyncHandler(async (req, res) => {
+        let props = ["city", "county", "jobTitle", "industryCategory", "company", "taxId", "cellphone", "address", "phone", "nickname"];
+        let user = await interface.updateUser(req.user.id, _.pick(req.body, props));
+        res.redirect('/user/info');
     }));
 
     // =====================================

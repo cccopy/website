@@ -5,6 +5,8 @@ var api = require('../config/constants.json').api;
 var utils = require('./utils');
 
 const cities = require('../static/city-county.json');
+const industries = require('../static/industry-category.json');
+const jobs = require('../static/job-title.json');
 
 var axiosIns = axios.create({
 	baseURL: api.base,
@@ -170,10 +172,19 @@ module.exports = {
 		});
 		return Promise.resolve(res);
 	},
+	getIndustryCategory: function(){
+		return Promise.resolve(industries);
+	},
+	getJobTitle: function(){
+		return Promise.resolve(jobs);
+	},
 
 	// =================================
 	// === Updates =====================
 	// =================================
+	updateUser: function(userId, prop){
+		return axiosIns.put("clients/" + userId, prop ).then(response => reduceUser(response.data));
+	},
 	updateUserFavorites: function(userId, ids){
 		let params = { favorites: ids || [] };
 		return axiosIns.put("clients/" + userId, params ).then(response => reduceUser(response.data));

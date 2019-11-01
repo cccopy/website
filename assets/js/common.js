@@ -125,40 +125,21 @@ function bindIndexPL(){
 }
 
 function bindFormSubmit(){
-	$(document.body).on('submit', 'section.login form', function(event) {
-		// event.preventDefault(); // stop default submit behavior when it bubbles to <body>
-		$.pjax.submit(event, '#main-pjax-container', { 
-			scrollTo: false,
-			timeout: 7000, 
-			push: false, 
-			replace: true,
-			type: "POST"
-		});
-	});
-
 	$(document.body).on('submit', 'form[header-search]', function(event){
 		// event.preventDefault();
 		$.pjax.submit(event, '#main-pjax-container', { timeout: 7000, type: "GET" });
 	});
 
-	$(document.body).on('submit', 'form[order-cancel]', function(event){
-		$.pjax.submit(event, '#main-pjax-container', { 
-			timeout: 7000, 
-			push: false, 
-			replace: true,
-			type: "POST"
-		});
-	});
-}
+	var selectors = ['section.login form', 'form[order-cancel]', 'form[cart-confirm]', 'form[rating-form]', 'form[update-info]'];
 
-function bindCartConfirm(){
-	$(document.body).on('submit', 'form[cart-confirm]', function(event){
-		// event.preventDefault();
-		$.pjax.submit(event, '#main-pjax-container', { 
-			timeout: 7000, 
-			push: false, 
-			replace: true,
-			type: "POST"
+	selectors.forEach(function(sel){
+		$(document.body).on('submit', sel, function(event){
+			$.pjax.submit(event, '#main-pjax-container', { 
+				timeout: 7000, 
+				push: false, 
+				replace: true,
+				type: "POST"
+			});
 		});
 	});
 }
@@ -194,15 +175,6 @@ function bindRatingForm(){
 			}
 		});
 		ratingInput.val(index + 1);
-	});
-
-	$(document.body).on('submit', 'form[rating-form]', function(event){
-		$.pjax.submit(event, '#main-pjax-container', { 
-			timeout: 7000, 
-			push: false, 
-			replace: true,
-			type: "POST"
-		});
 	});
 }
 
@@ -537,7 +509,7 @@ $(document).ready(function() {
 
 	bindMoreAjax();
 	bindFormSubmit();
-	bindCartConfirm();
+	bindChangePassword();
 	bindAddCartAjax();
 	bindLogoutLink();
 	bindTooltip();
