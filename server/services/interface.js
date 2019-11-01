@@ -4,6 +4,8 @@ var md5 = require('md5');
 var api = require('../config/constants.json').api;
 var utils = require('./utils');
 
+const cities = require('../static/city-county.json');
+
 var axiosIns = axios.create({
 	baseURL: api.base,
 	timeout: api.timeout,
@@ -47,6 +49,10 @@ module.exports = {
 			.catch( err => { reject(err); });
 		});
 	},
+
+	// =================================
+	// === Getters =====================
+	// =================================
 	getUserById: function(id){
 		return axiosIns.get("clients/" + id).then(response => reduceUser(response.data));
 	},
@@ -151,6 +157,23 @@ module.exports = {
 				return data;
 			});
 	},
+	getCityCounty: function(){
+		let res = { cities: [], counties: [] };
+		_.each(cities, city => {
+			res.cities.push({ name: city.CityName });
+			_.each(city.AreaList || [], county => {
+				res.counties.push({
+					name: county.AreaName,
+					city: city.CityName
+				});
+			});
+		});
+		return Promise.resolve(res);
+	},
+
+	// =================================
+	// === Updates =====================
+	// =================================
 	updateUserFavorites: function(userId, ids){
 		let params = { favorites: ids || [] };
 		return axiosIns.put("clients/" + userId, params ).then(response => reduceUser(response.data));
@@ -173,6 +196,10 @@ module.exports = {
 		let params = { ratingInfo: ratingInfo };
 		return axiosIns.put("orders/" + orderId, params ).then(response => response.data);
 	},
+
+	// =================================
+	// === Creations ===================
+	// =================================
 	createOrder: async function(userId, cart){
 		let cloneCart = _.cloneDeep(cart);
 		let masters = _.filter(cloneCart, c => !c.pid);

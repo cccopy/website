@@ -23,55 +23,57 @@
 
 				<div class="main">
 					<div class="tform row">
-						<div class="tfth col-md-3"><span><em class="fontR">*</em>真實姓名</span></div>
-						<div class="tftd col-md-9">
-							<input type="text" placeholder="請輸入你的真實姓名" onfocus="this.placeholder = ''" onblur="this.placeholder = '請輸入你的真實姓名'">
-						</div>
 						<div class="tfth col-md-3"><span>真實姓名</span></div>
 						<div class="tftd col-md-9">
-							<span class="fixed">王小美</span>
+							<span class="fixed">{{ user.name }}</span>
 						</div>
 						<div class="tfth col-md-3"><span><em class="fontR">*</em>暱稱</span></div>
 						<div class="tftd col-md-9">
-							<input type="text" value="Leahyeh">
+							<input type="text" value="{{ user.nickname }}">
 						</div>
-						<div class="tfth col-md-3"><span><em class="fontR">*</em>E-mail</span></div>
+						<!-- <div class="tfth col-md-3"><span><em class="fontR">*</em>E-mail</span></div>
 						<div class="tftd col-md-9">
 							<input type="text" value="abcd123@gmail.com">
-						</div>
+						</div> -->
 						<div class="tfth col-md-3"><span>E-mail</span></div>
 						<div class="tftd col-md-9">
-							<span class="fixed">leahyeh@gmail.com</span>
-							<a href="" class="btn">變更</a>
+							<span class="fixed">{{ user.email }}</span>
+							<!-- <a href="" class="btn">變更</a> -->
 						</div>
 						<div class="tfth col-md-3"><span>密碼</span></div>
 						<div class="tftd col-md-9">
-							<span class="fixed">*******</span>
+							<!-- <span class="fixed">*******</span> -->
 							<a href="" class="btn">變更</a>
 						</div>
-						<div class="tfth col-md-3"><span><em class="fontR">*</em>行動電話</span></div>
+						<!-- <div class="tfth col-md-3"><span><em class="fontR">*</em>行動電話</span></div>
 						<div class="tftd col-md-9">
 							<input type="text" value="0912345678">
-						</div>
+						</div> -->
 						<div class="tfth col-md-3"><span>行動電話</span></div>
 						<div class="tftd col-md-9">
-							<span class="fixed">0912345678</span>
-							<a href="" class="btn">變更</a>
+							<span class="fixed">{{ user.cellphone }}</span>
+							<!-- <a href="" class="btn">變更</a> -->
 						</div>
 						<div class="tfth col-md-3"><span>聯絡市話</span></div>
 						<div class="tftd col-md-9">
-							<input class="input-w1" type="text" value="02">
-							<input class="input-a" type="text" value="0912345678">
+							<input class="input-w1" type="text" value="">
+							<input class="input-a" type="text" value="{{ user.phone }}">
 						</div>
 						<div class="tfth col-md-3"><span><em class="fontR">*</em>地址</span></div>
 						<div class="tftd col-md-9">
-							<select name="" id="">
-								<option value="">台北市</option>
+							<select name="city">
+								<option init value="">-- 請選擇 --</option>
+								{% for city in citycounty.cities %}
+									<option value="{{ city.name }}" {% if user.city == city.name %}selected{% endif %}>{{ city.name }}</option>
+								{% endfor %}
 							</select>
-							<select name="" id="">
-								<option value="">中正區</option>
+							<select name="county">
+								<option init value="">-- 請選擇 --</option>
+								{% for county in citycounty.counties %}
+									<option link-from="{{ county.city }}" value="{{ county.name }}" {% if user.city == county.city %}{% if user.county == county.name %}selected{% endif %}{% else %}hidden{% endif %}>{{ county.name }}</option>
+								{% endfor %}
 							</select>
-							<input type="text" value="">
+							<input type="text" value="{{ user.address }}">
 						</div>
 						<div class="tfth col-md-3"><span>產業別</span></div>
 						<div class="tftd col-md-9">
@@ -81,11 +83,11 @@
 						</div>
 						<div class="tfth col-md-3"><span>公司名稱</span></div>
 						<div class="tftd col-md-9">
-							<input type="text" placeholder="請輸入公司名稱" onfocus="this.placeholder = ''" onblur="this.placeholder = '請輸入公司名稱'">
+							<input type="text" placeholder="請輸入公司名稱" onfocus="this.placeholder = ''" onblur="this.placeholder = '請輸入公司名稱'" value="{{ user.company }}">
 						</div>
 						<div class="tfth col-md-3"><span>統編</span></div>
 						<div class="tftd col-md-9">
-							<input type="text" placeholder="請輸入統編" onfocus="this.placeholder = ''" onblur="this.placeholder = '請輸入統編'">
+							<input type="text" placeholder="請輸入統編" onfocus="this.placeholder = ''" onblur="this.placeholder = '請輸入統編'" value="{{ user.taxId }}">
 						</div>
 						<div class="tfth col-md-3"><span>職稱</span></div>
 						<div class="tftd col-md-9">

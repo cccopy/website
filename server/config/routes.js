@@ -52,6 +52,7 @@ module.exports = async function(app, passport) {
 
     let normalKeywords = await interface.getKeywords(),
         additionItems = await interface.getAdditions(),
+        cityCounty = await interface.getCityCounty(),
         hotKeywords = [];
 
     let keywordsMap = utils.getPropMapObject(normalKeywords, "id");
@@ -343,7 +344,11 @@ module.exports = async function(app, passport) {
     }));
 
     app.get('/user/info', loginRequired, asyncHandler(async (req, res) => {
-        res.render('user/info');
+        let user = await interface.getUserById(req.user.id);
+        res.render('user/info', { 
+            user: user,
+            citycounty: cityCounty
+        } );
     }));
 
     // =====================================
