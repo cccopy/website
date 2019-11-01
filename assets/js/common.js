@@ -206,6 +206,22 @@ function bindRatingForm(){
 	});
 }
 
+function bindLinkedSelection(){
+	$(document.body).on('change', 'select[from-trigger]', function(event){
+		var fromjq = $(this);
+		var targetAttr = fromjq.attr("to-target");
+		var targetSelect = $("select[" + targetAttr + "]");
+		var targetOptions = targetSelect.children("option[link-from]");
+
+		targetSelect.val("");
+		targetOptions.attr("hidden", "");
+		targetOptions.each(function(){
+			var selfjq = $(this);
+			if ( selfjq.attr("link-from") == fromjq.val() ) selfjq.removeAttr("hidden");
+		});
+	});
+}
+
 function bindMoreAjax(){
 	$('a[more-ajax]').click(moreAjaxHandler);
 }
@@ -532,6 +548,7 @@ $(document).ready(function() {
 	bindRemoveCartAjax();
 	bindAddFavoriteAjax();
 	bindRatingForm();
+	bindLinkedSelection();
 
 	$('a[fast-search-link]').click(function(event){
 		event.preventDefault();

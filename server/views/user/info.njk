@@ -61,13 +61,13 @@
 						</div>
 						<div class="tfth col-md-3"><span><em class="fontR">*</em>地址</span></div>
 						<div class="tftd col-md-9">
-							<select name="city">
+							<select from-trigger to-target="county-select" name="city">
 								<option init value="">-- 請選擇 --</option>
 								{% for city in citycounty.cities %}
 									<option value="{{ city.name }}" {% if user.city == city.name %}selected{% endif %}>{{ city.name }}</option>
 								{% endfor %}
 							</select>
-							<select name="county">
+							<select county-select name="county">
 								<option init value="">-- 請選擇 --</option>
 								{% for county in citycounty.counties %}
 									<option link-from="{{ county.city }}" value="{{ county.name }}" {% if user.city == county.city %}{% if user.county == county.name %}selected{% endif %}{% else %}hidden{% endif %}>{{ county.name }}</option>
