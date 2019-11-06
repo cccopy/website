@@ -130,7 +130,13 @@ function bindFormSubmit(){
 		$.pjax.submit(event, '#main-pjax-container', { timeout: 7000, type: "GET" });
 	});
 
-	var selectors = ['section.login form', 'form[order-cancel]', 'form[cart-confirm]', 'form[rating-form]', 'form[update-info]'];
+	var selectors = [
+		'section.login form', 
+		'form[order-cancel]', 
+		'form[cart-confirm]', 
+		'form[rating-form]', 
+		'form[update-info]'
+	];
 
 	selectors.forEach(function(sel){
 		$(document.body).on('submit', sel, function(event){
@@ -141,6 +147,20 @@ function bindFormSubmit(){
 				type: "POST"
 			});
 		});
+	});
+
+	$(document.body).on('submit', 'form[material-edit]', function(event){
+		$.pjax.submit(event, '#main-pjax-container', { 
+			timeout: 12000, 
+			push: false, 
+			replace: true,
+			type: "POST"
+		});
+	});
+
+	$(document.body).on('click', 'form[material-edit] button[name=action]', function(event){
+		var selfjq = $(this);
+		$(this).parent().append('<input type="hidden" name="action" value="' + selfjq.val() + '" />');
 	});
 }
 

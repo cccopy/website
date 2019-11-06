@@ -207,6 +207,10 @@ module.exports = {
 		let params = { ratingInfo: ratingInfo };
 		return axiosIns.put("orders/" + orderId, params ).then(response => response.data);
 	},
+	makeDetailToReview: function(detailId){
+		let params = { status: '素材審核中' };
+		return axiosIns.put("orderdetails/" + detailId, params ).then(response => response.data);
+	},
 
 	// =================================
 	// === Creations ===================

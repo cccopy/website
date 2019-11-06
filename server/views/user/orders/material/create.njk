@@ -1,0 +1,184 @@
+
+{% extends "user/orders.njk" %}
+
+{% block ordercontent %}
+<div class="main">
+	<p class="center">請依下方欄位內容進行素材提交，一經「確認提交」後，將於3日內進行審核！</p>
+	<form material-edit action="{{ currentPath }}">
+		<h2 class="title"><span>影片素材提交</span></h2>
+		<div class="tform row">
+			<div class="tfth col-md-3"><span><em class="fontR">*</em>影片播放情境</span></div>
+			<div class="tftd col-md-9">
+				<select class="select-w1" name="" id="">
+					<option value="">請選擇</option>
+				</select>
+			</div>
+			<div class="tfth col-md-3"><span><em class="fontR">*</em>影片需傳達的訊息</span></div>
+			<div class="tftd col-md-9">
+				<select class="select-w1" name="" id="">
+					<option value="">請選擇</option>
+				</select>
+			</div>
+			<div class="tfth col-md-3"><span><em class="fontR">*</em>希望觀影後觀眾的反應及情緒</span></div>
+			<div class="tftd col-md-9">
+				<select class="select-w1" name="" id="">
+					<option value="">請選擇</option>
+				</select>
+			</div>
+			<div class="tfth col-md-3"><span><em class="fontR">*</em>希望影片能達到的目標</span></div>
+			<div class="tftd col-md-9">
+				<select class="select-w1" name="" id="">
+					<option value="">請選擇</option>
+				</select>
+			</div>
+			<div class="tfth col-md-3"><span>影片要素</span></div>
+			<div class="tftd col-md-9">
+				<div class="tfdv">
+					<span class="tfthh">可拍攝日期</span>
+					<input class="input-a" type="text" id="datepicker">
+				</div>
+				<div class="tfdv">
+					<span class="tfthh">可拍攝地點</span>
+					<select name="" id="">
+						<option value="">台北市</option>
+					</select>
+					<select name="" id="">
+						<option value="">中正區</option>
+					</select>
+					<input type="text" value="">
+				</div>
+				<div class="tfdv">
+					<span class="tfthh">需要上鏡的人物</span>
+					<input class="input-a" type="text">
+					<a href="" class="add">新增人物</a>
+				</div>
+				<div class="tfdv">
+					<span class="tfthh"></span>
+					<input class="input-a" type="text">
+				</div>
+				<div class="tfdv">
+					<span class="tfthh">場景設定</span>
+					<div class="imgpick">
+						<div class="item">
+							<img src="/assets/images/img_space.jpg" alt="">
+							<label for="" class="sp"><input type="radio" name="radio"><span class="radiomark"></span> 客廳</label>
+						</div>
+						<div class="item">
+							<img src="/assets/images/img_space.jpg" alt="">
+							<label for="" class="sp"><input type="radio" name="radio"><span class="radiomark"></span> 客廳</label>
+						</div>
+						<div class="item">
+							<img src="/assets/images/img_space.jpg" alt="">
+							<label for="" class="sp"><input type="radio" name="radio"><span class="radiomark"></span> 客廳</label>
+						</div>
+						<div class="item">
+							<img src="/assets/images/img_space.jpg" alt="">
+							<label for="" class="sp"><input type="radio" name="radio"><span class="radiomark"></span> 客廳</label>
+						</div>
+					</div>
+				</div>
+				<div class="tfdv">
+					<span class="tfthh">音樂</span>
+					<div class="musicpick">
+						<div class="item">
+							<label for="" class="sp"><input type="radio" name="radio"><span class="radiomark"></span> 音樂的文字說明</label>
+							<audio controls>
+							<source src="horse.ogg" type="audio/ogg">
+							<source src="horse.mp3" type="audio/mpeg">
+							Your browser does not support the audio element.
+							</audio>
+						</div>
+						<div class="item">
+							<label for="" class="sp"><input type="radio" name="radio"><span class="radiomark"></span> 音樂的文字說明</label>
+							<audio controls>
+							<source src="horse.ogg" type="audio/ogg">
+							<source src="horse.mp3" type="audio/mpeg">
+							Your browser does not support the audio element.
+							</audio>
+						</div>
+						<div class="item">
+							<label for="" class="sp"><input type="radio" name="radio"><span class="radiomark"></span> 交由專業人士決定</label>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="tfth col-md-3"><span>腳本概要</span></div>
+			<div class="tftd col-md-9">
+				<div class="storypick">
+					<div class="item">
+						<img src="/assets/images/img_plb.jpg" alt="">
+						<textarea name="" id="" cols="" rows="2">請輸入此劇情結構的說明需求
+						</textarea>
+						<span class="tab">起</span>
+					</div>
+					<div class="item">
+						<img src="/assets/images/img_plb.jpg" alt="">
+						<textarea name="" id="" cols="" rows="2">請輸入此劇情結構的說明需求
+						</textarea>
+					</div>
+					<div class="item">
+						<img src="/assets/images/img_plb.jpg" alt="">
+						<textarea name="" id="" cols="" rows="2">請輸入此劇情結構的說明需求
+						</textarea>
+						<span class="tab">承</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<h2 class="title"><span>影片素材上傳</span></h2>
+		<div class="tform row">
+			<div class="tfth col-md-3"><span>品牌LOGO</span></div>
+			<div class="tftd col-md-9">
+				<button class="btn">檔案上傳</button>
+				<em>檔案大小限於 10mb 以下；檔案格式 .ai</em>
+			</div>
+			<div class="tfth col-md-3"><span>相關主視覺圖</span></div>
+			<div class="tftd col-md-9">
+				<button class="btn">檔案上傳</button>
+				<em>檔案大小限於 200mb 以下；檔案格式 .rar / .zip</em>
+			</div>
+			<div class="tfth col-md-3"><span>喜愛的範例影片</span></div>
+			<div class="tftd col-md-9">
+				<input type="text" placeholder="請直接貼入網址"><br>
+				<input type="text" placeholder="請直接貼入網址"><br>
+				<input type="text" placeholder="請直接貼入網址"><br>
+			</div>
+			<div class="tfth col-md-3"><span>其他補充資料</span></div>
+			<div class="tftd col-md-9">
+				<div class="tfdv">
+					<button class="btn">檔案上傳</button>
+					<em>ex.企劃PPT；檔案格式 .ppt / .doc / .pdf/ .zip</em>
+					<a href="" class="add">新增檔案</a>
+				</div>
+				<div class="tfdv">
+					<button class="btn">檔案上傳</button>
+					<em>ex.企劃PPT；檔案格式 .ppt / .doc / .pdf/ .zip</em>
+				</div>
+			</div>
+			<div class="tfth col-md-3"><span>雲端資料夾網址</span></div>
+			<div class="tftd col-md-9">
+				<input type="text" placeholder="請直接貼入網址"><br>
+				<input type="text" placeholder="請直接貼入網址"><br>
+				<input type="text" placeholder="請直接貼入網址"><br>
+			</div>
+			<div class="tfth col-md-3"><span>是否加購PPM</span></div>
+			<div class="tftd col-md-9">
+				<label for="" class="sp"><input type="radio" name="radio"><span class="radiomark"></span> 是</label>
+				<label for="" class="sp"><input type="radio" name="radio"><span class="radiomark"></span> 否</label>
+
+				<em>PPM為拍攝元素細節再次確認服務，並擁有更換一次素材的權利；一旦確認勾選，將自動於尾款金額加價$3,000。</em>
+			</div>
+			<div class="tfth col-md-3"><span>其他備註資訊</span></div>
+			<div class="tftd col-md-9">
+				<textarea name="" id="" cols="" rows="5"></textarea>
+			</div>
+
+		</div>
+		<div class="btns center">
+			<button class="btn" type="submit" name="action" value="save">儲存</button>
+			<button class="btn btnIm" type="submit" name="action" value="submit">確認提交</button>
+		</div>
+	</form>
+</div>
+{% endblock %}

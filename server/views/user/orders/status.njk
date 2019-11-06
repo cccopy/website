@@ -35,7 +35,7 @@
 				<div class="td col-lg-1">
 					<span class="sth">素材提交</span>
 					{% if detail.canSubmitFactor %}
-					<a href="odItempush.html">提交素材(儲存/修改)</a>
+					<a main-pjax-link href="/user/orders/{{ serialnumber }}/detail/{{ detail.id }}/material/create">提交素材(儲存/修改)</a>
 					{% elif detail.hasSubmitFactor %}
 					素材已提交
 					{% elif detail.hasReviewFactor %}

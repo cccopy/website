@@ -638,6 +638,27 @@ module.exports = async function(app, passport) {
             });
         } else next(FORBIDDEN);
     }));
+    // ==============================================
+    // USER - ORDER - DETAIL - MATERIAL - Create ====
+    // ==============================================
+    app.get('/user/orders/:serial/detail/:detail/material/create', loginRequired, asyncHandler(async (req, res, next) => {
+        let serial = req.params.serial;
+        let detail = req.params.detail;
+
+        // detailCanSubmitFactor
+        res.render('user/orders/material/create');
+    }));
+    app.post('/user/orders/:serial/detail/:detail/material/create', loginRequired, asyncHandler(async (req, res, next) => {
+        let serial = req.params.serial;
+        let detailId = req.params.detail;
+        let action = req.body.action;
+        if ( action == "save" ) {
+
+        } else if ( action == "submit" ) {
+            let detail = await interface.makeDetailToReview(detailId);
+        }
+        res.redirect('/user/orders/' + serial);
+    }));
 
     app.get('/user/promote', loginRequired, asyncHandler(async (req, res) => {
         res.render('user/promote');
