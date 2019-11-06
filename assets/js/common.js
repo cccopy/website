@@ -529,7 +529,7 @@ $(document).ready(function() {
 
 	bindMoreAjax();
 	bindFormSubmit();
-	bindChangePassword();
+	// bindChangePassword();
 	bindAddCartAjax();
 	bindLogoutLink();
 	bindTooltip();
