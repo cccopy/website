@@ -4,8 +4,8 @@
   "description": "The e-commerce website",
   "main": "server/index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production supervisor server/index.js",
-    "dev": "cross-env NODE_ENV=development supervisor -i assets server/index.js"
+    "start": "cross-env NODE_ENV=production node server/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon server/index.js"
   },
   "repository": {
     "type": "git",
